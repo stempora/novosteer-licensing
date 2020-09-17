@@ -1,0 +1,74 @@
+<tabs>
+		<t 
+			icon="settings"
+			title="Add-on" 
+			link="" 
+			color="Blue"
+		>
+
+
+			<link 
+				active="isModSub('modules','default');" 
+				link="index.php?mod=novosteer-addon-autobrands&sub=settings.general" 
+				icon="edit" 
+				title="General Settings" 
+				acl="settings.general"
+				subtitle="Status, URL, display rules & permissions." />
+
+
+			<link 
+				active="isModSub('modules' , 'default-settings');" 
+				link="index.php?mod=novosteer-addon-autobrands&sub=settings.advanced" 
+				icon="advanced-settings" 
+				title="Advanced Settings" 
+				acl="settings.advanced"
+				subtitle="Default layouts, functionality & display style." />
+
+
+			<link 
+				active="isModSub('modules' , 'default-language');" 
+				link="index.php?mod=novosteer-addon-autobrands&sub=settings.static-texts" 
+				icon="language" 
+				title="Language Variables" 
+				acl="settings.static-texts"
+				subtitle="Predefined text variables of the module." />
+
+		</t>
+
+
+		<types 
+			color="Teal" 
+			icon="drawer3" 
+			acl="types.list"
+			title="Types" 
+			subtitle="Add & Edit" 
+			link="index.php?mod=novosteer-addon-autobrands&sub=types"/>
+
+		<brands
+			color="Purple" 
+			icon="factory" 
+			acl="brands.list"
+			subtitle="Add & Edit" 
+			title="Brands" 
+			link="index.php?mod=novosteer-addon-autobrands&sub=brands"
+		/>
+
+		<models
+			color="DarkBlue" 
+			icon="car" 
+			acl="models.list"
+			subtitle="Add & Edit" 
+			title="Models" 
+			link="index.php?mod=novosteer-addon-autobrands&sub=models"
+		/>
+
+		<trims
+			color="Orange" 
+			icon="certificate" 
+			acl="trims.list"
+			subtitle="Add & Edit" 
+			title="Trims" 
+			link="index.php?mod=novosteer-addon-autobrands&sub=trims"
+		/>
+</tabs>
+

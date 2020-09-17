@@ -1,0 +1,396 @@
+<form>
+
+	<fields>
+
+		<box width="6" title="Filter">
+			<fields>
+
+				<set_sets type="droplist" multi="true" title="Fieldset(s)">
+					<relation table="plugin:products_field_sets" id="set_id" text="set_name" order="set_name ASC"></relation>
+					<description>Select the sets to be linked to this addon.</description>
+				</set_sets>
+
+				<set_vin_field type="droplist" empty="true" empty_text="" title="Vin Field">
+					<autocomplete url="json.php?mod=products-addon-attributes&sub=autocomplete.attributes" params="" />
+				</set_vin_field>
+
+				<set_year_field type="droplist" empty="true" empty_text="" title="Year Field">
+					<autocomplete url="json.php?mod=products-addon-attributes&sub=autocomplete.attributes" params="" />
+				</set_year_field>
+
+				<set_new_field type="droplist" width="50%" empty="true" empty_text="" title="New Car Field / Option" referers="set_new_option">
+					<autocomplete url="json.php?mod=products-addon-attributes&sub=autocomplete.attributes" params="" />
+				</set_new_field>
+
+				<set_new_option type="droplist" width="50%" empty="true" empty_text="" title="Option"  referer="true">
+					<autocomplete url="json.php?mod=products-addon-autobrands&sub=autocomplete.options" params="set_new_field" />
+				</set_new_option>
+
+				<set_used_field type="droplist" width="50%" empty="true" empty_text="" title="Used Car Field / Option" referers="set_used_option">
+					<autocomplete url="json.php?mod=products-addon-autobrands&sub=autocomplete.attributes" params="" />
+				</set_used_field>
+
+				<set_used_option type="droplist" width="50%" empty="true" empty_text="" title="Option"  referer="true">
+					<autocomplete url="json.php?mod=products-addon-autobrands&sub=autocomplete.options" params="set_used_field" />
+				</set_used_option>
+
+				<set_certified_field type="droplist" width="50%" empty="true" empty_text="" title="Certified Car Field / Option" referers="set_certified_option">
+					<autocomplete url="json.php?mod=products-addon-autobrands&sub=autocomplete.attributes" params="" />
+				</set_certified_field>
+
+				<set_certified_option type="droplist" width="50%" empty="true" empty_text="" title="Option"  referer="true">
+					<autocomplete url="json.php?mod=products-addon-autobrands&sub=autocomplete.options" params="set_certified_field" />
+				</set_certified_option>
+
+				<set_field_mileage type="droplist" empty="true" empty_text="" title="Mileage Field">
+					<autocomplete url="json.php?mod=products-addon-vehicles-new&sub=autocomplete.attributes" params="" />
+				</set_field_mileage>
+
+				<subtitle_models type="subtitle" title="Mega Menu"/>
+
+				<set_info_list_type type="droplist" title="Listing Module">
+					<options>
+						<option name="2">instance module</option>
+						<option name="3">global module</option>
+					</options>
+				</set_info_list_type>
+
+				<set_info_list type="droplist" empty="true">
+					<title>Global Module</title>
+					<relation table="core:modules" table_lang="core:modules_lang" id="module_id" text="module_type_name" condition="module_code = 'products' or module_parent_code = 'products' " order="module_type_name ASC"/>
+				</set_info_list>
+
+				<set_info_list_instance type="droplist" empty="true">
+					<title>Instance Module</title>
+					<tree parent="mod_parent" separator="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" s1eparator="   " />
+					<relation table_lang="core:user_modules_lang" table="core:user_modules" id="mod_id" text="mod_name" order="mod_parent,mod_order ASC" condition="mod_module_code NOT IN ( 'manuallink' , 'globalmodule' , 'multidropdown')"/>
+				</set_info_list_instance>
+
+
+				<set_menu_elements type="checklist" title="Show Elements">
+					<options>
+						<option name="hover_brand">Brands Hover</option>
+						<option name="hover_type">Type Hover</option>
+					</options>
+				</set_menu_elements>
+
+				<subtitle_menu_grid type="minititle" title="Menu Settings" />
+				<set_menu_items type="widths" title="Items per Line" />
+
+				<set_menu_brands type="columns" title="Brands (# of Cols)" />
+				<set_menu_types type="columns" title="Types(# of Cols)" />
+				<set_menu_buttons type="columns" title="Buttons (# of Cols)" />
+
+				<subtitle_menu_buttons type="minititle" title="Buttons"/>
+
+				<set_menu_button_info_size type="droplist" title="Model Details" width="30%" referers="set_menu_button_info_style">
+					<relation table="core:skins_classes" text="class_alias" id="class_name" order="class_alias" condition='class_type=2' />
+				</set_menu_button_info_size>
+
+				<set_menu_button_info_style type="droplist" title="Size" referer="true" width="70%" multi="true">
+					<relation table="core:skins_classes" text="class_alias" id="class_name" order="class_alias" condition='class_type=1' />
+				</set_menu_button_info_style>
+
+				<set_menu_button_vehicles_size type="droplist" title="Model Inventory" width="30%" referers="set_menu_button_vehicles_style">
+					<relation table="core:skins_classes" text="class_alias" id="class_name" order="class_alias" condition='class_type=2' />
+				</set_menu_button_vehicles_size>
+
+				<set_menu_button_vehicles_style type="droplist" title="Size" referer="true" width="70%" multi="true">
+					<relation table="core:skins_classes" text="class_alias" id="class_name" order="class_alias" condition='class_type=1' />
+				</set_menu_button_vehicles_style>
+
+
+				<set_menu_button_allmodels_size type="droplist" title="All Models" width="30%" referers="set_menu_button_allmodels_style">
+					<relation table="core:skins_classes" text="class_alias" id="class_name" order="class_alias" condition='class_type=2' />
+				</set_menu_button_allmodels_size>
+
+				<set_menu_button_allmodels_style type="droplist" title="Size" referer="true" width="70%" multi="true">
+					<relation table="core:skins_classes" text="class_alias" id="class_name" order="class_alias" condition='class_type=1' />
+				</set_menu_button_allmodels_style>
+
+
+				<set_menu_button_allvehicles_size type="droplist" title="All Vehicles" width="30%" referers="set_menu_button_allvehicles_style">
+					<relation table="core:skins_classes" text="class_alias" id="class_name" order="class_alias" condition='class_type=2' />
+				</set_menu_button_allvehicles_size>
+
+				<set_menu_button_allvehicles_style type="droplist" title="Size" referer="true" width="70%" multi="true">
+					<relation table="core:skins_classes" text="class_alias" id="class_name" order="class_alias" condition='class_type=1' />
+				</set_menu_button_allvehicles_style>
+
+				<set_menu_offer_form type="droplist" required="true" validate="A:1:20" title="Form" empty="true">
+					<relation table="plugin:dataforms_items" id="item_id" text="item_note" order="item_note" />
+				</set_menu_offer_form>
+
+				<set_menu_offer_bg type="droplist" title="Popup Background" empty="true" empty_text="[ default ]" width="100%">
+					<relation table="plugin:backgrounds" id="image_id" order="image_cat ASC, image_name ASC">
+						<text>
+							<f2 field="image_name"/>
+						</text>
+					</relation>
+					<description><![CDATA[To upload & manage all backgrounds <a href="index.php?mod=backgrounds&sub=landing" target="_blank">click here</a>.]]></description>
+				</set_menu_offer_bg>
+
+
+				<subtitle_info_info type="subtitle" title="Price - Element" />
+				<set_noprice_icon type="textbox" title="Icon" width="100%" onclick="javascript:BrowseIconFonts(jQuery('#set_noprice_icon').val() , '#set_noprice_icon' );" description="Click inside the field to open the Icon Library." />
+				<set_noprice_button_size type="droplist" title="Model Details" width="30%" referers="set_noprice_button_style">
+					<relation table="core:skins_classes" text="class_alias" id="class_name" order="class_alias" condition='class_type=2' />
+				</set_noprice_button_size>
+				<set_noprice_call type="textbox" title="Phone" />
+
+				<set_noprice_button_style type="droplist" title="Size" referer="true" width="70%" multi="true">
+					<relation table="core:skins_classes" text="class_alias" id="class_name" order="class_alias" condition='class_type=1' />
+				</set_noprice_button_style>
+
+
+				<subtitle_nofinance_info type="subtitle" title="No Finance - Element" />
+				<set_nofinance_button_size type="droplist" title="Model Details" width="30%" referers="set_nofinance_button_style">
+					<relation table="core:skins_classes" text="class_alias" id="class_name" order="class_alias" condition='class_type=2' />
+				</set_nofinance_button_size>
+
+				<set_nofinance_button_style type="droplist" title="Size" referer="true" width="70%" multi="true">
+					<relation table="core:skins_classes" text="class_alias" id="class_name" order="class_alias" condition='class_type=1' />
+				</set_nofinance_button_style>
+
+				<set_nofinance_link type="textbox" title="Url" description="To open the phone use tel:+1.555.555-555. To use a dataforms just paste the code for popup." />
+
+
+				<subtitle_dla_info type="subtitle" title="DLA - Element" />
+				<set_dla_button_size type="droplist" title="Model Details" width="30%" referers="set_dla_button_style">
+					<relation table="core:skins_classes" text="class_alias" id="class_name" order="class_alias" condition='class_type=2' />
+				</set_dla_button_size>
+
+				<set_dla_button_style type="droplist" title="Size" referer="true" width="70%" multi="true">
+					<relation table="core:skins_classes" text="class_alias" id="class_name" order="class_alias" condition='class_type=1' />
+				</set_dla_button_style>
+
+				<set_dla_link type="textbox" title="Url" description="To open the phone use tel:+1.555.555-555. To use a dataforms just paste the code for popup." />
+
+
+				<subtitle_info_bloick type="subtitle" title="Info Page Button - Element" />
+				<set_element_button_size type="droplist" title="Button" width="30%" referers="set_element_button_style">
+					<relation table="core:skins_classes" text="class_alias" id="class_name" order="class_alias" condition='class_type=2' />
+				</set_element_button_size>
+
+				<set_element_button_style type="droplist" title="Size" referer="true" width="70%" multi="true">
+					<relation table="core:skins_classes" text="class_alias" id="class_name" order="class_alias" condition='class_type=1' />
+				</set_element_button_style>
+
+				<subtitle_price_discount type="subtitle" title="Discount Badge" />
+				<set_discount_min type="textbox" suffix="{CUR:SUF}" preffix="{CUR:PREF}" title="Min Discount" />
+
+
+				<subtitle_page title="Page" type="subtitle" />
+				<set_button_info_size type="droplist" title="Model Details" width="30%" referers="set_button_info_style">
+					<relation table="core:skins_classes" text="class_alias" id="class_name" order="class_alias" condition='class_type=2' />
+				</set_button_info_size>
+
+				<set_button_info_style type="droplist" title="Size" referer="true" width="70%" multi="true">
+					<relation table="core:skins_classes" text="class_alias" id="class_name" order="class_alias" condition='class_type=1' />
+				</set_button_info_style>
+
+				<set_button_offer_size type="droplist" title="Model Details" width="30%" referers="set_button_offer_style">
+					<relation table="core:skins_classes" text="class_alias" id="class_name" order="class_alias" condition='class_type=2' />
+				</set_button_offer_size>
+
+				<set_button_offer_style type="droplist" title="Size" referer="true" width="70%" multi="true">
+					<relation table="core:skins_classes" text="class_alias" id="class_name" order="class_alias" condition='class_type=1' />
+				</set_button_offer_style>
+
+
+				<subtitle_pricing_old title="Used Cars - Pricing" type="subtitle"/>
+
+				<set_pricing_old_apply type="droplist" title="Apply To">
+					<options>
+						<option name="1">Products w/out discounted price</option>
+						<option name="2">All Products</option>
+					</options>
+				</set_pricing_old_apply>
+				<set_pricing_old_add type="textbox" title="Increase By" suffix="%" mask="currency" />
+
+			</fields>
+		</box>
+
+
+		<box width="6" title="Financial Terms">
+			<fields>				
+				<set_calculator_tax title="Tax" type="textbox" width="150px" suffix="%" required="true" validate="A:1:20"/>
+
+				<subtitle_financial_new type="minititle" title="New Cars" />
+
+				<set_calculator_new_rate_type type="checklist" title="Show" newline="false" >
+					<options>
+						<option name="1">Monthly</option>
+						<option name="2">Weekly</option>
+						<option name="3">Semi-Monthly</option>
+						<option name="4">Bi-Weekly</option>
+					</options>
+				</set_calculator_new_rate_type>
+
+				<set_price_block_finance_new type="droplist" title="Financing Period" >
+					<options>
+						<option name="1">Monthly</option>
+						<option name="2">Weekly</option>
+						<option name="3">Semi-Monthly</option>
+						<option name="4">Bi-Weekly</option>
+					</options>
+				</set_price_block_finance_new>
+
+				<subtitle_financial_used type="minititle" title="Used Cars" />
+				<set_calculator_used_rate_type type="checklist" title="Show" newline="false" >
+					<options>
+						<option name="1">Monthly</option>
+						<option name="2">Weekly</option>
+						<option name="3">Semi-Monthly</option>
+						<option name="4">Bi-Weekly</option>
+					</options>
+				</set_calculator_used_rate_type>
+
+				<set_price_block_finance_used type="droplist" title="Financing Period" >
+					<options>
+						<option name="1">Monthly</option>
+						<option name="2">Weekly</option>
+						<option name="3">Semi-Monthly</option>
+						<option name="4">Bi-Weekly</option>
+					</options>
+				</set_price_block_finance_used>
+
+				<subtitle_financial_cert type="minititle" title="Certified Cars" />
+				<set_calculator_certified_rate_type type="checklist" title="Show" newline="false" >
+					<options>
+						<option name="1">Monthly</option>
+						<option name="2">Weekly</option>
+						<option name="3">Semi-Monthly</option>
+						<option name="4">Bi-Weekly</option>
+					</options>
+				</set_calculator_certified_rate_type>
+
+				<set_price_block_finance_certified type="droplist" title="Financing Period" >
+					<options>
+						<option name="1">Monthly</option>
+						<option name="2">Weekly</option>
+						<option name="3">Semi-Monthly</option>
+						<option name="4">Bi-Weekly</option>
+					</options>
+				</set_price_block_finance_certified>
+
+
+				<subtitle title="Design Layouts" type="subtitle" />
+
+				<set_layout type="droplist" title="Module Listing" empty="true" empty_text="[ Default Module Layout ]">
+					<relation table="core:layouts" id="layout_id" text="layout_name" order="layout_system DESC,layout_name ASC" condition="layout_parent=0 AND layout_template = 1"/>
+				</set_layout>
+
+				<set_layout_footer type="droplist" title="Footer" empty="true" empty_text="[ Default Footer Layout ]">
+					<relation table="core:layouts" id="layout_id" text="layout_name" order="layout_system DESC,layout_name ASC" condition="layout_parent=0 AND layout_template = 2"/>
+				</set_layout_footer>
+
+				<minititle title="Info Page" type="minititle"/>
+				<set_layout_item type="droplist" title="Module Details" empty="true" empty_text="[ Default Module Layout ]">
+					<relation table="core:layouts" id="layout_id" text="layout_name" order="layout_system DESC,layout_name ASC" condition="layout_parent=0 AND layout_template = 1"/>
+				</set_layout_item>
+				<comment type="comment" html="true">
+					<description><![CDATA[
+						<p>Select the same backgrounds for each section .. </p>
+						<p>Background types must be images, as they will be optionaly overwritten directly from brand page</p>
+					
+					]]></description>
+				</comment>
+
+				<set_bg_header type="droplist" title="Header" empty="true" width="100%">
+					<relation table="core:backgrounds" id="image_id" order="image_cat ASC, image_name ASC" text="image_name" />						
+				</set_bg_header>
+
+				<set_bg_colors type="droplist" title="Colors" empty="true" width="100%">
+					<relation table="core:backgrounds" id="image_id" order="image_cat ASC, image_name ASC" text="image_name" />						
+				</set_bg_colors>
+
+				<set_bg_gallery type="droplist" title="Gallery" empty="true" width="100%">
+					<relation table="core:backgrounds" id="image_id" order="image_cat ASC, image_name ASC" text="image_name" />						
+				</set_bg_gallery>
+
+				<set_bg_features type="droplist" title="Features" empty="true" width="100%">
+					<relation table="core:backgrounds" id="image_id" order="image_cat ASC, image_name ASC" text="image_name" />						
+				</set_bg_features>
+
+				<set_bg_engines type="droplist" title="Engines" empty="true" width="100%">
+					<relation table="core:backgrounds" id="image_id" order="image_cat ASC, image_name ASC" text="image_name" />						
+				</set_bg_engines>
+
+				<set_bg_specs type="droplist" title="Specs" empty="true" width="100%">
+					<relation table="core:backgrounds" id="image_id" order="image_cat ASC, image_name ASC" text="image_name" />						
+				</set_bg_specs>
+
+
+				<subtitle_animations title="CSS Class(es)" type="subtitle" collapsed="true"/>
+				<comment_css type="comment">
+					<description><![CDATA[Apply <a href="javascript:CSSClasses();">animations</a> or classes that you created in <a href="index.php?mod=skineditor&sub=skins" target="_blank">Style & Skins</a>.]]></description>
+				</comment_css>
+
+				<subtitle_element_price type="minititle" title="Price Block"/>
+				<set_css_price_grid type="textbox" width="100%" title="Listing - Grid">
+				</set_css_price_grid>
+
+				<set_css_price_list type="textbox" width="100%" title="Listing - List">
+				</set_css_price_list>
+
+				<set_css_price_details type="textbox" width="100%" title="Details">
+				</set_css_price_details>
+
+				<set_css_price_compare type="textbox" width="100%" title="Compare" restricted="eval:!is_object($_MODULES['products-addon-compare']);">
+				</set_css_price_compare>
+
+				<subtitle_element_color type="minititle" title="Clor Selector - Image"/>
+				<set_css_color_selector_image_grid type="textbox" width="100%" title="Listing - Grid">
+				</set_css_color_selector_image_grid>
+
+				<set_css_color_selector_image_list type="textbox" width="100%" title="Listing - List">
+				</set_css_color_selector_image_list>
+
+				<set_css_color_selector_image_details type="textbox" width="100%" title="Details">
+				</set_css_color_selector_image_details>
+
+				<set_css_color_selector_image_compare type="textbox" width="100%" title="Compare" restricted="eval:!is_object($_MODULES['products-addon-compare']);">
+				</set_css_color_selector_image_compare>
+
+				<subtitle_element_color2 type="minititle" title="Clor Selector - Full"/>
+				<set_css_color_selector_image2_grid type="textbox" width="100%" title="Listing - Grid">
+				</set_css_color_selector_image2_grid>
+
+				<set_css_color_selector_image2_list type="textbox" width="100%" title="Listing - List">
+				</set_css_color_selector_image2_list>
+
+				<set_css_color_selector_image2_details type="textbox" width="100%" title="Details">
+				</set_css_color_selector_image2_details>
+
+				<set_css_color_selector_image2_compare type="textbox" width="100%" title="Compare" restricted="eval:!is_object($_MODULES['products-addon-compare']);">
+				</set_css_color_selector_image2_compare>
+			</fields>
+		</box>
+		
+	</fields>
+
+
+
+	<javascript>
+		<after><![CDATA[
+
+			formSelectShowHide(
+				$("#set_info_list_type"),
+				{
+					1: {
+						"set_info_list"				: 1,
+						"set_info_list_instance"	: 0,
+					},
+					2 : {
+						"set_info_list"				: 0,
+						"set_info_list_instance"	: 1,
+					}
+				}
+			);
+
+
+		]]></after>
+	</javascript>
+
+</form>

@@ -1,0 +1,13 @@
+<module>
+	<fields>	
+		<system>
+			<module_protected>false</module_protected>
+			<module_groups>false</module_groups>
+			<module_memberships>false</module_memberships>
+			<subtitle_private>false</subtitle_private>
+			<module_css_class>false</module_css_class>
+			<module_status>false</module_status>
+			<module_url>false</module_url>
+		</system>
+	</fields>		
+</module>

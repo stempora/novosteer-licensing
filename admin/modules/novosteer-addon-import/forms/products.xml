@@ -1,0 +1,47 @@
+<form>
+
+	<forms>
+		<list>products/list.xml</list>
+		<search>products/search.xml</search>
+	</forms>
+
+	<table>plugin:products_items</table>
+	<table_lang>plugin:products_items_lang</table_lang>
+	<table_uid>item_id</table_uid>
+
+
+	<URIdata>
+		<action>action</action>
+
+		<add>add</add>
+		<details>details</details>
+		<delete>delete</delete>
+		<edit>edit</edit>
+		<list>details</list>
+		<search>search</search>
+		
+		<mup>moveup</mup>
+		<mdw>movedown</mdw>
+
+		<store>store</store>
+	</URIdata>
+
+
+	<acl>
+		<list>products.list</list>
+	</acl>
+
+
+	<URIlinks>
+		<add>{SELF.LINK.ADD}&_tb={TRAIL.HERE}</add>
+		<edit>{SELF.LINKUID.EDIT}&_tb={TRAIL.HERE}&section={SECTION}</edit>
+		<details>{SELF.LINKUID.DETAILS}&_tb={TRAIL.HERE}</details>
+		<delete>javascript:DeleteConfirm('Are you sure you want to delete this record?' , '{SELF.LINKUID.DELETE}&_tb={TRAIL.HERE}');</delete>
+		<store>{SELF.LINK}{SELF.ACTION.STORE}</store>
+
+		<move_down>{SELF.LINKUID.MDW}&item_order={ITEM_ORDER}&&_tb={TRAIL.HERE}</move_down>
+		<move_up>{SELF.LINKUID.MUP}&item_order={ITEM_ORDER}&_tb={TRAIL.HERE}</move_up>
+
+	</URIlinks>
+
+</form>

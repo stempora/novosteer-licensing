@@ -1,0 +1,1277 @@
+<?php
+
+
+
+class CNovosteerAddonAutoBrands extends CNovosteerAddonAutoBrandsBackend{
+
+	function DoEvents(){
+		global $base, $_CONF, $_TSM , $_VARS , $_USER , $_BASE , $_SESS;
+
+		if ($_GET["mod"] == $this->name) {
+
+			//read the module
+			$this->__init();
+			parent::DoEvents();
+
+			$sub = $_GET["sub"];
+			$action = $_GET["action"];
+
+			switch ($sub) {
+
+
+				case "texts":
+					return $this->__adminTexts();
+				break;
+
+				case "landing":
+					$sub = "brands";
+				case "brands":
+				case "models":
+				case "trims":
+				case "types":
+				case "info":
+				case "menu":
+				case "info.trims":
+					$_REQUEST["module_id"] = $this->tpl_module["module_id"];
+
+					$data = new CSQLAdmin($sub, $this->__parent_templates,$this->db,$this->tables,$extra);
+					$data->setAclMod($this->tpl_module);
+					$this->PrepareFields($data->forms["forms"]);
+
+					if ($sub == "models") {
+						$data->functions = [
+							"onstore"	=> [&$this , "storeModel"],
+						];					
+
+					}
+
+					if ($sub == "info") {
+						$data->functions = [
+							"onstore"	=> [&$this , "storeInfoPage"],
+						];					
+
+					}
+					
+					
+					return $data->DoEvents();
+				break;
+
+				case "autocomplete.attributes":
+					return $this->AutoCompleteAttributes();
+				break;
+
+				case "autocomplete.brands":
+					return $this->AutoCompleteBrands();
+				break;
+
+				case "autocomplete.models":
+					return $this->AutoCompleteModels();
+				break;
+
+				case "autocomplete.trims":
+					return $this->AutoCompleteTrims();
+				break;
+
+				case "autocomplete.options":
+					return $this->AutoCompleteOptions();
+				break;
+
+				case "info.duplicate":
+					return $this->DuplicateInfoPage($_GET['info_id']);
+				break;
+
+				case "info.duplicate.trim":
+					return $this->DuplicateInfoPageTrim($_GET['info_id']);
+				break;
+
+				case "preview":
+					return $this->PreviewInfoPage();
+				break;
+
+				case "menu-status":
+					return $this->MenuStatus();
+				break;
+
+			}
+		}
+	}
+
+	/**
+	* description
+	*
+	* @param
+	*
+	* @return
+	*
+	* @access
+	*/
+	function __init() {
+		global $site; 
+
+		if ($this->__inited == true ) {
+			return true;
+		}
+
+		$this->__inited = true;
+	
+		$this->tpl_module = $this->plugins["modules"]->LoadDefaultModule($this->name);
+		$this->module = &$this->plugins["products"];
+
+		$this->cache = $site->shared->addChild($this->name);
+		$this->cache->addChild("brands");
+		$this->cache->addChild("models");
+		$this->cache->addChild("trims");
+
+	}
+
+
+	/**
+	* description
+	*
+	* @param
+	*
+	* @return
+	*
+	* @access
+	*/
+	function setHooks() {
+		global $base , $_USER , $_SESS; 
+
+		$this->hookRegister("module.products.forms" , [$this , "productAddField"] , 101); 
+		$this->hookRegister("module.products.process-list" , [$this , "productPrepareList"] , 101); 
+
+		$this->hookRegister("widget.cproductswidgetproducts.form" , [$this , "widgetForm"] , 1100); 
+
+
+		parent::setHooks();
+
+	}
+
+	/**
+	* description
+	*
+	* @param
+	*
+	* @return
+	*
+	* @access
+	*/
+	function productAddField(&$forms) {
+		global $base , $_USER , $_SESS; 
+
+		$this->__init();
+
+		if (!$this->tpl_module["module_status"] == 1) {
+			return false;
+		}
+
+
+		if ($_GET["sub"] == "products/products") {
+
+			$field_brand = $this->module->getFieldByCode($this->_field_brand , [$this, "createField"]);
+			$field_model = $this->module->getFieldByCode($this->_field_model , [$this, "createField"]);
+			$field_trim = $this->module->getFieldByCode($this->_field_trim , [$this, "createField"]);
+
+			if ($_REQUEST["item_id"]) {
+
+				$set = $this->plugins["products-addon-attributes"]->getProductSet($_REQUEST["item_id"]);
+
+				if (!in_array($set , explode(","  , $this->_s("set_sets")))) {
+					return null;
+				}
+
+
+				$brand = $this->module->getProductValueByField($_REQUEST["item_id"] , $field_brand["field_id"] );
+				$model = $this->module->getProductValueByField($_REQUEST["item_id"] , $field_model["field_id"] );
+				$trim = $this->module->getProductValueByField($_REQUEST["item_id"] , $field_trim["field_id"] );
+
+				$forms["details"]["fields"]["box"]["1"]["fields"][$this->_field_brand] = 
+				$forms["edit"]["fields"]["box"]["1"]["fields"][$this->_field_brand] = [
+
+					"title"		=> "Brand/Model",
+					"type"		=> "droplist",
+					"default"	=> $brand,
+					"empty"		=> "true",
+					"required"	=> "true",
+					"validate"	=> "A:1:20",
+					"autocomplete"	=> [
+						"url"	=> "json.php?mod={$this->name}&sub=autocomplete.brands"
+					],
+					"referers"	=> $this->_field_model,
+					"width"		=> "50%",
+				];
+
+				$forms["details"]["fields"]["box"]["1"]["fields"][$this->_field_model] = 
+				$forms["edit"]["fields"]["box"]["1"]["fields"][$this->_field_model] = [
+					"title"		=> "Model",
+					"type"		=> "droplist",
+					"default"	=> $model,
+					"empty"		=> "true",
+					"required"	=> "true",
+					"validate"	=> "A:1:20",
+					"width"		=> "50%",
+					"referer"	=> "true",
+					"autocomplete"	=> [
+						"url"	=> "json.php?mod={$this->name}&sub=autocomplete.models",
+						"params"	=> $this->_field_brand
+					]
+				];
+
+				$forms["details"]["fields"]["box"]["1"]["fields"][$this->_field_trim] = 
+				$forms["edit"]["fields"]["box"]["1"]["fields"][$this->_field_trim] = [
+					"title"		=> "Trim",
+					"type"		=> "droplist",
+					"default"	=> $trim,
+					"empty"		=> "true",
+					"width"		=> "100%",
+					"autocomplete"	=> [
+						"url"	=> "json.php?mod={$this->name}&sub=autocomplete.trims",
+						"params"	=> $this->_field_brand
+					]
+				];
+
+			} else {
+				$field = CForm::GetField($forms["search"],"_columns");
+
+				$field["options"]["autobrands:make"] = "Autobrands:Make";
+				$field["options"]["autobrands:model"] = "Autobrands:Model";
+				$field["options"]["autobrands:trim"] = "Autobrands:Trim";
+
+				CForm::updateField($forms["search"] , "_columns" , $field);
+
+				$fields = is_array($_GET["_columns"]) ? $_GET["_columns"] : explode("," , $_GET["_columns"]);
+
+				if (is_array($fields)) {
+					foreach ($fields as $key => $field) {
+						switch ($field) {
+							case "autobrands:make":
+								$forms["list"]["fields"]["autobrands_make"] = ["header" => "Make" , "align" => "center"];
+							break;
+
+							case "autobrands:model":
+								$forms["list"]["fields"]["autobrands_model"] = ["header" => "Model" , "align" => "center"];
+							break;
+
+							case "autobrands:trim":
+								$forms["list"]["fields"]["autobrands_trim"] = ["header" => "Trim" , "align" => "center"];
+							break;
+						}						
+					}
+					
+				}
+
+
+			}
+		} 
+
+	}
+
+	/**
+	* description
+	*
+	* @param
+	*
+	* @return
+	*
+	* @access
+	*/
+	function productPrepareList(&$items) {
+		global $base , $_USER , $_SESS; 
+
+		if (!$_GET["_columns"]) {
+			return false;
+		}
+
+		$this->__init();
+
+		$fields = explode("," , $_GET["_columns"]);
+
+
+		foreach ($items as $key => &$item) {
+
+			if (in_array("autobrands:make" , $fields)) {
+				$make_field = $this->module->getFieldByCode($this->_field_brand, [$this, "createField"]);
+				$item["autobrands_make"] = 
+					$this->getBrandById(
+						$this->module->getProductValueByField($item["item_id"] , $make_field["field_id"])
+					)["brand_name"];
+			}
+
+			if (in_array("autobrands:model" , $fields)) {
+				$model_field = $this->module->getFieldByCode($this->_field_model, [$this, "createField"]);
+				$item["autobrands_model"] = 
+					$this->getModelById(
+						$this->module->getProductValueByField($item["item_id"] , $model_field["field_id"])
+					)["model_name"];
+			}
+
+			if (in_array("autobrands:trim" , $fields)) {
+				$trim_field = $this->module->getFieldByCode($this->_field_trim, [$this, "createField"]);
+				$item["autobrands_trim"] = 
+					$this->getTrimById(
+						$this->module->getProductValueByField($item["item_id"] , $trim_field["field_id"])
+					)["trim_name"];
+			}
+		}		
+	}
+
+	/**
+	* description
+	*
+	* @param
+	*
+	* @return
+	*
+	* @access
+	*/
+	function widgetForm(&$form , &$values) {
+		global $base , $_USER , $_SESS; 
+
+		$this->__init();
+
+		if ($this->tpl_module["module_status"] != 1) {
+			return false;
+		}
+			
+
+		$field = CForm::GetField($form["edit"],"set_type");
+
+		$field["options"]["autobrands"] = "AutoBrands"; 
+		CForm::updateField($form["edit"] , "set_type" , $field);
+		CForm::updateField($form["details"] , "set_type" , $field);
+
+
+		$fields = [
+			"set_autobrand_brand" => [
+				"width"		=> "100%",
+				"title"		=> "Auto Brand/Model/Trim/Type",
+				"type"		=> "droplist",
+				"multi"		=> "true",
+				"default"	=> $values["set_autobrand_brand"],
+				"description" => "Select the brands to narrow the search.",
+				"relation"	=> [
+					"table"			=> "plugin:products_addon_autobrands_brands",
+					"id"			=> "brand_id",
+					"text"			=> "brand_name",
+					"order"			=> "brand_name ASC"	
+				],
+				"referers"	=> "set_autobrand_model,set_autobrand_trim"
+			],
+
+			"set_autobrand_model" => [
+				"width"		=> "100%",
+				"type"		=> "droplist",
+				"multi"		=> "true",
+				"referer"	=> "true",
+				"default"	=> $values["set_autobrand_model"],
+				"description" => "Select the brands to narrow the search.",
+				"relation"	=> [
+					"table"			=> "plugin:products_addon_autobrands_models",
+					"id"			=> "model_id",
+					"text"			=> "model_name",
+					"order"			=> "model_name ASC"	
+				],
+			],
+
+			"set_autobrand_trim" => [
+				"width"		=> "100%",
+				"type"		=> "droplist",
+				"referer"	=> "true",
+				"multi"		=> "true",
+				"default"	=> $values["set_autobrand_trim"],
+				"description" => "Select the brands to narrow the search.",
+				"relation"	=> [
+					"table"			=> "plugin:products_addon_autobrands_trims",
+					"id"			=> "trim_id",
+					"text"			=> "trim_name",
+					"order"			=> "trim_name ASC"	
+				],
+			],
+
+			"set_autobrand_type" => [
+				"width"		=> "100%",
+				"type"		=> "droplist",
+				"referer"	=> "true",
+				"multi"		=> "true",
+				"default"	=> $values["set_autobrand_type"],
+				"description" => "Select the type to narrow the search.",
+				"relation"	=> [
+					"table"			=> "plugin:products_addon_autobrands_types",
+					"table_lang"	=> "plugin:products_addon_autobrands_types_lang",
+					"id"			=> "type_id",
+					"text"			=> "type_name",
+					"order"			=> "type_name ASC"	
+				],
+			]
+
+		];
+
+		CForm::insertFieldsAfterField($form["edit"] , "subtitle_filter" , $fields);
+		CForm::insertFieldsAfterField($form["details"] , "subtitle_filter" , $fields);
+
+
+		$fields = [
+			"subtitle_autobrands" => [
+				"title"		=> "Auto-Brands",
+				"type"		=> "subtitle",
+			],
+			"subtitle_autobrands_comment" => [
+				"type"			=> "comment",
+				"description"	=> "<p>This type of widget works only in the product details page.</p>",
+			],
+			"set_autobrands_type"	=>  [
+				"type"		=> "droplist",
+				"title"		=> "Similar Vehicles",
+				"options"	=> [
+					"4"		=>  "Same Type",
+					"1"		=>  "Same Brand",
+					"5"		=>  "Same Brand & Type",
+					"2"		=>  "Same Model",
+					"3"		=>  "Same Model & Trim",
+				]
+			],
+
+			"set_autobrands_category"	=>  [
+				"type"		=> "droplist",
+				"title"		=> "Category",
+				"options"	=> [
+					""		=>  "[ all ]",
+					"1"		=>  "Same As Current",
+					"2"		=>  "New Vehicles Only",
+					"3"		=>  "Used Vehicles Only",
+				]
+			],
+
+		];
+
+		CForm::insertFieldsBeforeField($form["edit"] , "subtitle_filter" , $fields);
+		CForm::insertFieldsBeforeField($form["details"] , "subtitle_filter" , $fields);
+
+	}
+
+
+	/**
+	* description
+	*
+	* @param
+	*
+	* @return
+	*
+	* @access
+	*/
+	function AutocompleteAttributes() {
+		global $base , $_USER , $_SESS; 
+
+		return $this->plugins["products-addon-attributes"]->AutocompleteAttributes();
+	}
+	
+	/**
+	* description
+	*
+	* @param
+	*
+	* @return
+	*
+	* @access
+	*/
+	function AutocompleteOptions() {
+		global $base , $_USER , $_SESS; 
+
+		if ($_GET["set_new_field"]) {
+			$_GET["option_parent"] = $_GET["set_new_field"];
+		}
+
+		if ($_GET["set_used_field"]) {
+			$_GET["option_parent"] = $_GET["set_used_field"];
+		}		
+
+		if ($_GET["set_certified_field"]) {
+			$_GET["option_parent"] = $_GET["set_certified_field"];
+		}		
+
+		if ($_GET["field_id"]) {
+			$_GET["option_parent"] = $_GET["field_id"];
+		}		
+
+		return $this->plugins["products-addon-attributes"]->AutocompleteOptions();
+	}
+
+	/**
+	* description
+	*
+	* @param
+	*
+	* @return
+	*
+	* @access
+	*/
+	function storeModel($model) {
+		global $base , $_USER , $_SESS; 
+
+		$field_model = $this->module->getFieldByCode($this->_field_model , [$this, "createField"]);
+		$field_type = $this->module->getFieldByCode($this->_field_type , [$this, "createField"]);
+
+		$pids = $this->db->Linear(
+			$this->db->QFetchRowArray(
+				"SELECT mproducts.product_id FROM 
+					%s as 
+						mproducts
+					INNER JOIN 
+						%s as models 
+						ON 
+							mproducts.value_val = models.model_id AND
+							models.model_id = %d
+				WHERE
+					mproducts.field_id = %d",
+				[
+					$this->tables["plugin:products_field_values_options"],
+					$this->tables["plugin:products_addon_autobrands_models"],
+					$model["model_id"],
+					$field_model["field_id"]
+				]
+			)
+		);
+
+		if (is_array($pids) && count($pids)) {
+			//update the types ....
+			$this->db->QueryUpdate(
+				$this->tables["plugin:products_field_values_options"],
+				[
+					"value_val"	=> $model["type_id"]
+				],
+				$this->db->Statement(
+					"field_id=%d AND product_id in ( %s )",
+					[
+						$field_type["field_id"],
+						implode("," , $pids)
+					]
+				)
+			);
+		}
+	}
+
+	
+
+	/**
+	* description
+	*
+	* @param
+	*
+	* @return
+	*
+	* @access
+	*/
+	function MassUploadForm() {
+		global $_CONF;
+
+		if ($_REQUEST["module_id"]) {
+			$this->AlterSettings();
+		}
+
+		return CPlUpload::NewInstance()
+			->Render(
+				[
+					"action"		=> \Stembase\Lib\Link::Show(
+						"json.php",
+						[
+							"mod"			=> $this->name,
+							"sub"			=> "info.colors-360-mass.act",
+							"item_parent"	=> $_GET["item_parent"],
+						]
+					),
+					"skin"			=> "Gray",
+				]
+		);
+	}
+
+	/**
+	* description
+	*
+	* @param
+	*
+	* @return
+	*
+	* @access
+	*/
+	function MassUploadAction() {
+
+		$temp = CPlUpload::NewInstance()
+			->SetFunction(
+				"onComplete",
+				array(&$this , "StoreImage")
+			)
+			->Run();
+	}
+
+
+
+	
+		
+	/**
+	* description
+	*
+	* @param
+	*
+	* @return
+	*
+	* @access
+	*/
+	function StoreImage($path , $name) {
+		global $base;
+
+		$ext = CFile::Extension($name);
+
+		$id = $this->db->QueryInsert(
+			$this->tables["plugin:products_addon_autobrands_info_colors_360"],
+			array(
+				"item_parent"		=> $_GET["item_parent"],				
+				"item_image"		=> "1",
+				"item_image_type"	=> $ext,
+			)
+		);
+
+		$this->db->QueryUpdate(
+			$this->tables["plugin:products_addon_autobrands_info_colors_360"],
+			[
+				"item_order"	=> $id
+			],
+			$this->db->Statement("item_id=%d" , [ $id ])
+		);
+
+		//copy the base image to the full 
+		CFile::Copy(
+			$path , 
+			"../upload/products/autobrands/360/{$id}." . $ext
+		);
+	}
+
+	/**
+	* description
+	*
+	* @param
+	*
+	* @return
+	*
+	* @access
+	*/
+	function getBrandTrims() {
+		global $base , $_USER , $_SESS; 
+
+		if ($_REQUEST["info_parent"]) {
+			$page = $this->getInfoPageByID($_REQUEST["info_parent"]) ;
+		} else {
+			$page = $this->getInfoPageByID($_REQUEST["info_id"]) ;
+			$page = $this->getInfoPageByID($page["info_parent"]) ;
+		}
+
+		$model = $this->GetModelByID($page["model_id"]);
+		
+		return $this->getBrandTrimsByID($model["brand_id"]);
+	}
+
+	
+	/**
+	* description
+	*
+	* @param
+	*
+	* @return
+	*
+	* @access
+	*/
+	function DuplicateInfoPage($id , $redirect = true) {
+		global $base , $_USER , $_SESS; 
+
+		$info = $this->db->QFetchArray(
+			"SELECT * FROM %s WHERE info_id = %d" , 
+			[
+				$this->tables["plugin:products_addon_autobrands_info"]	,
+				$id
+			]
+		);
+
+		unset($info["info_id"]);
+
+		$new_id = $this->db->QueryInsert(
+			$this->tables["plugin:products_addon_autobrands_info"],
+			$info
+		);
+
+		if ($info["info_image"]) {
+			CFile::Copy(
+				"../upload/products/autobrands/info/" . $id . "." . $info["info_image_type"],
+				"../upload/products/autobrands/info/" . $new_id . "." . $info["info_image_type"]
+			);
+
+			CFile::Copy(
+				"../upload/products/autobrands/info/tn_" . $id . "." . $info["info_image_type"],
+				"../upload/products/autobrands/info/tn_" . $new_id . "." . $info["info_image_type"]
+			);
+		}
+		
+
+		$info_langs = $this->db->QFetchRowArray(
+			"SELECT * FROM %s WHERE info_id = %d",
+			[
+				$this->tables["plugin:products_addon_autobrands_info_lang"]	,
+				$id
+			]
+		);
+
+		foreach ($info_langs as $info_lang) {
+			$info_lang["info_id"] = $new_id;
+			$this->db->QueryInsert(
+				$this->tables["plugin:products_addon_autobrands_info_lang"]	,
+				$info_lang
+			);
+		}
+
+		//get the trims
+		$trims = $this->db->QFetchRowArray(
+			"SELECT * FROM %s WHERE info_parent = %d",
+			[
+				$this->tables["plugin:products_addon_autobrands_info"]	,
+				$id
+			]
+		);
+
+		if (is_array($trims)) {
+			foreach ($trims as $trim) {
+				$new_trim_id = $this->DuplicateInfoPage($trim["info_id"] , false);
+				$this->db->QueryUpdate(
+					$this->tables["plugin:products_addon_autobrands_info"],
+					["info_parent" => $new_id],
+					$this->db->Statement("info_id = %d" , [$new_trim_id])
+				);
+			}			
+		}
+					
+		if ($redirect) {
+
+			\Stembase\Lib\Link::Go(
+				"index.php",
+				[	
+					"mod"	=> $this->name,
+					"sub"	=> "info",
+					"info_id"	=> $new_id,
+					"action"	=> "edit",
+					"_tb"		=> \Stembase\Lib\Trail::Save(
+						"index.php" ,
+						[
+							"mod"		=> $this->name,
+							"sub"		=> "info",
+							"info_id"	=> $new_id,
+							"action"	=> "details",
+							"_tb"		=> \Stembase\Lib\Trail::Save(
+								"index.php",
+								[
+									"mod"		=> $this->name,
+									"sub"		=> "info",
+								]
+							)
+						]	
+					)
+				]
+			);
+
+
+		} else {		
+			return $new_id;
+		}
+	}
+
+	/**
+	* description
+	*
+	* @param
+	*
+	* @return
+	*
+	* @access
+	*/
+	function AutoCompleteBrands() {
+		global $base , $_USER , $_SESS; 
+
+		if ($_GET["keywords"]) {
+			$keyword = $_GET["keywords"];
+		}		
+
+		if ($_GET["ids"]) {
+			$tmp = explode("," , $_GET["ids"]);
+			$ids = array();
+
+			foreach ($tmp as $k => $v) {
+				if (trim($v)) {
+					$ids[] = $v;
+				}				
+			}
+
+			if (count($ids)) {
+				$cond[] = " brand_id IN (" . implode("," , $ids) . ") ";
+			}					
+		}
+		
+
+		if ($keyword) {
+			$tmp = explode(" " , $keyword);
+
+			if (count($tmp)) {
+				foreach ($tmp as $key => $val) {
+					$cond[] = $this->db->Statement(
+						" ( brand_name LIKE '%%%s%%') " , 
+						[	$val ]
+					);
+				}				
+			}			
+		}
+
+
+		$sql = $this->db->Statement(
+			"FROM 
+				%s 
+				:cond ",
+			[
+				$this->tables['plugin:products_addon_autobrands_brands'],
+			],
+			[
+				":cond"	=> is_array($cond) ? " WHERE " . implode(" AND " , $cond) : ""
+			]
+		);
+
+		$items = $this->db->QFetchRowArray(
+			"SELECT * {$sql} ORDER BY  brand_name LIMIT 100"
+		);	
+
+
+
+		if (is_array($items)) {
+			foreach ($items as $key => $brand) {
+				$_data[] = array(
+					"id"		=> $brand["brand_id"],
+					"name"		=> $brand["brand_name"],
+				);
+			}
+		
+			$return = array(
+				"status"	=> "ok" , 
+				"results"	=> $_data,
+				"total"		=> count($brands)
+			);
+
+			return $this->json($return);
+			
+		}
+
+		return $this->json(array(
+				"status"	=> "empty" , 
+				"message"	=> "No results available"
+		));
+
+	}
+	
+
+	/**
+	* description
+	*
+	* @param
+	*
+	* @return
+	*
+	* @access
+	*/
+	function AutoCompleteModels() {
+		global $base , $_USER , $_SESS; 
+
+		if ($_GET["keywords"]) {
+			$keyword = $_GET["keywords"];
+		}		
+
+		if ($_GET["ids"]) {
+			$tmp = explode("," , $_GET["ids"]);
+			$ids = array();
+
+			foreach ($tmp as $k => $v) {
+				if (trim($v)) {
+					$ids[] = $v;
+				}				
+			}
+
+			if (count($ids)) {
+				$cond[] = " model_id IN (" . implode("," , $ids) . ") ";
+			}					
+		} else {		
+			$cond[] = $this->db->Statement(" brand_id = %d " , [$_GET[$this->_field_brand]]);
+		}
+
+		if ($keyword) {
+			$tmp = explode(" " , $keyword);
+
+			if (count($tmp)) {
+				foreach ($tmp as $key => $val) {
+					$cond[] = $this->db->Statement(
+						" ( model_name LIKE '%%%s%%') " , 
+						[	$val ]
+					);
+				}				
+			}			
+		}
+
+
+		$sql = $this->db->Statement(
+			"FROM 
+				%s 
+				:cond ",
+			[
+				$this->tables['plugin:products_addon_autobrands_models'],
+			],
+			[
+				":cond"	=> is_array($cond) ? " WHERE " . implode(" AND " , $cond) : ""
+			]
+		);
+
+		$items = $this->db->QFetchRowArray(
+			"SELECT * {$sql} ORDER BY  model_name LIMIT 100"
+		);	
+
+
+
+		if (is_array($items)) {
+			foreach ($items as $key => $model) {
+				$_data[] = array(
+					"id"		=> $model["model_id"],
+					"name"		=> $model["model_name"],
+				);
+			}
+		
+			$return = array(
+				"status"	=> "ok" , 
+				"results"	=> $_data,
+				"total"		=> count($models)
+			);
+
+			return $this->json($return);
+			
+		}
+
+		return $this->json(array(
+				"status"	=> "empty" , 
+				"message"	=> "No results available"
+		));
+
+	}
+
+
+	/**
+	* description
+	*
+	* @param
+	*
+	* @return
+	*
+	* @access
+	*/
+	function AutoCompleteTrims() {
+		global $base , $_USER , $_SESS; 
+
+		if ($_GET["keywords"]) {
+			$keyword = $_GET["keywords"];
+		}		
+
+		if ($_GET["ids"]) {
+			$tmp = explode("," , $_GET["ids"]);
+			$ids = array();
+
+			foreach ($tmp as $k => $v) {
+				if (trim($v)) {
+					$ids[] = $v;
+				}				
+			}
+
+			if (count($ids)) {
+				$cond[] = " trim_id IN (" . implode("," , $ids) . ") ";
+			}					
+		} else {		
+			$cond[] = $this->db->Statement(" brand_id = %d " , [$_GET[$this->_field_brand]]);
+		}
+
+		if ($keyword) {
+			$tmp = explode(" " , $keyword);
+
+			if (count($tmp)) {
+				foreach ($tmp as $key => $val) {
+					$cond[] = $this->db->Statement(
+						" ( trim_name LIKE '%%%s%%') " , 
+						[	$val ]
+					);
+				}				
+			}			
+		}
+
+
+		$sql = $this->db->Statement(
+			"FROM 
+				%s 
+				:cond ",
+			[
+				$this->tables['plugin:products_addon_autobrands_trims'],
+			],
+			[
+				":cond"	=> is_array($cond) ? " WHERE " . implode(" AND " , $cond) : ""
+			]
+		);
+
+		$items = $this->db->QFetchRowArray(
+			"SELECT * {$sql} ORDER BY  trim_name LIMIT 100"
+		);	
+
+
+
+		if (is_array($items)) {
+			foreach ($items as $key => $trim) {
+				$_data[] = array(
+					"id"		=> $trim["trim_id"],
+					"name"		=> $trim["trim_name"],
+				);
+			}
+		
+			$return = array(
+				"status"	=> "ok" , 
+				"results"	=> $_data,
+				"total"		=> count($trims)
+			);
+
+			return $this->json($return);
+			
+		}
+
+		return $this->json(array(
+				"status"	=> "empty" , 
+				"message"	=> "No results available"
+		));
+	}
+
+	/**
+	* description
+	*
+	* @param
+	*
+	* @return
+	*
+	* @access
+	*/
+	function DuplicateInfoPageTrim($id) {
+		global $base , $_USER , $_SESS; 
+
+		$new_id = $this->duplicateInfoPage($id , false);
+
+		\Stembase\Lib\Link::Go(
+			"index.php",
+			[	
+				"mod"	=> $this->name,
+				"sub"	=> "info.trims",
+				"info_id"	=> $new_id,
+				"action"	=> "edit",
+				"_tb"		=> \Stembase\Lib\Trail::Save(
+					"index.php" ,
+					[
+						"mod"		=> $this->name,
+						"sub"		=> "info.trims",
+						"info_id"	=> $new_id,
+						"action"	=> "trimdetails",
+						"_tb"		=> $_GET["_tb"]
+					]	
+				)
+			]
+		);
+	}
+
+	
+	/**
+	* description
+	*
+	* @param
+	*
+	* @return
+	*
+	* @access
+	*/
+	function PreviewInfoPage() {
+		global $_CONF;
+
+		$mod = $this->plugins["modules"]->GetDefaultModuleInfoById($this->tpl_module["module_id"]);
+		$lang = $this->plugins["languages"]->getLanguageById($_GET["lid"]);
+
+		$page = $this->getInfoPageByID($_GET["info_id"]);
+
+		if ($this->vars->data["set_multilanguage"]) {
+			$link = $_CONF["url"] . $lang["lang_code"] . "/" ;
+		} else {
+			$link = $_CONF["url"] . $mod["module_url"] . "/";
+		}		
+
+		$model = $this->getModelById($page["model_id"]);
+		$brand = $this->getBrandById($model["brand_id"]);
+
+
+		$link .= $page["info_year"] . "/";
+		$link .= $brand["brand_url"] . "/";
+		$link .= $model["model_url"] . "/";
+
+		urlredirect($link);
+	}
+
+
+	/**
+	* description
+	*
+	* @param
+	*
+	* @return
+	*
+	* @access
+	*/
+	function storeInfoPage($record) {
+		global $base , $_USER , $_SESS; 
+
+		if (!is_array($this->db->QFetchArray("SELECT * FROM %s WHERE model_id = %d " , [$this->tables['plugin:products_addon_autobrands_info_models'] , $record['model_id']]))) {
+			$id = $this->db->QueryUpdate(
+				$this->tables["plugin:products_addon_autobrands_info_models"],
+				[
+					"infomodel_order"	=> $id = $this->db->QueryInsert(
+						$this->tables["plugin:products_addon_autobrands_info_models"],
+						[
+							"model_id"			=> $record["model_id"],
+							"infomodel_status"	=> "1",
+						]
+					)
+				],
+				$this->db->Statement(
+					"infomodel_id = %d",
+					[ $id ]
+				)
+			);			
+		}
+		
+	}
+
+	/**
+	* description
+	*
+	* @param
+	*
+	* @return
+	*
+	* @access
+	*/
+	function MenuStatus() {
+		global $base , $_USER , $_SESS; 
+
+		if (is_array($_POST["infomodel_id"]) && count($_POST["infomodel_id"])) {
+			$this->db->QueryUpdate(
+				$this->tables["plugin:products_addon_autobrands_info_models"],
+				["infomodel_status" => $_GET["type"] == "menu.hide" ? 0 : 1],
+				$this->db->Statement("infomodel_id IN (%s)" , implode("," , $_POST["infomodel_id"]))
+			);
+		}
+		
+
+		die("1");
+
+		debug($_POST);
+		debug($_GET,1);
+	}
+	
+	
+
+	/**
+	* description
+	*
+	* @param
+	*
+	* @return
+	*
+	* @access
+	*/
+	function getProductElementsCategories () {
+		global $base , $_USER , $_SESS; 
+
+		if (!$this->tpl_module["module_status"] == 1) {
+			//return false;
+		}
+
+		$data = [
+			[
+				"title"		=> "Auto Brands",
+				"value"		=> "autobrands",
+				"parent"	=> "",
+			],
+
+		];
+		
+		return $data;
+
+	}
+
+
+	/**
+	* description
+	*
+	* @param
+	*
+	* @return
+	*
+	* @access
+	*/
+	function getProductElements() {
+		global $base , $_USER , $_SESS; 
+
+		if (!$this->tpl_module["module_status"] == 1) {
+			//return false;
+		}
+
+		return [
+			[
+				"id"		=> 'autobrands:colors',
+				"title"		=> "Add-on Auto Brands",
+				"subtitle"	=> 'Colors Selector',
+				"edit"		=> '',
+				"css"		=> "",
+				"parent"	=> "autobrands",
+				"for"		=> ["details"]
+			],
+
+			[
+				"id"		=> 'autobrands:colorswimage',
+				"title"		=> "Add-on Auto Brands",
+				"subtitle"	=> 'Colors Selector w/ Image',
+				"edit"		=> '',
+				"css"		=> "",
+				"parent"	=> "autobrands",
+				"for"		=> ["details"]
+			],		];				
+	}
+
+
+	/**
+	* description
+	*
+	* @param
+	*
+	* @return
+	*
+	* @access
+	*/
+	function __menuButton() {
+		global $base , $_USER , $_SESS , $_CONF , $_LANG_ID; 
+
+		$module = $this->plugins["modules"]->LoadDefaultModule($this->name);
+
+		return [
+			[
+				"id"	=> "1",
+				"name"	=> $module["module_name"] . " - Fuck Knows"
+			]
+		];
+	}
+	
+}

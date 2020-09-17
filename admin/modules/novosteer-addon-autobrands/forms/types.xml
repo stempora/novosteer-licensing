@@ -1,0 +1,55 @@
+<form>
+
+	<forms>
+		<add>types/add.xml</add>
+		<details>SHOW::add</details>
+		<edit>types/add.xml</edit>
+		<list>types/list.xml</list>
+	</forms>
+
+	<table>plugin:products_addon_autobrands_types</table>
+	<table_lang>plugin:products_addon_autobrands_types_lang</table_lang>
+	<table_uid>type_id</table_uid>
+
+
+	<URIdata>
+		<action>action</action>
+
+		<add>add</add>
+		<details>itemdetails</details>
+		<delete>delete</delete>
+		<edit>edit</edit>
+		<list>details</list>
+		<search>search</search>
+		
+		<mup>moveup</mup>
+		<mdw>movedown</mdw>
+
+		<store>store</store>
+		<upload>upload</upload>
+	</URIdata>
+
+
+	<acl>
+		<add>types.add</add>
+		<edit>types.edit</edit>
+		<details>types.details</details>
+		<delete>types.delete</delete>
+		<list>types.list</list>
+	</acl>
+
+
+	<URIlinks>
+		<add>{SELF.LINK.ADD}&_tb={TRAIL.HERE}</add>
+		<edit>{SELF.LINKUID.EDIT}&_tb={TRAIL.HERE}</edit>
+		<details>{SELF.LINKUID.DETAILS}&_tb={TRAIL.HERE}</details>
+		<delete>javascript:DeleteConfirm('Are you sure you want to delete this record?' , '{SELF.LINKUID.DELETE}&_tb={TRAIL.HERE}');</delete>
+		<store>{SELF.LINK}{SELF.ACTION.STORE}</store>
+
+		<move_down>{SELF.LINKUID.MDW}&cat_order={CAT_ORDER}&&_tb={TRAIL.HERE}</move_down>
+		<move_up>{SELF.LINKUID.MUP}&cat_order={CAT_ORDER}&_tb={TRAIL.HERE}</move_up>
+
+	</URIlinks>
+
+
+</form>

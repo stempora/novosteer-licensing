@@ -1,0 +1,9 @@
+<menu>
+				<link 
+				active="isMod('novosteer-addon-autobrands');" 
+				link="index.php?mod=novosteer-addon-autobrands&sub=landing" 
+				icon="car" 
+				title="Auto Brands" 				
+				acl="novosteer-addon-autobrands:*"
+				subtitle="Manage brands models & trims." />
+</menu>

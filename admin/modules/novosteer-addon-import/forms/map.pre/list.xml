@@ -1,0 +1,67 @@
+<form>
+	
+	<title>Map Table</title>
+	<border>true</border>
+	<alternance>true</alternance>
+	<valternance>true</valternance>
+	<skin>Green</skin>
+	
+	<fields>
+		<_count header="No." suffix="." width="30" align="center" />
+		<map_source header="From" allownl="true"/>
+		<map_destination header="To" allownl="true"/>
+
+		<importer_id type="relation" header="Importer(s)" multi="true" empty="ALL Importers">
+			<relation table="plugin:products_addon_importer_feeds" id="feed_id" text="feed_name" order="feed_name ASC">							
+			</relation>
+		</importer_id> 
+
+		<button_delete type="button" width="44" align="center" onclick="" button="/small/delete" acl="map.delete" >
+			<location>{SELF.URI.DELETE}</location>
+		</button_delete>
+
+		<button_details onclick="" type="button" width="44" align="center" button="/small/edit" acl="map.edit">
+			<location>{SELF.URI.EDIT}</location>
+		</button_details>
+
+	</fields>
+
+	<vars>
+		<attribute_id type="eval" import="$_GET['attribute_id']" />
+		<importer_id type="eval" import="$_GET['importer_id']" />
+	</vars>
+
+	<header>
+		<titles>true</titles>
+		<buttons>
+			<add button="addnew" acl="map.add">
+				<location>{SELF.URI.ADD}</location>
+			</add>
+
+
+		</buttons>
+	</header>
+
+	<items>50</items>
+
+
+	<sql>
+		<vars>
+
+			<table type="table"/>
+
+			<page type="page"/>
+			<items type="form" var="items"/>
+
+			<condition type="var" import="" />
+
+			<order type="var" import="map_source" />
+			<order_mode type="var" import="ASC" />
+
+		</vars>
+		<query>select * from {TABLE} {CONDITION} ORDER BY {ORDER} {ORDER_MODE} LIMIT {PAGE} , {ITEMS} </query>
+		<count table="{TABLE}" condition="{CONDITION}" />
+
+	</sql> 
+
+</form>

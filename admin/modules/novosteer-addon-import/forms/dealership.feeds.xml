@@ -1,0 +1,44 @@
+<form>
+
+	<forms>
+		<add>../../novosteer-addon-import/forms/dealership.feeds/add.xml</add>
+		<details>SHOW::add</details>
+		<edit>../../novosteer-addon-import/forms/dealership.feeds/add.xml</edit>
+		<list>../../novosteer-addon-import/forms/dealership.feeds/list.xml</list>
+	</forms>
+
+	<table>plugin:novosteer_addon_importer_feeds</table>
+	<table_uid>feed_id</table_uid>
+
+
+	<URIdata>
+		<action>action</action>
+
+		<add>add</add>
+		<details>itemdetails</details>
+		<delete>delete</delete>
+		<edit>edit</edit>
+		<list>list</list>
+		<search>search</search>
+		
+		<mup>moveup</mup>
+		<mdw>movedown</mdw>
+
+		<store>store</store>
+	</URIdata>
+
+
+	<URIlinks>
+		<main>index.php?mod=novosteer-addon-import&sub=importers&</main>
+
+		<add>index.php?mod=novosteer-addon-import&sub=dealership.feeds.add&dealership_id={GLOBAL.GET.DEALERSHIP_ID}&_tb={TRAIL.HERE}</add>
+		<edit>{SELF.URI.MAIN}&feed_id={FEED_ID}&action=edit&_tb={TRAIL.HERE}</edit>
+		<delete>javascript:DeleteConfirm('Are you sure you want to delete this record?' , '{SELF.URI.MAIN}feed_id={FEED_ID}&action=delete&_tb={TRAIL.HERE}');</delete>
+		<store>{SELF.LINK}{SELF.ACTION.STORE}</store>
+
+		<ajax.reorder-records>{SELF.URI.MAIN}&action=ajax.reorder-records&dealership_id={GLOBAL.GET.DEALERSHIP_ID}&_tb={TRAIL.HERE}</ajax.reorder-records>
+
+	</URIlinks>
+
+
+</form>

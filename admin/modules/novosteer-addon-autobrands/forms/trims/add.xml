@@ -1,0 +1,103 @@
+<form lang="true">
+	<title>{SELF.TITLE} Trim</title>
+	<action>{SELF.URI.STORE}</action>
+	<name>edit</name>
+	<width>100%</width>
+	<alternance>true</alternance>
+	<encoding>multipart/form-data</encoding>
+
+	<skin>Orange</skin>
+
+
+	<formtag>true</formtag>
+	<border>true</border>
+	
+	<buttons>		
+		<set>
+			<header>true</header>
+		</set>
+
+		<button_savecontinue button="saveall" title="Save & Continue">
+			<location>javascript:SaveAndContinue();</location>
+		</button_savecontinue>
+
+		<button_back onclick="" button="return">
+			<location>{TRAIL.PREVIOUS.LINK}</location>
+		</button_back>
+
+		<button_edit onclick="" button="edit">
+			<location>{SELF.URI.EDIT}</location>
+		</button_edit>
+
+		<button_save button="saveall">
+			<location>javascript:$('form').first().trigger('submit');</location>
+		</button_save>
+
+	</buttons>
+
+	<redirect>{PHP}?sub=accounts</redirect>
+
+	<fields>
+		<trim_id type="hidden"/>		
+
+		<box title="Brief" width="6">
+			<fields>
+				<trim_name type="textbox" width="100%" title="Name" required="true" validate="A:1:200"/>
+				<trim_url type="textbox" width="90%" title="URL" required="true" validate="A:2:200" u_nique="true" preffix="/" suffix="/"/>
+			</fields>
+		</box>
+
+		<box title="Settings" width="6">
+			<fields>
+				<brand_id type="droplist" title="Brand" empty="true" required="true" validate="A:1:20" default="eval:$_GET['brand_id'];">
+					<relation table="plugin:products_addon_autobrands_brands" text="brand_name" id="brand_id" order="brand_name" />
+				</brand_id>
+
+				<trim_status type="checkbox" checked="1" label="published|unpublished" title="Status" default="1"/>
+
+				<subtitle_seo title="SEO Settings" type="subtitle" />
+				<seo_title type="textarea" size="1:2" width="100%" title="Meta Title" lang="true" description="Use 55-65 chars although you can test for slightly longer titles."/>
+				<seo_desc type="textarea" size="1:3" width="100%" title="Meta Desc" lang="true" description="Use ~150 chars although longer descriptions show for longer queries."/>
+
+				<seo_meta type="checklist" lang="true" newline="false" default="index,follow">
+					<options>
+						<option name="index">index</option>
+						<option name="follow">follow</option>
+						<option name="noindex">noindex</option>
+						<option name="nofollow">nofollow</option>
+					</options>
+					<title>Robots &lt;META&gt;</title>
+				</seo_meta>
+
+
+				<sem_title type="subtitle" title="Append HTML Snippets" collapsed="true"/>
+				<seo_conv_head type="textarea" width="100%" size="2:4" lang="true" extend="true" script="true">
+					<title>&lt;head&gt;&lt;/head&gt;</title>
+				</seo_conv_head>
+
+				<seo_conv_body type="textarea" width="100%" size="2:4" lang="true" extend="true" script="true">
+					<title>&lt;body&gt;&lt;/body&gt;</title>
+				</seo_conv_body>
+
+			</fields>
+		</box>
+
+	</fields>
+
+	<javascript>
+		<after><![CDATA[
+			formPageUrl(
+				$("#trim_name"),
+				$("#trim_url")
+			);
+
+
+			formFieldAutoFill(
+				$("#trim_name"),
+				$("#seo_title")
+			);
+
+		]]></after>
+	</javascript>
+
+</form>

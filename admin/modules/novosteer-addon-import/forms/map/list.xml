@@ -1,0 +1,76 @@
+<form>
+	
+	<title>Map Table</title>
+	<border>true</border>
+	<alternance>true</alternance>
+	<valternance>true</valternance>
+	<skin>Green</skin>
+	
+	<fields>
+		<_count header="No." suffix="." width="30" align="center" />
+		<map_original header="From"/>
+		<map_final header="To"/>
+
+		<attribute_id type="relation" header="Attribute">
+			<relation table="plugin:products_fields" table_lang="plugin:products_fields_lang" id="field_id" order="field_name ASC">							
+				<text>
+					<f1 field="field_name" />
+					<f2 field="field_code" preffix="(" suffix=")"/>
+				</text>
+			</relation>
+		</attribute_id> 
+
+		<importer_id type="relation" header="Importer(s)" multi="true">
+			<relation table="plugin:products_addon_importer_feeds" id="feed_id" text="feed_name" order="feed_name ASC">							
+			</relation>
+		</importer_id> 
+
+		<button_delete type="button" width="44" align="center" onclick="" button="/small/delete" acl="avize.achizitii.delete" >
+			<location>{SELF.URI.DELETE}</location>
+		</button_delete>
+
+		<button_details onclick="" type="button" width="44" align="center" button="/small/edit" acl="avize.achizitii.details">
+			<location>{SELF.URI.EDIT}</location>
+		</button_details>
+
+	</fields>
+
+	<vars>
+		<attribute_id type="eval" import="$_GET['attribute_id']" />
+		<importer_id type="eval" import="$_GET['importer_id']" />
+	</vars>
+
+	<header>
+		<titles>true</titles>
+		<buttons>
+			<add button="addnew" acl="avize.achizitii.add">
+				<location>{SELF.URI.ADD}</location>
+			</add>
+
+
+		</buttons>
+	</header>
+
+	<items>50</items>
+
+
+	<sql>
+		<vars>
+
+			<table type="table"/>
+
+			<page type="page"/>
+			<items type="form" var="items"/>
+
+			<condition type="var" import="" />
+
+			<order type="var" import="map_original" />
+			<order_mode type="var" import="ASC" />
+
+		</vars>
+		<query>select * from {TABLE} {CONDITION} ORDER BY {ORDER} {ORDER_MODE} LIMIT {PAGE} , {ITEMS} </query>
+		<count table="{TABLE}" condition="{CONDITION}" />
+
+	</sql> 
+
+</form>

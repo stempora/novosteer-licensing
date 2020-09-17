@@ -1,0 +1,61 @@
+<form>
+	<title>Discount Calculators</title>
+	<border>true</border>
+
+	<skin>Orange</skin>
+
+	<fields>
+		<_count header="No." width="20" align="right" suffix="."/>
+
+		<calculator_name header="Title"></calculator_name>
+		<calculator_extension header="Extension"></calculator_extension>
+
+		<button_delete type="button" width="44" align="center" onclick="" button="/small/delete" acl="fields.delete">
+			<location>{SELF.URI.DELETE}</location>
+		</button_delete>
+
+		<button_details type="button" width="44" align="center" onclick="" button="/small/details" acl="fields.edit">
+			<location>{SELF.URI.DETAILS}</location>
+		</button_details>
+
+	</fields>
+
+	<header>
+		<titles>true</titles>
+		<buttons>
+			<add button="addnew" acl="fields.add">
+				<location>{SELF.URI.ADD}</location>
+			</add>
+		</buttons>
+	</header>
+
+	<items>50</items>
+
+
+	<sql>
+		<vars>
+
+			<table type="table"/>
+
+			<page type="page"/>
+			<items type="form" var="items"/>
+			<manufacturer_id type="eval" import="$_GET['manufacturer_id'];" />
+
+			<from type="var"><import><![CDATA[
+				{TABLE} as fids
+
+			]]></import></from>
+
+			<condition type="var" import="WHERE manufacturer_id= {MANUFACTURER_ID}" />
+
+			<order type="var" import="calculator_name" />
+			<order_mode type="var" import="ASC" />
+
+		</vars>
+		<query>select * from {FROM} {CONDITION} ORDER BY {ORDER} {ORDER_MODE} LIMIT {PAGE} , {ITEMS} </query>
+		<count table="{FROM} " condition="{CONDITION}" />
+
+	</sql> 
+
+
+</form>

@@ -1,0 +1,60 @@
+<form>
+	<title>
+		<details>
+			<options>
+				<option 
+					name="o1" 
+					link="index.php?mod=novosteer-dealerships&sub=dealerships/dealerships&manufacturer_id={GLOBAL.GET.manufacturer_ID}&action=details&_tb={TRAIL.PREVIOUS}" 
+					title="Dealership Brief" 
+					icon="file"
+					active="eval:!$_GET['section'];"/>
+
+		
+			</options>
+		</details>
+		<default>{SELF.TITLE} Manufacturer</default>
+	</title>
+	<action>{SELF.URI.STORE}&storeredirect=ADDDETAILS</action>
+	<name>edit_cat</name>
+	<width>100%</width>
+	<alternance>true</alternance>
+	<encoding>multipart/form-data</encoding>
+
+	<skin>Orange</skin>
+
+
+	<formtag>true</formtag>
+	<border>true</border>
+	
+	<buttons>		
+		<set>
+			<header>true</header>
+		</set>
+
+
+		<button_savecontinue button="saveall" title="Save & Continue">
+			<location>javascript:SaveAndContinue();</location>
+		</button_savecontinue>
+
+		<button_back onclick="" button="return">
+			<location>{TRAIL.PREVIOUS.LINK}</location>
+		</button_back>
+
+		<button_edit onclick="" button="edit" acl="elements.edit">
+			<location>{SELF.URI.EDIT}</location>
+		</button_edit>
+
+		<button_save button="saveall">
+			<location>javascript:$('form').first().trigger('submit');</location>
+		</button_save>
+
+	</buttons>
+
+	<redirect>{PHP}?sub=accounts</redirect>
+
+	<fields>
+		<manufacturer_id type="hidden"/>		
+		<manufacturer_name type="textbox" required="true" validate="A:1:200" unique="true" title="Name"/>
+
+	</fields>
+</form>

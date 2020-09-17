@@ -1,0 +1,37 @@
+<importer>
+	<fields>
+		<box title="Settings" width="7">
+			<fields>			
+				<set_import_type type="radiolist" title="Import" newline="false" required="true" validate="A:1:20">
+					<options>
+						<option name="1">all</option>
+						<option name="2">used</option>
+						<option name="3">new</option>
+					</options>
+				</set_import_type>
+
+
+				<subtitle_product_s type="minititle" title="New"/>
+
+				<set_import_new_images type="checkbox" checked="1" label="yes|no" title="Import Images"/>
+				<set_import_new_prices type="checkbox" checked="1" label="yes|no" title="Import Prices"/>
+
+
+				<subtitle_product_s2 type="subtitle" title="Used & Certified"/>
+
+				<set_import_used_images type="checkbox" checked="1" label="yes|no" title="Import Images"/>
+				<set_import_used_prices type="checkbox" checked="1" label="yes|no" title="Import Prices"/>
+
+
+
+				<subtitle_only type="subtitle" title="Import Only Stock Numbers" />
+				<set_import_stock type="textarea" size="1:4" extend="true" />
+
+
+
+
+			</fields>
+		</box>
+	</fields>
+</importer>
+

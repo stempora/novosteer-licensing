@@ -1,0 +1,71 @@
+<form>
+	<title>Applicants</title>
+	<border>true</border>
+	<skin>Purple</skin>
+
+	<vars>
+		<module_id type="eval" import="$_GET['module_id']" />
+	</vars>
+
+	<fields>
+
+		<_count header="No." width="20" align="right" suffix="."/>
+
+		<dealership_name header="Dealership"></dealership_name>
+
+		<dealership_date type="date" params="%F" header="Date" align="center" width="100"/>
+
+		<dealership_status type="relation" header="Status" align="center" width="100">
+			<options>
+				<option name="1" color="green" value="active" />
+				<option name="0" color="red" value="suspended" />
+			</options>
+		</dealership_status>
+
+		<button_delete type="button" width="44" align="center" onclick="" button="/small/delete" acl="msg.delete">
+			<location>{SELF.URI.DELETE}</location>
+		</button_delete>
+
+		<button_details type="button" width="44" align="center" onclick="" button="/small/details" acl="msg.edit">
+			<location>{SELF.URI.DETAILS}</location>
+		</button_details>
+
+	</fields>
+
+	<vars>
+		<module_id type="eval" import="$_GET['module_id'];"/>
+	</vars>
+
+	<header>
+		<titles>true</titles>
+		<buttons>
+			<add button="addnew" acl="badges.add">
+				<location>{SELF.URI.ADD}</location>
+			</add>
+		</buttons>
+	</header>
+
+	<items>50</items>
+
+	<sql>
+		<vars>
+
+			<table type="table"/>
+
+			<page type="page"/>
+			<items type="form" var="items"/>
+			<module_id type="eval" import="$_GET['module_id'];" />
+
+			<condition type="var" import="" />
+			<req_condition type="var" import="" />
+
+			<order type="var" import="dealership_name" />
+			<order_mode type="var" import="ASC" />
+
+		</vars>
+		<query>select * from {TABLE} {CONDITION} ORDER BY {ORDER} {ORDER_MODE} LIMIT {PAGE} , {ITEMS} </query>
+		<count table="{TABLE}" condition="{CONDITION}" />
+	</sql> 
+
+
+</form>

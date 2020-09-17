@@ -1,0 +1,1 @@
+RewriteRule ^__novosteer-addon-import_module__/$							stembase.php?_PAGE=shared&mod=novosteer-addon-import&sub=landing

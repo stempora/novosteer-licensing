@@ -1,0 +1,27 @@
+<module>
+	<id>401</id>
+	<name>Novosteer Dealerships</name>
+	<code>novosteer-dealerships</code>
+	<url>__novosteer</url>
+	<type>system</type>
+	<version>1.0</version>
+
+	<install>			
+
+		<data>
+			<settings>
+			</settings>
+			<language>
+			</language>
+		</data>
+
+
+		<version>1.0</version>
+		<files>
+		</files>
+	</install>
+
+	<history>
+
+	</history>
+</module>

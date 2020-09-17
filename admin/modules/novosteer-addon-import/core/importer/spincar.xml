@@ -1,0 +1,11 @@
+<importer>
+	<remove_fields>
+		<subtitle>true</subtitle>
+		<feed_duplicates>true</feed_duplicates>
+		<feed_missing>true</feed_missing>
+		<feed_missing_status>true</feed_missing_status>
+		<button_info>true</button_info>
+		<button_list>true</button_list>
+		<button_details>true</button_details>
+	</remove_fields>
+</importer>

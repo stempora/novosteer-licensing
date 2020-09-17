@@ -1,0 +1,87 @@
+<form>
+	<title>Models</title>
+	<border>true</border>
+
+	<skin>DarkBlue</skin>
+
+	<alternance>true</alternance>
+	<valternance>true</valternance>
+
+	<fields>
+		<_count header="No." width="20" align="right" suffix="."/>
+
+		<brand_id type="relation" header="Brand" empty="true">
+			<relation table="plugin:products_addon_autobrands_brands" text="brand_name" id="brand_id" order="brand_name" />
+		</brand_id>
+
+
+		<model_name header="Name"/>
+
+		<type_id type="relation" header="Type">
+			<relation table="plugin:novosteer_addon_autobrands_types" table_lang="plugin:novosteer_addon_autobrands_types_lang" text="type_name" id="type_id" order="type_name" />
+		</type_id>
+
+		<model_status type="relation" align="center" width="100" header="Status">
+			<options>
+				<option name="1" color="green" value="published" />
+				<option name="0" color="red" value="unpublished" />
+			</options>
+		</model_status>
+
+		<products header="Products" align="center" type="sql" width="80">
+			<sql>
+				<vars>					
+					<table type="table" import="plugin:novosteer_vehicles" />
+					<cond type="field" import="model_id" />
+				</vars>
+				<query>SELECT count(distinct product_id) as cnt FROM {TABLE} WHERE model_id='{COND}'</query>
+				<field>cnt</field>
+			</sql>
+		</products>
+
+		<button_delete type="button" width="44" align="center" onclick="" button="/small/delete" acl="models.delete">
+			<location>{SELF.URI.DELETE}</location>
+		</button_delete>
+
+		<button_details type="button" width="44" align="center" onclick="" button="/small/edit" acl="models.edit">
+			<location>{SELF.URI.EDIT}</location>
+		</button_details>
+
+	</fields>
+
+	<header>
+		<titles>true</titles>
+		<buttons>
+			<add button="addnew" acl="models.add">
+				<location>{SELF.URI.ADD}</location>
+			</add>
+		</buttons>
+	</header>
+
+	<items>50</items>
+
+
+	<sql>
+		<vars>
+
+			<table type="table"/>
+			<table_lang type="table_lang"/>
+
+			<page type="page"/>
+			<items type="form" var="items"/>
+			<lang_id type="eval" import="$_GET[lang_id];" />
+			<parent type="eval" import="(int)$_GET[model_parent];" />
+
+			<condition type="var" import="" />
+
+			<order type="var" import="model_name" />
+			<order_mode type="var" import="ASC" />
+
+		</vars>
+		<query>select * from {TABLE} {CONDITION} ORDER BY {ORDER} {ORDER_MODE} LIMIT {PAGE} , {ITEMS} </query>
+		<count table="{TABLE} " condition="{CONDITION}" />
+
+	</sql> 
+
+
+</form>

@@ -1,0 +1,17 @@
+<form>
+
+	<fields>
+
+		
+		<set_keep type="textbox" width="120px" title="Keep Logs for" suffix="days" description="Number of days to keep the importer logs. To disable leave it empty or 0."/>
+
+	</fields>
+
+	<javascript>
+		<after><![CDATA[
+
+
+		]]></after>
+	</javascript>
+
+</form>

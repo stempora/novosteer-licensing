@@ -1,0 +1,77 @@
+<form>
+	<title></title>
+	<action>{SELF.FILE}</action>
+	<name>search</name>
+	<width>100%</width>
+	<method>get</method>
+
+	<formtag>true</formtag>
+	<border>true</border>
+	<alternance>true</alternance>
+
+	<skin>Purple</skin>
+	
+	
+	<buttons>		
+		<set>
+			<header>true</header>
+		</set>
+
+
+		<button_reset location="index.php?mod={GLOBAL.GET.MOD}&sub={GLOBAL.GET.SUB}&module_id={GLOBAL.GET.MODULE_ID}" icon="undo" title="Reset"/>
+		<button_search type="submit" location="javascript:$('form').first().trigger('submit');" icon="search" title="Search"/>
+
+	</buttons>
+
+
+	<redirect>index.php?sub=units</redirect>
+
+
+	<fields>
+
+		<mod type="hidden" default="$_GET['mod']" action="eval"/>
+		<sub type="hidden" default="$_GET['sub']" action="eval"/>
+		<module_id type="hidden" default="$_GET['module_id']" action="eval"/>
+		<advanced type="hidden" default="0" />
+	</fields>
+
+	<search>
+			<fields>
+
+
+				<box title="Search" width="6">
+					<fields>
+
+						<keywords type="textbox" title="Keywords"/>
+
+					</fields>
+				</box>
+
+
+				<box title="Filter" width="6">
+					<fields>
+
+						<dealership_status type="radiolist" title="Type" newline="false">
+							<options>
+								<option name="">all</option>
+								<option name="0">read</option>
+								<option name="1">unread</option>
+							</options>
+						</dealership_status>
+
+					
+					</fields>
+				</box>
+
+
+			</fields>
+
+			<sql_fields>
+				<field name="keywords" type="keyword" search="full"  fields="dealership_name" />
+				<field name="dealership_status">=</field>			
+			</sql_fields>
+
+	</search>
+
+
+</form>

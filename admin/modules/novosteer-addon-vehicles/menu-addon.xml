@@ -1,0 +1,9 @@
+<menu>
+				<link 
+				active="isMod('novosteer-addon-vehicles');" 
+				link="index.php?mod=novosteer-addon-vehicles&sub=landing" 
+				icon="car" 
+				title="Vehicles" 
+				acl="novosteer-addon-vehicles:*"
+				subtitle="Manage vehicles for all dealers." />
+</menu>

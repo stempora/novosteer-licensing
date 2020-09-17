@@ -1,0 +1,108 @@
+<form>
+	<title></title>
+	<action>{SELF.FILE}</action>
+	<name>search</name>
+	<width>100%</width>
+	<method>get</method>
+
+	<formtag>true</formtag>
+	<border>true</border>
+	<alternance>true</alternance>
+
+	<skin>Purple</skin>
+	
+	
+	<buttons>		
+		<set>
+			<header>true</header>
+		</set>
+
+		<button_reset location="index.php?mod={GLOBAL.GET.MOD}&sub={GLOBAL.GET.SUB}" icon="undo" title="Reset"/>
+		<button_search type="submit" location="javascript:$('form').first().trigger('submit');" icon="search" title="Search"/>
+	</buttons>
+
+	<redirect>index.php?sub=units</redirect>
+
+
+	<fields>
+
+		<mod type="hidden" default="$_GET['mod']" action="eval"/>
+		<sub type="hidden" default="$_GET['sub']" action="eval"/>
+		<module_id type="hidden" default="$_GET['module_id']" action="eval"/>
+		<advanced type="hidden" default="0" />
+	</fields>
+
+	<search>
+			<fields>
+
+				<box title="Search" width="6">
+					<fields>
+
+						<item_title type="textbox" width="100%" title="Keywords"/>
+					</fields>
+				</box>
+
+
+				<box title="Filter" width="6">
+					<fields>
+
+						<item_display type="radiolist" title="Display" empty="true" empty_text="[ all ]" newline="false">
+							<options>
+								<option name="1">listing</option>
+								<option name="2">details only</option>
+								<option name="3">unpublished</option>
+							</options>
+						</item_display>
+
+						<lock_id type="droplist" title="Locked Groups" empty="true" empty_text="[ all ]" newline="false">
+							<relation table="plugin:products_addon_importer_locks_groups" text="lock_name" id="lock_id"/>
+						</lock_id>
+
+					</fields>
+				</box>
+
+
+			</fields>
+
+			<sql_fields>
+				<field name="item_title" type="keyword" search="full" fields="product.item_id,item_title,item_sku,values_text.value_val">keyword</field>			
+				<field name="item_date">range</field>			
+				<field name="item_status">=</field>			
+				<field name="item_display">=</field>			
+				<field name="lock_id">in_set</field>			
+			</sql_fields>
+	</search>
+
+
+	<javascript>
+		<after><![CDATA[
+
+			$.getScript("modules/products/forms/products/products/search_products.js")
+				.done(function( script, textStatus ) {
+				})
+				.fail(function( jqxhr, settings, exception ) {
+				    console.log(exception);
+				});
+
+
+			function Delete(){				
+
+				ConfirmCallback(
+					"Are you sure you want to remove locks for all selected products? ",
+					function() {
+						$.ajax({
+							url:"index.php?mod=products-addon-import&sub=products.unlock",
+							type: "post",
+							data:$('form[name="search"]').serialize(),
+							success: function(msg){ 
+								window.location.reload();
+							}
+						});
+					}
+				);
+			}
+
+
+		]]></after>
+	</javascript>
+</form>

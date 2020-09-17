@@ -1,0 +1,84 @@
+<form>
+	<title>Importers</title>
+	<border>true</border>
+
+	<alternance>true</alternance>
+	<valternance>true</valternance>
+
+	<skin>Purple</skin>
+
+	<order>
+		<restricted></restricted>
+		<drag>true</drag>
+		<field>feed_order</field>
+		<mode>ASC</mode>
+		<button></button>
+	</order>
+
+	<vars>
+		<item_parent type="eval" import="$_GET[item_id]" />
+	</vars>
+
+	<fields>
+
+		<_count header="No." width="20" align="right" suffix="."/>
+
+		<feed_name header="Admin Note" />
+
+
+		<feed_extension type="text" header="Extension"/>
+
+		<feed_status type="relation" align="center" width="100" header="Status">
+			<options>
+				<option name="1" color="green" value="enabled" />
+				<option name="0" color="red" value="disabled" />
+			</options>
+		</feed_status>
+
+		<feed_lastrun type="date" params="Y-m-d" align="center"  header="Last Run" width="140"/>
+	
+		<button_delete type="button" width="44" align="center" onclick="" button="/small/delete" protected="promo_default">
+			<location>{SELF.URI.DELETE}</location>
+		</button_delete>
+
+		<button_details type="button" width="44" align="center" onclick="" button="/small/edit">
+			<location>{SELF.URI.EDIT}</location>
+		</button_details>
+	</fields>
+
+	<header>
+		<titles>true</titles>
+		<nolinks>true</nolinks>
+		<buttons>
+			<add button="addnew">
+				<location>{SELF.URI.ADD}</location>
+			</add>
+		</buttons>
+	</header>
+
+	<items>50</items>
+
+	<sql>
+		<vars>
+
+			<table type="table"/>
+			<table_lang type="table_lang"/>
+
+			<page type="page"/>
+			<items type="form" var="items"/>
+			<lang_id type="eval" import="$_GET['lang_id'];" />
+			<parent type="eval" import="$_GET['dealership_id'];" />
+
+			<condition type="var" import="WHERE dealership_id={PARENT}" />
+
+			<order type="var" import="feed_order" />
+			<order_mode type="var" import="ASC" />
+
+		</vars>
+		<query>select * from {TABLE} {CONDITION} ORDER BY {ORDER} {ORDER_MODE} LIMIT {PAGE} , {ITEMS} </query>
+		<count table="{TABLE} " condition="{CONDITION}" />
+
+	</sql> 
+
+
+</form>

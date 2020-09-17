@@ -1,0 +1,72 @@
+<form>
+
+	<fields>
+
+		<box width="6" title="Menu Item">
+			<fields>
+				<lang_menu_title title="Title" type="textbox" lang="true"/>
+
+				<subtitle_menu_grid type="subtitle" title="Menu Texts" />
+				<lang_menu_types title="Browse by Type" type="textbox" lang="true"/>
+				<lang_menu_brands title="Browse by Brand" type="textbox" lang="true"/>
+				<lang_menu_models title="View all Models" type="textbox" lang="true"/>
+				<lang_menu_vehicles title="View all Vehicles" type="textbox" lang="true"/>
+				<lang_menu_all title="Model All Trims" type="textbox" lang="true"/>
+
+				<subtitle_buttons type="subtitle" title="Buttons" />
+
+				<lang_buttons_details title="Details" type="textbox" lang="true"/>
+				<lang_buttons_inventory title="Vehicles" type="textbox" lang="true"/>
+				<lang_buttons_offer title="Offer" type="textbox" lang="true"/>
+				<lang_buttons_pdf title="Download" type="textbox" lang="true"/>
+
+				<subtitle_elements type="subtitle" title="Elements" />
+				<lang_element_colors type="textbox" width="100%" lang="true" title="Available Colors" />
+				<lang_element_button type="textbox" width="100%" lang="true" title="Info Page Button" />
+				<lang_discount_prefix type="textbox" width="100%" lang="true" title="Discount Badge" />
+
+				<subtitle_noprice type="subtitle" title="No price" />
+				<lang_noprice_title type="textbox" width="100%" lang="true" title="Title" />
+				<lang_noprice_button type="textbox" width="100%" lang="true" title="Button" />
+				<lang_noprice_popup type="textbox" width="100%" lang="true" title="Popup" />
+
+
+				<subtitle_nofinance type="subtitle" title="No Financing" />
+				<lang_nofinance_title type="textbox" width="100%" lang="true" title="Title" />
+				<lang_nofinance_button type="textbox" width="100%" lang="true" title="Button" />
+				<lang_nofinance_popup type="textbox" width="100%" lang="true" title="Popup" />
+
+				<subtitle_dla type="subtitle" title="DLA" />
+				<lang_dla_title type="textbox" width="100%" lang="true" title="Title" />
+				<lang_dla_button type="textbox" width="100%" lang="true" title="Button" />
+				<lang_dla_popup type="textbox" width="100%" lang="true" title="Popup" />
+
+
+			</fields>
+		</box>
+
+		<box width="6" title="Financing - Period Sufixes">
+			<fields>
+				<lang_1 title="/monthly" type="textbox" width="100%" lang="true" />
+				<lang_3 title="/bi-monthly" type="textbox" width="100%" lang="true" />
+				<lang_2 title="/weekly" type="textbox" width="100%" lang="true" />
+				<lang_4 title="/bi-weekly" type="textbox" width="100%" lang="true" />
+
+				<lang_financing_note_new type="textarea" title="New Note/Disclaymer" size="1:5" description="Variables: calculator.downpayment , calculator.downpayment_type , calculator.period, calculator.interest, calculator.tax. Supports TWIG syntax." />
+				<lang_financing_note_used type="textarea" title="Used Note/Disclaymer" size="1:5" description="Variables: calculator.downpayment , calculator.downpayment_type , calculator.period, calculator.interest, calculator.tax. Supports TWIG syntax." />
+				<lang_financing_note_certified type="textarea" title="Certif Note/Disclaymer" size="1:5" description="Variables: calculator.downpayment , calculator.downpayment_type , calculator.period, calculator.interest, calculator.tax. Supports TWIG syntax." />
+
+
+				<subtitle_menu_grid type="subtitle" title="Global Texts" />
+
+				<lang_price_retail title="Retail Price" type="textbox" width="100%" lang="true" />
+				<lang_price_sale title="Sale Price" type="textbox" width="100%" lang="true" />
+				<lang_price_save title="You Save" type="textbox" width="100%" lang="true" />
+				<lang_price_finance title="Finance" type="textbox" width="100%" lang="true" />
+				<lang_price_protection title="Protection Price" type="textbox" width="100%" lang="true" />
+				<lang_price_wprotection title="Price w/ Protection" type="textbox" width="100%" lang="true" />
+
+			</fields>
+		</box>
+	</fields>
+</form>

@@ -1,0 +1,65 @@
+<form>
+	<title>{SELF.TITLE} Map Item</title>
+	<action>{SELF.URI.STORE}</action>
+	<name>edit</name>
+	<width>100%</width>
+	<encoding>multipart/form-data</encoding>
+	<alternance>true</alternance>
+	<skin>Green</skin>
+
+
+	<formtag>true</formtag>
+	<border>true</border>
+	
+	<buttons>		
+		<set>
+			<header>true</header>
+		</set>
+
+		<button_back onclick="" button="return">
+			<location>{PRIVATE.FORM_PREVIOUS_PAGE}</location>
+		</button_back>
+
+		<button_edit onclick="" button="edit" acl="avize.achizitii.edit">
+			<location>{SELF.URI.EDIT}</location>
+		</button_edit>
+
+		<button_save button="saveall">
+			<location>javascript:$('form').first().trigger('submit');</location>
+		</button_save>
+
+	</buttons>
+
+	<redirect>{PHP}?sub=accounts</redirect>
+
+	<fields>
+		<map_id type="hidden"/>
+
+		<box title="Conversion" width="6">
+			<fields>
+				<map_original type="textbox" width="100%" title="Original" />
+				<map_final type="textbox" width="100%" title="Final" />
+			</fields>
+		</box>
+
+		<box title="Settings" width="6">
+			<fields>
+				<attribute_id type="droplist" title="Attribute" empty="true" required="true" validate="A:1:20" default="eval:$_GET['attribute_id'];">
+					<relation table="plugin:products_fields" table_lang="plugin:products_fields_lang" id="field_id" order="field_name ASC">							
+						<text>
+							<f1 field="field_name" />
+							<f2 field="field_code" preffix="(" suffix=")"/>
+						</text>
+					</relation>
+				</attribute_id> 
+
+				<importer_id type="droplist" title="Importer(s)" multi="true" required="true" validate="A:1:20000" default="eval:$_GET['importer_id'];">
+					<relation table="plugin:products_addon_importer_feeds" id="feed_id" text="feed_name" order="feed_name ASC">							
+					</relation>
+				</importer_id> 
+
+			</fields>
+		</box>
+	</fields>
+
+</form>

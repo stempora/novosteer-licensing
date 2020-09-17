@@ -1,0 +1,13 @@
+<menu>
+
+	<group 
+		name="Dealerships" 
+		pos="top" 
+		icon="store"
+		subtitle="Copy & paste all icons."
+		prio="100"
+
+		>
+		<link>index.php?mod=novosteer-dealerships&sub=landing</link>		
+	</group>
+</menu>

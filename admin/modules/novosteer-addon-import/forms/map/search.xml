@@ -1,0 +1,81 @@
+<form>
+	<title></title>
+	<action>{SELF.FILE}</action>
+	<name>search</name>
+	<width>100%</width>
+	<method>get</method>
+
+	<skin>Green</skin>
+
+	<formtag>true</formtag>
+	<border>true</border>
+	<alternance>true</alternance>
+	
+	<buttons>		
+		<set>
+			<header>true</header>
+		</set>
+
+
+		<button_reset location="index.php?mod={GLOBAL.GET.MOD}&sub={GLOBAL.GET.SUB}" icon="undo" title="Reset"/>
+		<button_search type="submit" location="javascript:$('form').first().trigger('submit');" icon="search" title="Search"/>
+
+	</buttons>
+
+
+	<redirect>index.php?sub=units</redirect>
+
+	<fields>
+		<mod type="hidden" default="$_GET['mod']" action="eval"/>
+		<sub type="hidden" default="$_GET['sub']" action="eval"/>
+		<advanced type="hidden" default="0" />
+	</fields>
+
+	<search>
+			<fields>
+
+				<box title="Search" width="6">
+					<fields>
+						
+
+						<keywords type="textbox" width="100%" title="Keywords" />
+					</fields>
+				</box>
+					
+				<box title="Filter" width="6">
+					<fields>
+
+						<attribute_id type="droplist" title="Attribute" empty="true">
+							<relation table="plugin:products_fields" table_lang="plugin:products_fields_lang" id="field_id" order="field_name ASC">							
+								<text>
+									<f1 field="field_name" />
+									<f2 field="field_code" preffix="(" suffix=")"/>
+								</text>
+							</relation>
+						</attribute_id> 
+
+						<importer_id type="droplist" title="Importer" empty="true">
+							<relation table="plugin:products_addon_importer_feeds" id="feed_id" text="feed_name" order="feed_name ASC">							
+							</relation>
+						</importer_id> 
+
+					</fields>
+				</box>
+					
+			</fields>
+
+			<sql_fields>
+				<field name="keywords" type="keyword" search="full" fields="map_original,map_final">keyword</field>			
+				<field name="importer_id">in_set</field>			
+				<field name="attribute_id">=</field>			
+			</sql_fields>
+
+	</search>
+
+	<javascript>
+		<after><![CDATA[
+
+		]]></after>
+	</javascript>
+
+</form>

@@ -1,0 +1,24 @@
+<module>
+	<id>405</id>
+	<name>Auto Brands</name>
+	<code>novosteer-addon-autobrands</code>
+	<parent>novosteer-dealership</parent>
+	<type>system</type>
+	<version>1.0</version>
+	<url></url>
+	<install>			
+
+		<version>1.0</version>
+		<files>
+			<file>folders.php</file>
+			<file>install.sql</file>
+		</files>
+
+		<data>
+		</data>
+	</install>
+
+	<history>
+
+	</history>
+</module>

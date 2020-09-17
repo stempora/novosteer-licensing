@@ -1,0 +1,31 @@
+<module>
+	<id>403</id>
+	<name>Vehicles</name>
+	<code>novosteer-addon-vehicles</code>
+	<type>system</type>
+	<protected></protected>
+	<version>1.0</version>
+	<noperm>1</noperm>
+	<parent>novosteer-dealerships</parent>
+
+	<install>			
+			<version>1.0</version>
+			<files>
+				<file>install.sql</file>
+			</files>
+
+
+			<data>
+				<settings>
+
+				</settings>
+				<language>
+				</language>
+			</data>
+	</install>
+
+	<history>
+
+	</history>
+
+</module>
