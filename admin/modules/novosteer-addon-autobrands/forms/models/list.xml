@@ -11,14 +11,14 @@
 		<_count header="No." width="20" align="right" suffix="."/>
 
 		<brand_id type="relation" header="Brand" empty="true">
-			<relation table="plugin:products_addon_autobrands_brands" text="brand_name" id="brand_id" order="brand_name" />
+			<relation table="plugin:novosteer_addon_autobrands_brands" text="brand_name" id="brand_id" order="brand_name" />
 		</brand_id>
 
 
 		<model_name header="Name"/>
 
 		<type_id type="relation" header="Type">
-			<relation table="plugin:novosteer_addon_autobrands_types" table_lang="plugin:novosteer_addon_autobrands_types_lang" text="type_name" id="type_id" order="type_name" />
+			<relation table="plugin:novosteer_addon_autobrands_types" text="type_name" id="type_id" order="type_name" />
 		</type_id>
 
 		<model_status type="relation" align="center" width="100" header="Status">

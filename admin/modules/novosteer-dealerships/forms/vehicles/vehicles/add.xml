@@ -1,0 +1,93 @@
+<form>
+	<title>
+		<details>
+			<options>
+				<option 
+					name="o1" 
+					link="index.php?mod=novosteer-dealerships&sub=dealerships/dealerships&dealership_id={GLOBAL.GET.DEALERSHIP_ID}&action=details&_tb={TRAIL.PREVIOUS}" 
+					title="Dealership Brief" 
+					icon="file"
+					active="eval:!$_GET['section'];"/>
+
+		
+			</options>
+		</details>
+		<default>{SELF.TITLE} Dealership</default>
+	</title>
+	<action>{SELF.URI.STORE}&storeredirect=ADDDETAILS</action>
+	<name>edit_cat</name>
+	<width>100%</width>
+	<alternance>true</alternance>
+	<encoding>multipart/form-data</encoding>
+
+	<skin>Purple</skin>
+
+
+	<formtag>true</formtag>
+	<border>true</border>
+	
+	<buttons>		
+		<set>
+			<header>true</header>
+		</set>
+
+
+		<button_savecontinue button="saveall" title="Save & Continue">
+			<location>javascript:SaveAndContinue();</location>
+		</button_savecontinue>
+
+		<button_back onclick="" button="return">
+			<location>{TRAIL.PREVIOUS.LINK}</location>
+		</button_back>
+
+		<button_edit onclick="" button="edit" acl="elements.edit">
+			<location>{SELF.URI.EDIT}</location>
+		</button_edit>
+
+		<button_save button="saveall">
+			<location>javascript:$('form').first().trigger('submit');</location>
+		</button_save>
+
+	</buttons>
+
+	<redirect>{PHP}?sub=accounts</redirect>
+
+	<fields>
+		<dealership_id type="hidden"/>		
+		<dealership_date type="hidden" default="eval:time();"/>
+
+		<dealership_name type="text" width="100%" title="Title" lang="true" restricted="eval:($_GET['action'] != 'details') || !($_GET['action'] == 'details' && $_GET['section']);"/>
+
+
+		<box title="Details" width="6">
+			<fields>
+
+				<dealership_name type="textbox" required="true" validate="A:1:200" unique="true" title="Name"/>
+				<dealership_site type="textbox" required="true" validate="A:1:200" unique="true" title="Website"/>
+
+				<subtitle type="subtitle" title="Security"></subtitle>
+				<dealership_key type="textbox" required="true" validate="A:1:200" unique="true" title="Secret Key"/>
+			</fields>
+		</box>
+
+
+		<box title="Settings" width="6">
+			<fields>
+
+				<dealership_status type="checkbox" checked="1" label="enabled|disabled" title="Status" default="1"/>
+
+				<manufacturer_id type="droplist" empty="true" title="Manufacturer" required="true" validate="A:1:200">
+					<relation table="plugin:novosteer_manufacturers" id="manufacturer_id" text="manufacturer_name" order="manufacturer_name"></relation>
+				</manufacturer_id>
+
+				<subtitle_calaculator type="subtitle" title="Discounts Calculator"></subtitle_calaculator>
+
+				<calculator_id type="droplist" empty="true" title="Calculator" required="true" validate="A:1:200">
+					<relation table="plugin:novosteer_manufacturers_calculators" id="calculator_id" text="calculator_name" order="calculator_name"></relation>
+					<description>Calculator to be used to calculate the discounts for the msrp.</description>
+				</calculator_id>
+
+			</fields>
+		</box>
+	</fields>
+</form>

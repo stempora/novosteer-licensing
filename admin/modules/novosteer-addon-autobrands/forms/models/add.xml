@@ -52,11 +52,11 @@
 				<model_status type="checkbox" checked="1" label="published|unpublished" title="Status" default="1"/>
 
 				<brand_id type="droplist" title="Brand" empty="true" required="true" validate="A:1:20">
-					<relation table="plugin:products_addon_autobrands_brands" text="brand_name" id="brand_id" order="brand_name" />
+					<relation table="plugin:novosteer_addon_autobrands_brands" text="brand_name" id="brand_id" order="brand_name" />
 				</brand_id>
 
 				<type_id type="droplist" title="Type" empty="true" required="true" validate="A:1:20">
-					<relation table="plugin:products_addon_autobrands_types" table_lang="plugin:products_addon_autobrands_types_lang" text="type_name" id="type_id" order="type_name" />
+					<relation table="plugin:novosteer_addon_autobrands_types" text="type_name" id="type_id" order="type_name" />
 				</type_id>
 
 				

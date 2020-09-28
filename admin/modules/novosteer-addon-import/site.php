@@ -97,7 +97,7 @@ class CNovosteerAddonImport extends CNovosteerAddonImportBackend{
 
 		$this->__init();
 	
-/*
+
 		$feeds = $this->getImportersByDealershipID($job->getInfo()["params"]["dealership_id"]);
 
 		if (!is_array($feeds)) {
@@ -112,7 +112,7 @@ class CNovosteerAddonImport extends CNovosteerAddonImportBackend{
 				$client->runFeed();
 			}
 		}
-*/
+
 
 		$this->cronVehiclesPrice($job);
 

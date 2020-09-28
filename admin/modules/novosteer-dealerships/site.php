@@ -35,7 +35,6 @@ class CNovoSteerDealerships extends CNovoSteerDealershipsBackend{
 		parent::DoEvents();
 
 		if ($_GET["mod"] == $this->name) {
-
 		}
 	}
 
@@ -62,50 +61,8 @@ class CNovoSteerDealerships extends CNovoSteerDealershipsBackend{
 		]);
 
 		$this->tpl_module = $this->plugins["modules"]->LoadDefaultModule($this->name);
-		$this->module = $this->plugins["products"];
-		$this->module->__init();
-
-		$this->auto = $this->plugins["products-addon-autobrands"];
-		$this->auto->__init();
-
+	
 	} 		
 
-
-	/**
-	* description
-	*
-	* @param
-	*
-	* @return
-	*
-	* @access
-	*/
-	function setHooks() {
-		global $base , $_USER , $_SESS , $_CONF , $_LANG_ID; 
-
-		//$this->hookRegister("module.shotcodes.load.after" , [$this  , "changeDeveloper"]);
-	}
-	
-
-	/**
-	* description
-	*
-	* @param
-	*
-	* @return
-	*
-	* @access
-	*/
-	function changeDeveloper($shortcodes) {
-		global $base , $_USER , $_SESS , $_CONF , $_LANG_ID; 
-
-		$this->__init();
-		
-		$shortcodes->remove("developer");
-
-		$shortcodes->Add("developer"  , "html" , $this->_t("developer")->blockReplace("Developer" , []));
-	}
-	
-	
 
 }

@@ -62,5 +62,14 @@
 			link="index.php?mod=novosteer-dealerships&sub=dealerships/dealerships"
 		/>
 
+		<vehicles
+			color="Teal" 
+			icon="car" 
+			acl="fields.list"
+			subtitle="Search & Edit" 
+			title="Vehicles" 
+			link="index.php?mod=novosteer-dealerships&sub=vehicles/vehicles"
+		/>
+
 </tabs>
 

@@ -52,26 +52,4 @@
 	<items>50</items>
 
 
-	<sql>
-		<vars>
-
-			<table type="table"/>
-			<table_lang type="table_lang"/>
-
-			<page type="page"/>
-			<items type="form" var="items"/>
-			<lang_id type="eval" import="$_GET[lang_id];" />
-
-			<condition type="var" import="WHERE p.type_id=l.type_id AND l.lang_id={LANG_ID}" />
-
-			<order type="var" import="type_name" />
-			<order_mode type="var" import="ASC" />
-
-		</vars>
-		<query>select * from {TABLE} as p,{TABLE_LANG} as l {CONDITION} ORDER BY {ORDER} {ORDER_MODE} LIMIT {PAGE} , {ITEMS} </query>
-		<count table="{TABLE} as p,{TABLE_LANG} as l " condition="{CONDITION}" />
-
-	</sql> 
-
-
 </form>

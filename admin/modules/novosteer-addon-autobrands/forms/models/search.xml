@@ -48,7 +48,7 @@
 						</brand_id>
 
 						<type_id type="droplist" title="Type" empty="true" >
-							<relation table="plugin:novosteer_addon_autobrands_types" table_lang="plugin:novosteer_addon_autobrands_types_lang" text="type_name" id="type_id" order="type_name" />
+							<relation table="plugin:novosteer_addon_autobrands_types" text="type_name" id="type_id" order="type_name" />
 						</type_id>
 
 						<model_status type="radiolist" title="Status" newline="false">

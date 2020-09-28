@@ -1,0 +1,118 @@
+<form>
+	<title>Vehicles</title>
+	<border>true</border>
+	<skin>Teal</skin>
+
+	<fields>
+
+		<_count header="No." width="20" align="right" suffix="."/>
+		<dealership_name header="Dealership"></dealership_name>
+		<type header="Type"></type>
+		<vin header="Vin"></vin>
+		<stock header="Stock"></stock>
+		<brand_name header="Brand"></brand_name>
+		<model_name header="Model"></model_name>
+		<trim_name header="Trim"></trim_name>
+		<type_name header="Type"></type_name>
+
+		<dealership_status type="relation" header="Status" align="center" width="100">
+			<options>
+				<option name="1" color="green" value="active" />
+				<option name="0" color="red" value="suspended" />
+			</options>
+		</dealership_status>
+
+		<images header="Img" align="center" type="sql" width="80">
+			<sql>
+				<vars>					
+					<table type="table" import="plugin:novosteer_vehicles_images" />
+					<cond type="field" import="product_id" />
+				</vars>
+				<query>SELECT count(image_id) as cnt FROM {TABLE} WHERE product_id='{COND}'</query>
+				<field>cnt</field>
+			</sql>
+		</images>
+
+
+		<button_delete type="button" width="44" align="center" onclick="" button="/small/delete" acl="msg.delete">
+			<location>{SELF.URI.DELETE}</location>
+		</button_delete>
+
+		<button_details type="button" width="44" align="center" onclick="" button="/small/details" acl="msg.edit">
+			<location>{SELF.URI.DETAILS}</location>
+		</button_details>
+
+	</fields>
+
+	<vars>
+		<module_id type="eval" import="$_GET['module_id'];"/>
+	</vars>
+
+	<header>
+		<titles>true</titles>
+		<buttons>
+			<add button="addnew" acl="badges.add">
+				<location>{SELF.URI.ADD}</location>
+			</add>
+		</buttons>
+	</header>
+
+	<items>50</items>
+
+	<sql>
+		<vars>
+
+			<table type="table"/>
+			<table_brands type="table" import="plugin:novosteer_addon_autobrands_brands"/>
+			<table_models type="table" import="plugin:novosteer_addon_autobrands_models"/>
+			<table_trims type="table" import="plugin:novosteer_addon_autobrands_trims"/>
+			<table_types type="table" import="plugin:novosteer_addon_autobrands_types"/>
+			<table_dealerships type="table" import="plugin:novosteer_dealerships"/>
+
+			<page type="page"/>
+			<items type="form" var="items"/>
+			<module_id type="eval" import="$_GET['module_id'];" />
+
+			<from type="var">
+				<import>
+					{TABLE} as vehicles
+					INNER JOIN 
+					{TABLE_DEALERSHIPS} as dealership
+						ON 
+							vehicles.dealership_id = dealership.dealership_id
+					LEFT JOIN 
+						{TABLE_BRANDS} as brands
+						ON 
+							vehicles.brand_id = brands.brand_id
+						
+					LEFT JOIN 
+						{TABLE_MODELS} as models
+						ON 
+							vehicles.model_id = models.model_id
+
+					LEFT JOIN 
+						{TABLE_TRIMS} as trims
+						ON 
+							vehicles.trim_id = trims.trim_id
+
+					LEFT JOIN 
+						{TABLE_TYPES} as types
+						ON 
+							models.type_id = types.type_id
+
+				</import>
+			</from>
+
+			<condition type="var" import="" />
+			<req_condition type="var" import="" />
+
+			<order type="var" import="product_id" />
+			<order_mode type="var" import="DESC" />
+
+		</vars>
+		<query>select * from {FROM} {CONDITION} ORDER BY {ORDER} {ORDER_MODE} LIMIT {PAGE} , {ITEMS} </query>
+		<count table="{FROM}" condition="{CONDITION}" />
+	</sql> 
+
+
+</form>

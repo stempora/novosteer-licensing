@@ -44,6 +44,7 @@ class CNovosteerDealerships extends CNovosteerDealershipsBackend{
 				Case "dealerships/dealerships":
 				Case "manufacturers/manufacturers":
 				Case "manufacturers/calculators":
+				Case "vehicles/vehicles":
 					$data = new CSQLAdmin($sub, $this->__parent_templates,$this->db,$this->tables,$extra);
 					$data->setAclMod($this->tpl_module);
 					$this->PrepareFields($data->forms["forms"]);

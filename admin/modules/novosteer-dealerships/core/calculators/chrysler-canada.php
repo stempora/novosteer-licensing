@@ -118,8 +118,6 @@ class Chrysler_Canada extends Calculator {
 		$rule = $this->discounts
 			->setVehicle($this->vehicle)
 			->getMatchingRule();
-
-		debug($rule);
 		
 		//no rule found, so i mark the product as with problems to investigate
 		if (!is_array($rule)) {

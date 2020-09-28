@@ -1,0 +1,1 @@
+RewriteRule ^__novosteer-dealerships/feeds/([0-9]+)/inventory$					stembase.php?_PAGE=json&mod=novosteer-addon-vehicles&sub=feed&dealer_id=$1

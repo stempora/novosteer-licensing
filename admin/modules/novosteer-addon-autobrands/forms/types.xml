@@ -7,8 +7,7 @@
 		<list>types/list.xml</list>
 	</forms>
 
-	<table>plugin:products_addon_autobrands_types</table>
-	<table_lang>plugin:products_addon_autobrands_types_lang</table_lang>
+	<table>plugin:novosteer_addon_autobrands_types</table>
 	<table_uid>type_id</table_uid>
 
 

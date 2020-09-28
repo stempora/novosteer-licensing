@@ -179,7 +179,7 @@ class CNovosteerAddonAutoBrandsBackend extends CPlugin {
 	*
 	* @access
 	*/
-	function getModelIdByName($brand , $name , $create = false) {
+	function getModelIdByName($brand , $name , $create = false , $model_type = null) {
 		global $base , $_USER , $_SESS; 
 		$this->__init();
 
@@ -199,6 +199,23 @@ class CNovosteerAddonAutoBrandsBackend extends CPlugin {
 		);
 
 		if (is_array($model)) {
+
+			//update the model if thats the cas 
+			if (!$model["type_id"] && $model_type !== null) {
+				$type = $this->getTypeIDByName($model_type , false);
+
+				if ($type) {
+					$this->db->QueryUpdate(
+						$this->tables['plugin:novosteer_addon_autobrands_models'],
+						[
+							"type_id"	=> $type
+						],
+						$this->db->Statement("model_id = %d", [$model["model_id"]])
+					);
+				}
+			}
+
+
 			return $model["model_id"];
 		}
 		
@@ -211,6 +228,10 @@ class CNovosteerAddonAutoBrandsBackend extends CPlugin {
 			[
 				"brand_id"		=> $brand,
 				"model_name"	=> $name,
+				"type_id"		=> $model_type !== null 
+					? $this->getTypeIDByName($model_type , false)
+					: 0
+
 			]
 		);	
 		
@@ -265,6 +286,49 @@ class CNovosteerAddonAutoBrandsBackend extends CPlugin {
 				"trim_name"		=> $name,
 			]
 		);		
+	}
+
+
+
+	/**
+	* description
+	*
+	* @param
+	*
+	* @return
+	*
+	* @access
+	*/
+	function getTypeIdByName($name , $create = false) {
+		global $base , $_USER , $_SESS , $_LANG_ID; 
+
+		$this->__init();
+
+		$name = trim($name);
+
+		if (!$name) {
+			return null;
+		}		
+
+		$type = $this->db->QFetchArray(
+			"SELECT * FROM %s as type
+				WHERE type_name LIKE '%s'",
+			[
+				$this->tables['plugin:novosteer_addon_autobrands_types'],
+				$name
+			]
+		);
+
+		if (is_array($type)) {
+			return $type["type_id"];
+		}
+		
+		if (!$create) {
+			return null;
+		}
+
+		return $id;
+
 	}
 
 
@@ -551,55 +615,6 @@ class CNovosteerAddonAutoBrandsBackend extends CPlugin {
 	}
 
 
-
-	/**
-	* description
-	*
-	* @param
-	*
-	* @return
-	*
-	* @access
-	*/
-	function getTypeIdByName($name , $create = false) {
-		global $base , $_USER , $_SESS , $_LANG_ID; 
-
-		$this->__init();
-
-		$name = trim($name);
-
-		if (!$name) {
-			return null;
-		}		
-
-		$type = $this->db->QFetchArray(
-			"SELECT * FROM %s as type
-				INNER JOIN 
-					%s as type_lang 
-					ON type.type_id = type_lang.type_id AND 
-					type_lang.lang_id = %d
-
-				WHERE type_name LIKE '%s'",
-			[
-				$this->tables['plugin:novosteer_addon_autobrands_types'],
-				$this->tables['plugin:novosteer_addon_autobrands_types_lang'],
-				$_LANG_ID,
-				$name
-			]
-		);
-
-		if (is_array($type)) {
-			return $type["type_id"];
-		}
-		
-		if (!$create) {
-			return null;
-		}
-
-		return $id;
-
-	}
-
 	function getTypeById($id) {
 		global $base , $_USER , $_SESS , $_LANG_ID; 
 
@@ -617,17 +632,10 @@ class CNovosteerAddonAutoBrandsBackend extends CPlugin {
 		if (!is_array($data)) {
 			$data = $this->db->QFetchArray(
 				"SELECT * FROM %s as type
-					INNER JOIN 
-						%s as type_lang 
-						ON type.type_id = type_lang.type_id AND 
-						type_lang.lang_id = %d
-
 					WHERE 
 						type.type_id = %d",
 				[
 					$this->tables['plugin:novosteer_addon_autobrands_types'],
-					$this->tables['plugin:novosteer_addon_autobrands_types_lang'],
-					$_LANG_ID,
 					$id
 				]
 			);
