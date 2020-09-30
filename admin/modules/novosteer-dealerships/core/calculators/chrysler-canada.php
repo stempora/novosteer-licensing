@@ -121,26 +121,12 @@ class Chrysler_Canada extends Calculator {
 		
 		//no rule found, so i mark the product as with problems to investigate
 		if (!is_array($rule)) {
-			$this->db->QueryUpdate(
-				$this->module->tables["plugin:novosteer_vehicles"],
-				[
-					"alert_price"	=> 1,
-				],
-				$this->db->Statement("product_id=%d" , [$this->vehicle['product_id']])
-			);
+			return false;
 		} else {
+			$price = $this->vehicle[$this->msrpField];
 
-			$price = $this->vehicle["msrp"];
-//		debug($price);
-
-			if (!is_array($rule["discounts"])) {
-				$this->db->QueryUpdate(
-					$this->module->tables["plugin:novosteer_vehicles"],
-					[
-						"alert_price"	=> 1,
-					],
-					$this->db->Statement("product_id=%d" , [$this->vehicle['product_id']])
-				);
+			if (!is_array($rule["discounts"]) || !$this->vehicle[$this->msrpField]) {
+				return false;
 			} else {			
 				foreach ($rule["discounts"] as $key => $discount) {
 
@@ -158,22 +144,11 @@ class Chrysler_Canada extends Calculator {
 									
 				}
 
-//				debug($price);
-//				debug($this->vehicle['product_id']);
-				$this->db->QueryUpdate(
-					$this->module->tables["plugin:novosteer_vehicles"],
-					[
-						"calc_price"	=> round($price),
-						"alert_price"	=> 0,
-					],
-					$this->db->Statement("product_id=%d" , [$this->vehicle['product_id']])
-				);
+
+				return $price;
 			}
 			
 		}
-	
-
-		//debug($rule);
 	}
 	
 

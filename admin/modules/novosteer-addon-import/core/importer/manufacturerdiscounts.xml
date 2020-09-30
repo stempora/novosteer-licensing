@@ -1,0 +1,58 @@
+<importer>
+	<fields>
+		<box title="Settings" width="7">
+			<fields>		
+
+				<set_calculator type="droplist" empty="true" title="Calculator" required="true" validate="A:1:200">
+					<relation table="plugin:novosteer_manufacturers_calculators" id="calculator_id" text="calculator_name" order="calculator_name"></relation>
+					<description>Calculator to be used to calculate the discounts for the msrp.</description>
+				</set_calculator>
+
+				<subtitle_fields type="subtitle" title="Fields Relation"></subtitle_fields>
+			
+				<set_msrp_field type="droplist" required="true" validate="A:1:2000" title="MSRP Field" empty="true">
+					<function module="novosteer-addon-import" function="getTableFields" />
+					<relation id="Field">							
+						<text>
+							<f1 field="Field" />
+						</text>
+					</relation>
+				</set_msrp_field>
+
+				<set_price_field type="droplist" required="true" validate="A:1:2000" title="Calculated Discount" empty="true">
+					<function module="novosteer-addon-import" function="getTableFields" />
+					<relation id="Field">							
+						<text>
+							<f1 field="Field" />
+						</text>
+					</relation>
+				</set_price_field>
+
+
+			</fields>
+		</box>
+	</fields>
+
+	<remove_fields>
+		<feed_missing_status></feed_missing_status>
+		<feed_missing></feed_missing>
+		<feed_duplicates></feed_duplicates>
+		<subtitle></subtitle>
+		<feed_data_type></feed_data_type>
+		<subtitle_feed_location></subtitle_feed_location>
+		<subtitle_feed_manual></subtitle_feed_manual>
+		<comment_manual></comment_manual>
+		<feed_data_file></feed_data_file>
+		<subtitle_feed_ftp></subtitle_feed_ftp>
+		<feed_data_server></feed_data_server>
+		<feed_data_port></feed_data_port>
+		<feed_data_enc></feed_data_enc>
+		<feed_data_passive></feed_data_passive>
+		<feed_data_user></feed_data_user>
+		<feed_data_pass></feed_data_pass>
+		<feed_data_path></feed_data_path>
+		<subtitle_feed_web></subtitle_feed_web>
+		<feed_data_link></feed_data_link>
+	</remove_fields>
+</importer>
+

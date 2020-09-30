@@ -929,8 +929,6 @@ class Importer extends Base{
 	public function wasUpdated($scope , $hash) {
 		global $base , $_USER , $_SESS , $_CONF , $_LANG_ID; 
 
-		return true;
-
 		return $this->event->productWasUpdated($scope , $hash);
 	}
 	

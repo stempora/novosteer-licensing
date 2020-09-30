@@ -45,7 +45,7 @@
 				<feed_status type="checkbox" checked="1" title="Status" label="enabled|disabled" />
 				<feed_extension type="text" title="Extension"/>
 				<feed_class type="text" title="Class"/>
-				<feed_name type="textbox" width="100%" title="Name" required="true" validate="A:1:200" unique="true"/>
+				<feed_name type="textbox" width="100%" title="Name" required="true" validate="A:1:200"/>
 
 				<subtitle_feed_location type="subtitle" title="Feed Location" />
 
@@ -170,6 +170,11 @@
 			formSelectShowHide(
 				$("#feed_data_type"),
 				{
+					"default" : {
+						"#widget_subtitle_feed_manual"	: 0,
+						"#widget_subtitle_feed_ftp"		: 0,
+						"#widget_subtitle_feed_web"		: 0,
+					},
 					1 : {
 						"#widget_subtitle_feed_manual"	: 1,
 						"#widget_subtitle_feed_ftp"		: 0,

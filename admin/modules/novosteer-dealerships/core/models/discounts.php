@@ -130,7 +130,7 @@ class Discounts extends Base{
 						}
 						
 					} else {
-						if (!in_array($value , $ruleItem["values"])) {
+						if (!in_arrayi($value , $ruleItem["values"])) {
 							return false;
 						}						
 					}
@@ -144,7 +144,7 @@ class Discounts extends Base{
 							return false;
 						}
 					} else {
-						if (in_array($value , $ruleItem["values"])) {
+						if (in_arrayi($value , $ruleItem["values"])) {
 							return false;
 						}						
 					}

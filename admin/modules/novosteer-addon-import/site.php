@@ -113,10 +113,9 @@ class CNovosteerAddonImport extends CNovosteerAddonImportBackend{
 			}
 		}
 
-
-		$this->cronVehiclesPrice($job);
-
 		return true;
+
+
 	}
 
 	/**
@@ -156,9 +155,7 @@ class CNovosteerAddonImport extends CNovosteerAddonImportBackend{
 					vehicles.trim_id = trims.trim_id
 		
 			WHERE 
-				dealership_id = %d AND
-				product_status != 2 AND
-				vin = '3C63RRJL4LG183684'
+				dealership_id = %d
 			",
 			[
 				$this->tables["plugin:novosteer_vehicles"],
@@ -171,6 +168,8 @@ class CNovosteerAddonImport extends CNovosteerAddonImportBackend{
 
 		if (is_array($vehicles)) {
 			foreach ($vehicles as $key => $vehicle) {
+
+				$job->log("Calculating price for " . $vehicle["vin"]);
 				$calculator->setVehicle($vehicle);
 				$calculator->calculatePrice();
 			}

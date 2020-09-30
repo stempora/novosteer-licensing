@@ -24,6 +24,16 @@ class Calculator extends Base{
 	*
 	* @access type
 	*/
+	var $msrpField = "msrp";
+	
+
+	/**
+	* description
+	*
+	* @var type
+	*
+	* @access type
+	*/
 	var $event = null;
 	
 	/**
@@ -312,4 +322,20 @@ class Calculator extends Base{
 
 		return $this;
 	}	
+
+	public /**
+	* description
+	*
+	* @param
+	*
+	* @return
+	*
+	* @access
+	*/
+	function setMSRPField($field) {
+		global $base , $_USER , $_SESS , $_CONF , $_LANG_ID; 
+
+		$this->msrpField = $field;
+	}
+	
 }

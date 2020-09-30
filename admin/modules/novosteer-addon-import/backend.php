@@ -377,6 +377,27 @@ class CNovosteerAddonImportBackend extends CPlugin{
 			]
 		));
 	}
+
 	
+
+	/**
+	* description
+	*
+	* @param
+	*
+	* @return
+	*
+	* @access
+	*/
+	function getTableFields() {
+		global $base , $_USER , $_SESS , $_CONF , $_LANG_ID; 
+
+		$fields = $this->db->getTableFields($this->tables["plugin:novosteer_vehicles"])["fields"];
+
+		return $fields;
+
+		debug($fields,1);
+	}
+
 	
 }

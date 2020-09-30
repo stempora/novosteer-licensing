@@ -2,22 +2,14 @@
 	<fields>
 		<box title="Settings" width="7">
 			<fields>			
-				<set_adjust_doc type="textbox" title="Adjustment CSV"></set_adjust_doc>
-
-				<set_import_discount type="textbox" suffix="%" mask="currency" title="Increase Sale Price" description="Set a percentage to show a discount of the same value"/>
-
-
-				<subtitle_feed title="Field Relation" type="subtitle" />
-
-				<set_stock type="droplist" title="Stock" empty="true" required="true" validate="A:1:200">
-					<relation table="plugin:products_fields" table_lang="plugin:products_fields_lang" id="field_id" order="field_name ASC" condition="field_type in (3,4) ">							
+				<set_price_field type="droplist" required="true" validate="A:1:2000" title="Price Field" empty="true">
+					<function module="novosteer-addon-import" function="getTableFields" />
+					<relation id="Field">							
 						<text>
-							<f1 field="field_name" />
-							<f2 field="field_code" preffix="(" suffix=")"/>
+							<f1 field="Field" />
 						</text>
 					</relation>
-					<description>Select the stock id field, must be unique, and must be type single line.</description>
-				</set_stock> 
+				</set_price_field>
 
 			</fields>
 		</box>

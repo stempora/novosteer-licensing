@@ -75,45 +75,6 @@ class Vauto extends Importer {
 		}
 	}
 	
-
-
-	function processFeed(&$items) {
-		global $base , $_USER , $_SESS; 
-
-		$data  = $this->getRemoteCSV($this->info["settings"]["set_adjust_doc"]);
-
-		if (is_array($data)) {
-			foreach ($data as $key => $val) {
-
-				if ($val['Stock']) {
-					$_data[$val['Stock']] = $val;
-				}					
-			}				
-		}
-
-		$data = $_data;
-		
-		foreach ($items as $key => $val) {
-			if ($_data[$val["Stock"]]) {
-				$this->log("Adjusting %s" , [ $val["Stock"] ]);
-
-
-				foreach ($_data[$val["Stock"]] as $k => $v) {
-					if ($v == "") {
-						unset($_data[$val["Stock"]][$k]);
-					}						
-				}
-				
-
-				$items[$key] = array_merge(
-					$val , 
-					$_data[$val["Stock"]]
-				);
-			}				
-		}	
-		
-	}
-
 	function runPreProcess() {
 		$this->setSKUField("vin");
 		//update what exists
@@ -156,26 +117,7 @@ class Vauto extends Importer {
 		global $base , $_USER , $_SESS , $_CONF , $_LANG_ID; 
 
 		$importer = parent::getAdminFields();
-
-		debug($importer,);
-
-		$fields = [
-			"set_field_price_msrp"			=> "MSRP",
-			"set_field_price_incentives"	=> "Incentives",
-			"set_field_price_sale"			=> "Sale Price",
-			"set_field_price_accessories"	=> "Accessories",
-			"set_field_price_protection"	=> "Protection",
-			"set_field_price_discount"		=> "Discount",
-		];
-
-		$_fields = [];
-
-		foreach ($fields as $key => $val) {
-			$_fields[$key] = $this->generateRelationField($key , $val);
-		}
 		
-		\CForm::insertFieldsAfterField($importer , "set_stock" , $_fields);
-
 		return $importer;
 	}
 	
