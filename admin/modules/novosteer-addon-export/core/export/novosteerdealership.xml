@@ -1,0 +1,34 @@
+<form>
+	<fields>
+		<box title="Settings" width="7">
+			<fields>		
+				<set_dealer_client type="textbox" title="Connect Link" preffix="https://" suffix="/__novosteer/*"/>
+				<set_dealer_key type="textbox" title="Authorization Key">
+				</set_dealer_key>
+			</fields>
+		</box>
+	</fields>
+
+	<remove_fields>
+		<feed_missing_status></feed_missing_status>
+		<feed_missing></feed_missing>
+		<feed_duplicates></feed_duplicates>
+		<subtitle></subtitle>
+		<feed_data_type></feed_data_type>
+		<subtitle_feed_location></subtitle_feed_location>
+		<subtitle_feed_manual></subtitle_feed_manual>
+		<comment_manual></comment_manual>
+		<feed_data_file></feed_data_file>
+		<subtitle_feed_ftp></subtitle_feed_ftp>
+		<feed_data_server></feed_data_server>
+		<feed_data_port></feed_data_port>
+		<feed_data_enc></feed_data_enc>
+		<feed_data_passive></feed_data_passive>
+		<feed_data_user></feed_data_user>
+		<feed_data_pass></feed_data_pass>
+		<feed_data_path></feed_data_path>
+		<subtitle_feed_web></subtitle_feed_web>
+		<feed_data_link></feed_data_link>
+	</remove_fields>
+</form>
+

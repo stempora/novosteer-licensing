@@ -1,0 +1,143 @@
+<form lang="true">
+	
+	<title>{SELF.TITLE} Export</title>
+	<action>{SELF.URI.STORE}</action>
+	<name>edit</name>
+	<width>100%</width>
+	<alternance>true</alternance>
+	<encoding></encoding>
+
+	<skin>Gray</skin>
+
+	<formtag>true</formtag>
+	<border>true</border>
+	
+	<buttons>		
+		<set>
+			<header>true</header>
+		</set>
+
+		<button_savecontinue button="saveall" title="Save & Continue">
+			<location>javascript:SaveAndContinue();</location>
+		</button_savecontinue>
+
+		<button_back onclick="" button="return">
+			<location>{TRAIL.PREVIOUS.LINK}</location>
+		</button_back>
+
+		<button_edit onclick="" button="edit" acl="importers.edit">
+			<location>{SELF.URI.EDIT}</location>
+		</button_edit>
+
+		<button_save button="saveall">
+			<location>javascript:$('form').first().trigger('submit');</location>
+		</button_save>
+
+	</buttons>
+
+	<redirect>{PHP}?sub=accounts</redirect>
+
+	<fields>
+		<feed_id type="hidden" />
+
+		<box title="Details" width="5">
+			<fields>
+				<feed_status type="checkbox" checked="1" title="Status" label="enabled|disabled" />
+				<feed_extension type="text" title="Extension"/>
+				<feed_class type="text" title="Class"/>
+				<feed_name type="textbox" width="100%" title="Name" required="true" validate="A:1:200"/>
+
+
+				<cache_control type="subtitle" title="Reset Cache" restricted="eval:$_GET['action'] != 'details';" acl="importers.cache"/>
+
+				<button_all type="button" title="All Cache" label="Delete" button="cross" color="Red" restricted="eval:$_GET['action'] != 'details';" acl="importers.cache">
+					<location><![CDATA[javascript:DeleteConfirmCallback('Are you sure you want to delete the selected cache?' , deleteCacheAll);]]></location>	
+				</button_all>
+			</fields>
+		</box>
+
+
+	</fields>
+
+	<javascript>
+		<after><![CDATA[
+
+			function deleteCacheAll() {
+				_deleteCache("*");
+			}
+
+			function deleteCacheInfo() {
+				_deleteCache("");
+			}
+
+			function deleteCacheImage() {
+				_deleteCache("image");
+			}
+
+			function deleteCacheImages() {
+				_deleteCache("gallery");
+			}
+
+
+			function _deleteCache(what) {
+				InfoBox("Deleting...Please wait...");
+
+				$.ajax({
+					url: "index.php?mod=novosteer-addon-export&sub=delete.cache&type=" + what + "&feed_id={GLOBAL.GET.FEED_ID}"
+				}).done(function() {
+					AlertBox("Cache succesfuly deleted!");
+				});
+			}
+
+
+			formSelectShowHide(
+				$("#feed_data_type"),
+				{
+					"default" : {
+						"#widget_subtitle_feed_manual"	: 0,
+						"#widget_subtitle_feed_ftp"		: 0,
+						"#widget_subtitle_feed_web"		: 0,
+					},
+					1 : {
+						"#widget_subtitle_feed_manual"	: 1,
+						"#widget_subtitle_feed_ftp"		: 0,
+						"#widget_subtitle_feed_web"		: 0,
+					},
+					2 : {
+						"#widget_subtitle_feed_manual"	: 0,
+						"#widget_subtitle_feed_ftp"		: 1,
+						"#widget_subtitle_feed_web"		: 0,
+					},
+					3 : {
+						"#widget_subtitle_feed_manual"	: 0,
+						"#widget_subtitle_feed_ftp"		: 0,
+						"#widget_subtitle_feed_web"		: 1,
+					},
+					4 : {
+						"#widget_subtitle_feed_manual"	: 0,
+						"#widget_subtitle_feed_ftp"		: 0,
+						"#widget_subtitle_feed_web"		: 0,
+					}
+
+
+				}
+			);
+
+
+			formSelectShowHide(
+				$("#feed_missing"),
+				{
+					2 : {
+						"feed_missing_status"	: 1,
+					},
+					"default" : {
+						"feed_missing_status"	: 0,
+					}
+				}
+			);
+
+
+		]]></after>
+	</javascript>
+
+</form>

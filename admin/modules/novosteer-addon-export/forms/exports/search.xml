@@ -1,0 +1,68 @@
+<form>
+	<title></title>
+	<action>{SELF.FILE}</action>
+	<name>search</name>
+	<width>100%</width>
+	<method>get</method>
+
+	<skin>Gray</skin>
+
+	<formtag>true</formtag>
+	<border>true</border>
+	<alternance>true</alternance>
+	
+	<buttons>		
+		<set>
+			<header>true</header>
+		</set>
+
+
+		<button_reset location="index.php?mod={GLOBAL.GET.MOD}&sub={GLOBAL.GET.SUB}" icon="undo" title="Reset"/>
+		<button_search type="submit" location="javascript:$('form').first().trigger('submit');" icon="search" title="Search"/>
+
+	</buttons>
+
+
+	<redirect>index.php?sub=units</redirect>
+
+	<fields>
+		<mod type="hidden" default="$_GET['mod']" action="eval"/>
+		<sub type="hidden" default="$_GET['sub']" action="eval"/>
+		<advanced type="hidden" default="0" />
+	</fields>
+
+	<search>
+			<fields>
+
+				<box title="Search" width="6">
+					<fields>					
+						<keywords type="textbox" title="Keywords"></keywords>
+					</fields>
+				</box>
+					
+				<box title="Filter" width="6">
+					<fields>
+						<dealership_id type="droplist" title="Dealership" empty="true">
+							<relation table="plugin:novosteer_dealerships" id="dealership_id" text="dealership_name" order="dealership_name ASC">							
+							</relation>
+						</dealership_id> 
+
+					</fields>
+				</box>
+					
+			</fields>
+
+			<sql_fields>
+				<field name="keywords" type="keyword" search="full" fields="feed_name">keyword</field>			
+				<field name="dealership_id">=</field>			
+			</sql_fields>
+
+	</search>
+
+	<javascript>
+		<after><![CDATA[
+
+		]]></after>
+	</javascript>
+
+</form>

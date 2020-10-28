@@ -67,6 +67,15 @@
 
 				<subtitle type="subtitle" title="Security"></subtitle>
 				<dealership_key type="textbox" required="true" validate="A:1:200" unique="true" title="Secret Key"/>
+
+				<subtitle_syndication type="subtitle" title="Syndication"></subtitle_syndication>
+				<dealership_syn_name type="textbox" title="Name"/>
+				<dealership_syn_street type="textbox" title="Street"/>
+				<dealership_syn_city type="textbox" title="City"/>
+				<dealership_syn_state type="textbox" title="State"/>
+				<dealership_syn_zip type="textbox" title="Zip"/>
+				<dealership_syn_email type="textbox" title="Email"/>
+
 			</fields>
 		</box>
 
@@ -75,6 +84,7 @@
 			<fields>
 
 				<dealership_status type="checkbox" checked="1" label="enabled|disabled" title="Status" default="1"/>
+				<dealership_location_prefix type="textbox" title="Resources Prefix" preffix="/" suffix="/"></dealership_location_prefix>
 
 				<manufacturer_id type="droplist" empty="true" title="Manufacturer" required="true" validate="A:1:200">
 					<relation table="plugin:novosteer_manufacturers" id="manufacturer_id" text="manufacturer_name" order="manufacturer_name"></relation>

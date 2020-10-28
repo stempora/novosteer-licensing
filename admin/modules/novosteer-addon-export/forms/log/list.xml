@@ -1,0 +1,62 @@
+<form>
+	
+	<title>Feed File History</title>
+	<border>true</border>
+	<alternance>true</alternance>
+	<valternance>true</valternance>
+	<skin>Yellow</skin>
+	
+	<fields>
+		<_count header="No." suffix="." width="30" align="center" />
+		<dealership_id type="relation" header="Dealership" multi="true">
+			<relation table="plugin:novosteer_dealerships" id="dealership_id" text="dealership_name" order="dealership_name ASC">							
+			</relation>
+		</dealership_id> 
+
+		<feed_id type="relation" header="Export" multi="true">
+			<relation table="plugin:novosteer_addon_export_feeds" id="feed_id" text="feed_name" order="feed_name ASC">							
+			</relation>
+		</feed_id> 
+
+		<file_date header="Date" type="date" params="%F %T" align="center" width="120px"/>
+		<file_file_file header="File Name"/>
+
+		<button_view type="button" icon="file-excel" width="20" align="center" onclick="" color="Green" protected="eval:!strstr($field['file_file_file'] , '.csv');">
+			<location>javascript:STBCSVReader.show('novosteer/import/history/{FILE_ID}.file')</location>
+		</button_view>
+
+		<button_dl type="button" icon="download4" width="20" align="center" onclick="" color="DarkGray">
+			<location>index.php?mod=products-addon-import&sub=download&file_id={FILE_ID}</location>
+		</button_dl>
+
+	</fields>
+
+	<header>
+		<titles>true</titles>
+		<buttons>
+
+		</buttons>
+	</header>
+
+	<items>50</items>
+
+
+	<sql>
+		<vars>
+
+			<table type="table"/>
+
+			<page type="page"/>
+			<items type="form" var="items"/>
+
+			<condition type="var" import="" />
+
+			<order type="var" import="file_date" />
+			<order_mode type="var" import="DESC" />
+
+		</vars>
+		<query>select * from {TABLE} {CONDITION} ORDER BY {ORDER} {ORDER_MODE} LIMIT {PAGE} , {ITEMS} </query>
+		<count table="{TABLE}" condition="{CONDITION}" />
+	</sql> 
+
+</form>

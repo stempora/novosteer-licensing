@@ -1,0 +1,48 @@
+<form>
+
+
+	<title>{SELF.TITLE} Export</title>
+	<action>{SELF.LINK}action=store</action>
+	<name>edit</name>
+	<width>100%</width>
+	<alternance>true</alternance>
+
+	<skin>Purple</skin>	
+	<formtag>true</formtag>
+	<border>true</border>
+
+	
+	<buttons>		
+		<set>
+			<header>true</header>
+		</set>
+
+		<button_back onclick="" button="return">
+			<location>{TRAIL.PREVIOUS.LINK}</location>
+		</button_back>
+
+		<button_save button="saveall">
+			<location>javascript:$('form').first().trigger('submit');</location>
+			<title>Next Step</title>
+		</button_save>
+
+	</buttons>
+
+	<redirect>{PHP}?sub=accounts</redirect>
+
+	<fields>
+
+		<dealership_id type="hidden" empty="true" default="eval:$_GET['dealership_id'];" />
+
+		<feed_extension type="fileslist" required="true" validate="A:4:200" empty="true" title="Extension" path="../locals/admin/modules/novosteer-addon-export/core/export" extension=".php" hideextension="true">
+		</feed_extension>
+
+	</fields>
+
+	<javascript>
+		<after>
+
+		</after>
+	</javascript>
+
+</form>

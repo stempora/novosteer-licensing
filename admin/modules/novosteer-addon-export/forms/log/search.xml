@@ -1,0 +1,96 @@
+<form>
+	<title></title>
+	<action>{SELF.FILE}</action>
+	<name>search</name>
+	<width>100%</width>
+	<method>get</method>
+
+	<skin>Yellow</skin>
+
+	<formtag>true</formtag>
+	<border>true</border>
+	<alternance>true</alternance>
+	
+	<buttons>		
+		<set>
+			<header>true</header>
+		</set>
+
+
+		<button_reset location="index.php?mod={GLOBAL.GET.MOD}&sub={GLOBAL.GET.SUB}" icon="undo" title="Reset"/>
+		<button_search type="submit" location="javascript:$('form').first().trigger('submit');" icon="search" title="Search"/>
+
+	</buttons>
+
+
+	<redirect>index.php?sub=units</redirect>
+
+	<fields>
+		<mod type="hidden" default="$_GET['mod']" action="eval"/>
+		<sub type="hidden" default="$_GET['sub']" action="eval"/>
+		<advanced type="hidden" default="0" />
+	</fields>
+
+	<search>
+			<fields>
+
+				<box title="Search" width="6">
+					<fields>					
+						<dealership_id type="droplist" title="Dealership" empty="true">
+							<relation table="plugin:novosteer_dealerships" id="dealership_id" text="dealership_name" order="dealership_name ASC">							
+							</relation>
+						</dealership_id> 
+
+						<feed_id type="droplist" title="Export" empty="true">
+
+							<relation id="feed_id" text="name">
+								<sql>
+									<vars>
+										<table type="table" import="plugin:novosteer_dealerships"/>
+										<table_lang type="table" import="plugin:novosteer_addon_export_feeds"/>
+									</vars>
+
+									<query><![CDATA[
+										SELECT 
+											concat(dealership_name , ' ' , feed_name) as name
+										FROM 
+											{TABLE} as t, 
+											{TABLE_LANG} as l  
+										WHERE 
+											t.dealership_id = l.dealership_id 
+										ORDER BY
+											dealership_name,feed_name ASC
+									]]></query>
+									<field>name</field>
+								</sql>
+							</relation>
+
+
+						</feed_id> 
+					</fields>
+				</box>
+					
+				<box title="Filter" width="6">
+					<fields>
+						<file_date type="calendar" range="true" title="Date Range" />
+
+					</fields>
+				</box>
+					
+			</fields>
+
+			<sql_fields>
+				<field name="feed_id">=</field>			
+				<field name="dealership_id">=</field>			
+				<field name="file_date">range</field>			
+			</sql_fields>
+
+	</search>
+
+	<javascript>
+		<after><![CDATA[
+
+		]]></after>
+	</javascript>
+
+</form>

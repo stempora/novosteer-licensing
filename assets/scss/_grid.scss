@@ -1,0 +1,7 @@
+	$grid-breakpoints : (
+				(class : "" , width: 0 , container: 0 ),
+				(class : "sm" , width: 576 , container: 540 ),
+				(class : "md" , width: 768 , container: 720 ),
+				(class : "lg" , width: 992 , container: 960 ),
+				(class : "xl" , width: 1200 , container: 1140 ),
+			) !default;

@@ -1,0 +1,89 @@
+<tabs>
+		<t 
+			icon="settings"
+			title="Add-on" 
+			link="" 
+			color="Blue"
+		>
+
+
+			<link 
+				active="isModSub('modules','default');" 
+				link="index.php?mod=novosteer-addon-import&sub=settings.general" 
+				icon="edit" 
+				title="General Settings" 
+				acl="settings.general"
+				subtitle="Status, URL, display rules & permissions." />
+
+			<link 
+				active="isModSub('modules' , 'default-settings');" 
+				link="index.php?mod=novosteer-addon-import&sub=settings.advanced" 
+				icon="advanced-settings" 
+				title="Advanced Settings" 
+				acl="settings.advanced"
+				subtitle="Default layouts, functionality & display style." />
+
+		</t>
+
+		<t5 
+			color="Gray" 
+			icon="cloud-download" 
+			subtitle="Add & Edit" 
+			acl="importers.list"
+			title="Exports" 
+			link="index.php?mod=novosteer-addon-import&sub=importers"
+			/>
+
+		<map 
+			color="Green" 
+			icon="merge" 
+			title="Maping Table" 			
+		>
+			<link 
+				active="isModSub('novosteer-addon-import','map.pre');" 
+				link="index.php?mod=novosteer-addon-import&sub=map.pre" 
+				icon="edit" 
+				title="Pre Import" 
+				acl="map.list"
+				subtitle="Rules executed before linking feed to fields." />
+
+			<link 
+				active="isModSub('novosteer-addon-import','map.post');" 
+				link="index.php?mod=novosteer-addon-import&sub=map.post" 
+				icon="edit" 
+				title="Post Import" 
+				acl="map.list"
+				subtitle="Rules executed after linking feed to fields." />
+
+
+		</map>
+
+		<locks
+			color="Red" 
+			icon="lock" 
+			subtitle="Add & Edit" 
+			title="Lock Groups" 
+			acl="lock.list"
+			link="index.php?mod=novosteer-addon-import&sub=locks"
+		/>
+
+
+		<products 
+			color="Purple" 
+			icon="list" 
+			subtitle="View & Manage" 
+			title="Locked Products" 
+			acl="products.list"
+			link="index.php?mod=novosteer-addon-import&sub=products"
+			/>
+
+		<history 
+			color="Yellow" 
+			icon="quill" 
+			subtitle="View & Analize" 
+			title="Log" 
+			acl="logs"
+			link="index.php?mod=novosteer-addon-import&sub=log"
+			/>
+
+	</tabs>

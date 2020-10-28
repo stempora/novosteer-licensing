@@ -1,0 +1,86 @@
+<form>
+	<title>Exports</title>
+	<border>true</border>
+
+
+	<alternance>true</alternance>
+	<valternance>true</valternance>
+
+	<skin>Gray</skin>
+
+	<order>
+		<restricted>eval:$_GET['dealeship_id'];</restricted>
+		<drag>true</drag>
+		<field>feed_order</field>
+		<mode>ASC</mode>
+		<button></button>		
+	</order>
+
+
+	<fields>
+
+		<_count header="No." width="20" align="right" suffix="."/>
+
+		<feed_name header="Admin Note" />
+
+		<dealership_id header="Dealeship" type="relation">
+			<relation table="plugin:novosteer_dealerships" id="dealership_id" text="dealership_name" order="dealership_name" />
+		</dealership_id>
+
+		<feed_extension type="text" header="Extension"/>
+
+		<feed_status type="relation" align="center" width="100" header="Status">
+			<options>
+				<option name="1" color="green" value="enabled" />
+				<option name="0" color="red" value="disabled" />
+			</options>
+		</feed_status>
+
+		<feed_lastrun type="date" params="Y-m-d" align="center"  header="Last Run" width="140"/>
+
+		<button_duplicate type="button" width="44" align="center" onclick="" icon="files-empty" color="Blue" acl="importers.add">
+			<location><![CDATA[javascript:DeleteConfirm('Do you want to duplicate this item?<br>It will be douplicated with the same fieldset and the status disabled.','index.php?mod=products-addon-import&sub=importer.duplicate&feed_id={FEED_ID}');]]></location>
+		</button_duplicate>
+
+		<button_delete type="button" width="44" align="center" onclick="" button="/small/delete" acl="importers.delete">
+			<location>{SELF.URI.DELETE}</location>
+		</button_delete>
+
+		<button_details type="button" width="44" align="center" onclick="" button="/small/details" acl="importers.details">
+			<location>{SELF.URI.DETAILS}</location>
+		</button_details>
+
+	</fields>
+
+	<header>
+		<titles>true</titles>
+		<buttons>
+			<add button="addnew" acl="importers.add">
+				<location>{SELF.URI.ADD}</location>
+			</add>
+		</buttons>
+	</header>
+
+	<items>50</items>
+
+	<sql>
+		<vars>
+
+			<table type="table"/>
+
+			<page type="page"/>
+			<items type="form" var="items"/>
+
+			<condition type="var" import="" />
+
+			<order type="var" import="feed_name" />
+			<order_mode type="var" import="ASC" />
+
+		</vars>
+		<query>select * from {TABLE} {CONDITION} ORDER BY {ORDER} {ORDER_MODE} LIMIT {PAGE} , {ITEMS} </query>
+		<count table="{TABLE} " condition="{CONDITION}" />
+
+	</sql> 
+
+
+</form>

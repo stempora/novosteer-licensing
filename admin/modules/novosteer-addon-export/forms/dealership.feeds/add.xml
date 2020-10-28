@@ -1,0 +1,66 @@
+<form lang="true">
+	
+	<title>{SELF.TITLE} File</title>
+	<action>{SELF.URI.STORE}</action>
+	<name>edit</name>
+	<width>100%</width>
+	<alternance>true</alternance>
+	<encoding></encoding>
+
+	<skin>Purple</skin>
+
+	<formtag>true</formtag>
+	<border>true</border>
+	
+	<buttons>		
+		<set>
+			<header>true</header>
+		</set>
+
+
+		<button_back onclick="" button="return">
+			<location>{PRIVATE.FORM_PREVIOUS_PAGE}</location>
+		</button_back>
+
+		<button_edit onclick="" button="edit">
+			<location>{SELF.URI.EDIT}</location>
+		</button_edit>
+
+		<button_save button="saveall">
+			<location>javascript:$('form').first().trigger('submit');</location>
+		</button_save>
+
+	</buttons>
+
+	<redirect>{PHP}?sub=accounts</redirect>
+
+	<fields>
+		<item_id type="hidden" />
+		<module_id type="hidden" default="eval:$_GET[module_id]"/>
+		<item_parent type="hidden" default="eval:$_GET[item_parent]"/>
+		<item_date type="hidden" default="eval:time()"/>
+		<item_code type="hidden" default="eval:md5(microtime(time))"/>
+
+		<box title="Details" width="7">
+			<fields>
+				<item_title type="textbox" width="100%" title="Title" required="true" validate="A:1:200" lang="true"/>
+				<item_brief type="textarea" width="100%" size="1:4" title="Description" lang="true"/>
+			
+			</fields>
+		</box>
+
+
+		<box title="File" width="5">
+			<fields>
+				<item_file  valign="top" type="upload" path="./products/files/" absolute="false" editable="true" extend="true">
+					<file default="" field="item_id" ext=".file" />			
+					<error>No file available.</error>						
+				</item_file>
+
+			</fields>
+		</box>
+
+
+	</fields>
+
+</form>
