@@ -199,7 +199,7 @@ class CNovosteerAddonExport extends CNovosteerAddonExportBackend{
 			)
 		);		
 
-		\Stembase\Lib\Link::GO(
+		\Stembase\Lib\Link::Go(
 			"index.php",
 			[
 				"mod"		=> $this->name,
@@ -398,10 +398,10 @@ class CNovosteerAddonExport extends CNovosteerAddonExportBackend{
 	*/
 	function ExportPrepareFields(&$forms) {
 
-
 		if ($_REQUEST["feed_id"]) {			
 
 			$client = $this->getExportObject($_REQUEST["feed_id"]);
+
 
 			if (is_object($client)) {
 				$fields = $client->getAdminFields();
@@ -434,7 +434,7 @@ class CNovosteerAddonExport extends CNovosteerAddonExportBackend{
 
 		$data = array_merge(
 			$data , 
-			$settings
+			(array)$settings
 		);
 
 		//debug($settings,1);

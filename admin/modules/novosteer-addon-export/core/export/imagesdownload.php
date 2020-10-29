@@ -23,7 +23,7 @@ use \CFile;
 use \Intervention\Image\ImageManager;
 
 
-class ImagesOverlays extends Export implements ExportInterface{
+class ImagesDownload extends Export implements ExportInterface{
 
 	/**
 	* description
@@ -60,7 +60,6 @@ class ImagesOverlays extends Export implements ExportInterface{
 		return "xx";
 	}
 
-
 	/**
 	* description
 	*
@@ -92,11 +91,11 @@ class ImagesOverlays extends Export implements ExportInterface{
 			WHERE				
 				image_alert = 0 AND 
 				dealership_id = %d AND
-				image_downloaded = 1 AND 
-				image_overlay = 0 AND 
+				image_downloaded = 0 AND
 				image_deleted = 0
 
-				:cond				
+				:cond
+				
 			",
 			[
 				$this->module->tables["plugin:novosteer_vehicles_export_images"],
@@ -126,25 +125,14 @@ class ImagesOverlays extends Export implements ExportInterface{
 	*/
 	function runItem($item) {
 		global $_LANG_ID; 
-		
-		if ($item["image_downloaded"]) {
-			$source = $this->info["dealership_location_prefix"] . "/export/" . $item['product_sku'] . "/original/" . $item["image_id"] . ".jpg";
-		} else {
-			$source = $item["image_source"];
-		}
 
+		$source = $item["image_source"];
+		$destination = $this->info["dealership_location_prefix"] . "/export/" . $item['product_sku'] ."/original/" . $item["image_id"] . ".jpg";
 
-		$destination = $this->info["dealership_location_prefix"] . "/export/" . $item['product_sku'] . "/final/" . $item["image_id"] . ".jpg";
+		$this->log("Downloading image %s" , [$source]);
 
-		$this->log("Processing image %s" , $source);
-	
 		try {
-
-			$image = $this->image->make(
-					$item["image_downloaded"] 
-						? $this->module->storage->resources->get($source)
-						: $source
-				)
+			$image = $this->image->make($source)
 				->resize(
 					$this->info["settings"]["set_image_width"] , 
 					null , 
@@ -152,19 +140,7 @@ class ImagesOverlays extends Export implements ExportInterface{
 						$constraint->aspectRatio();
 					}
 				);
-
-			if (is_array($this->watermarks)) {
-				foreach ($this->watermarks as $key => $watermark) {
-					$image->insert(
-						$watermark["content"] , 
-						$watermak["position"] , 
-						(int)$watermark["offset_x"] , 
-						(int)$watermark["offset_y"]
-					);
-				}			
-			}
-
-			//save the image in final		
+			
 			$this->module->storage->resources->saveStream(
 				$destination, 
 				$image->stream("jpg", $this->info["settings"]["set_image_quality"])->detach()
@@ -172,23 +148,27 @@ class ImagesOverlays extends Export implements ExportInterface{
 
 			$this->db->QueryUpdateByID(
 				$this->module->tables["plugin:novosteer_vehicles_export_images"],
-				["image_overlay" => $this->info["feed_id"]],
+				[
+					"image_error_download"	=> "",
+					"image_downloaded"		=> 1,
+				],
 				$item["image_id"]
 			);
 
-			$this->log("Process Successfuly \n");
-		} catch (\Exception $e ) {
-			$this->log("Error: %s\n" ,$e->getMessage() );
+			$this->log("Download Successfuly\n");
+		} catch ( \Exception $e ) {
 
 			$this->db->QueryUpdateByID(
 				$this->module->tables["plugin:novosteer_vehicles_export_images"],
 				[
-					"image_error_overlay" => $e->getMessage()
+					"image_error_download"	=> $e->getMessage()
 				],
 				$item["image_id"]
 			);
-		}
 
+
+			$this->log("Error: %s\n" , $e->getMessage());
+		}
 	}
 
 	
@@ -202,23 +182,10 @@ class ImagesOverlays extends Export implements ExportInterface{
 	* @access
 	*/
 	function runPreprocess() {
+		global $_LANG_ID; 
 
 		$this->image = new ImageManager(array('driver' => "gd"));
 
-		for ($i = 1; $i <= 4; $i++) {
-			if ($this->info["settings"]["set_w{$i}"]) {
-
-				if ($this->module->storage->public->fileExists("novosteer/export/overlays/w{$i}_" . $this->info["feed_id"] . "." . $this->info["settings"]["set_w{$i}_type"])) {				
-					$this->watermarks[] = [
-						"content"	=> $this->module->storage->public->get("novosteer/export/overlays/w{$i}_" . $this->info["feed_id"] . "." . $this->info["settings"]["set_w{$i}_type"]),
-						"position"	=> $this->info["settings"]["set_w{$i}_position"],
-						"offset_x"	=> $this->info["settings"]["set_w{$i}_offset_x"],
-						"offset_y"	=> $this->info["settings"]["set_w{$i}_offset_y"],
-					];
-				}
-			}
-			
-		}
 	}
 	
 	

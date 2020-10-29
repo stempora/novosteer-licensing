@@ -34,7 +34,7 @@
 
 		<dealership_id type="hidden" empty="true" default="eval:$_GET['dealership_id'];" />
 
-		<feed_extension type="fileslist" required="true" validate="A:4:200" empty="true" title="Extension" path="../locals/admin/modules/novosteer-addon-export/core/export" extension=".php" hideextension="true">
+		<feed_extension type="fileslist" required="true" validate="A:4:200" empty="true" title="Extension" path="locals/admin/modules/novosteer-addon-export/core/export" extension=".php" hideextension="true">
 		</feed_extension>
 
 	</fields>

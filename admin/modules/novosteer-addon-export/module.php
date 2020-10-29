@@ -27,6 +27,8 @@ return [
 		"plugin:novosteer_addon_export_locks_groups"	=> "site_plugin_novosteer_addon_export_locks_groups",
 		"plugin:novosteer_addon_export_locks_products"	=> "site_plugin_novosteer_addon_export_locks_products",
 
+		"plugin:novosteer_addon_export_products"	=> "site_plugin_novosteer_addon_export_products"
+
 	]
 ];		
 		

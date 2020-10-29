@@ -30,6 +30,18 @@ class NovosteerDealership extends Export implements ExportInterface{
 	* @access type
 	*/
 	var $first = false;
+
+	/**
+	* description
+	*
+	* @var type
+	*
+	* @access type
+	*/
+	var $skus = [
+		"updated" => [] , "created" => [], "ignored" => [] , "all" => []
+	];
+	
 	
 
 	/**
@@ -43,53 +55,8 @@ class NovosteerDealership extends Export implements ExportInterface{
 	*/
 	function processFeedItem(&$item) {
 		global $base , $_USER , $_SESS; 
-
-		//$item = $this->lowerKeys($item);
-
-		//dont import new
-		if (($item["type"] == "New") && ($this->info["settings"]["set_import_type"] == "2")) {
-			unset($item[$this->skuField]);
-			return false;
-		}
-
-		//dont import used
-		if (($item["type"] != "New") && ($this->info["settings"]["set_import_type"] == "3")) {
-			unset($item[$this->skuField]);
-			return false;
-		}
-
-		//remove images field if not activated
-		if (!$this->info["settings"]["set_import_" . strtolower($item["type"]) . "_images"]) {
-			unset($item["imagelist"]);
-		} 
-		//remove thr prices if not activated
-		if (!$this->info["settings"]["set_import_" . strtolower($item["type"]) . "_prices"]) {
-			unset($item["msrp"]);
-			unset($item["sellingprice"]);
-			unset($item["bookvalue"]);
-			unset($item["invoice"]);
-			unset($item["internet_price"]);
-			unset($item["misc_price_1"]);
-			unset($item["misc_price_2"]);
-			unset($item["misc_price_3"]);
-		}
 		
-		if ($item["type"] == "Used") {
-
-			if (strtolower($item["certified"]) == "true")  {
-				$item["type"] = "Certified";
-			}			
-		}
-
-		$item["description"] = strip_tags($item["description"]);
-		
-		//build the engine filter fields
-		$item["engine"] = strtoupper($item["engine_block_type"]) ."-". $item["enginecylinders"] . " " . str_replace(" " , "" , $item["enginedisplacement"]);		
-		$item["factory_codes"] = implode("," , explode(" " , $item["factory_codes"]));
-
-		$item["age"] = date("Y") - $item["year"];
-
-
+	
 		switch ($item["type"]) {
 			case "New":
 				$item["brand_id"] = $this->module->plugins["novosteer-addon-autobrands"]->getBrandIdByName(
@@ -124,6 +91,8 @@ class NovosteerDealership extends Export implements ExportInterface{
 		}
 
 		$item["feed_id"] = $this->info["feed_id"];
+
+		$item["images"] = is_array($item["gallery"]) ? count($item["gallery"]) : 0;
 		return true;
 	}
 
@@ -198,7 +167,7 @@ class NovosteerDealership extends Export implements ExportInterface{
 	public function updateProductImages($product , $data) {
 
 		$old = $this->db->qFetchRowArray(
-			"SELECT * FROM %s WHERE product_id = %d",
+			"SELECT * FROM %s WHERE product_id = %d AND image_deleted = 0",
 			[
 				$this->module->tables['plugin:novosteer_vehicles_export_images'],
 				$product["product_id"]
@@ -208,75 +177,43 @@ class NovosteerDealership extends Export implements ExportInterface{
 		$new = [];
 
 		if (is_array($data["gallery"])) {
-			$first = true;
+			$cnt = 1;
 			foreach ($data["gallery"] as $key => $val) {
 				$new[$val] = [
 					"product_id"		=> $product["product_id"],
+					"image_order"		=> $cnt ++,
 					"image_main"		=> $first,
-					"image_url"			=> $val,
+					"image_source"			=> $val,
 					"image_last_update"	=> time()
 				];
-
-				$first = false;
 			}			
 		}
 
 		if (is_array($old)) {
 			foreach ($old as $k => $v) {
-				if ($new[$v["image_url"]]) {
-					$new[$v["image_url"]] = $v;
-
-					unset($old[$v["image_url"]]);
-				}			
-			}		
+				if ($new[$v["image_source"]]) {
+					unset($new[$v["image_source"]]);
+					unset($old[$k]);
+				}
+			}	
 		}
 
 		if (is_array($old) && count($old)) {
-			foreach ($old as $key => $val) {
-				$this->module->storage->resources->delete($this->info["dealership_location_prefix"] . "/export/{$product['product_sku']}/original/" . $val["image_id"] . ".jpg");
-			}			
+			$ids = array_map(function($item) { return $item["image_id"]; } ,$old );
+
+			$this->db->QueryUpdate(
+				$this->module->tables["plugin:novosteer_vehicles_export_images"],
+				[ "image_deleted" => "1"] ,
+				$this->db->Statement("image_id in (%s)" , [implode("," , $ids)])
+			);
 		}
 
-		$this->db->Query(
-			"DELETE FROM %s WHERE product_id = %d" , 
-			[
-				$this->module->tables["plugin:novosteer_vehicles_export_images"],
-				$product["product_id"]
-			]
-		);
-
-
 		if (is_array($new) && count($new)) {
-			foreach ($new as $key => $image) {
-				//is a new one
-				$id = $this->db->QueryInsert(
-					$this->module->tables["plugin:novosteer_vehicles_export_images"],
-					$image
-				);
-
-				if (!$image["image_id"]) {
-
-					$this->log("Downloading image %s" , [$image["image_url"]]);
-
-					$client = new \GuzzleHttp\Client();
-					$res = $client->request(
-						"GET" , 
-						$image["image_url"]
-					);
-
-					if ($res->getStatusCode() !== 200) {
-						$this->log("Error downloading...");
-					} else {
-						$this->module->storage->resources->saveStream(
-							$this->info["dealership_location_prefix"] . "/export/{$product['product_sku']}/original/" . $id . ".jpg",
-							$res->getBody()->detach()		
-						);
-						$this->log("Download Successfuly");
-					}
-				}				
-			}			
-		}		
-			
+			$this->db->QueryInsertMulti(
+				$this->module->tables["plugin:novosteer_vehicles_export_images"],
+				$new
+			);
+		}				
 	}
 
 
@@ -289,7 +226,7 @@ class NovosteerDealership extends Export implements ExportInterface{
 	*
 	* @access
 	*/
-	public function updateProduct(&$product , &$item , &$data) {
+	public function updateProduct(&$product , &$item) {
 		global $base , $_USER , $_SESS , $_LANG_ID; 
 
 		$this->log("Updating %s..." , [$item[$this->skuField]]);
@@ -325,7 +262,7 @@ class NovosteerDealership extends Export implements ExportInterface{
 				)
 			);
 
-			$this->skus["updates"][] = $item[$this->skuField];
+			$this->skus["updated"][] = $item[$this->skuField];
 		}
 			
 
@@ -344,7 +281,7 @@ class NovosteerDealership extends Export implements ExportInterface{
 	*
 	* @access
 	*/
-	public function createProduct($item , $data) {
+	public function createProduct($item) {
 		global $base , $_USER , $_SESS; 
 
 		$this->log("Creating product %s ..." , [$item[$this->skuField]]);
@@ -396,23 +333,21 @@ class NovosteerDealership extends Export implements ExportInterface{
 			$this->log("Processing %s" , [$item[$this->skuField]]);
 			$this->updateCronJob();
 
-			$data = null;
-
-
 			//check if exists a product with this sku already
 			$product = $this->getProduct($item);
 			$changeLog = null;
 
 			$this->skus["all"][] = $item[$this->skuField];
 
+			$cache = $item;
+
 			if (is_Array($product)) {
 				$this->event->setProduct($product["product_id"]);
-				//$this->lock->setProduct($product["product_id"]);
 
 				$this->log("Checking %s for changes..." , [$item[$this->skuField]]);
 
-				if ($this->wasUpdated("" , $this->event->getHash($item))) {
-					$this->updateProduct($product , $item , $data);
+				if ($this->wasUpdated("" , $this->event->getHash($cache))) {
+					$this->updateProduct($product , $item);
 					$this->updateProductImages($product , $item);
 				} else {
 					$this->log("No Change, skipping \n");
@@ -420,11 +355,13 @@ class NovosteerDealership extends Export implements ExportInterface{
 				}							
 				
 			} else {
-				$product = $this->createProduct($item , $data);				
+				$this->event->setProduct($product["product_id"]);
+				$product = $this->createProduct($item);				
 			}
 
-			if (is_array($product)) {
-				$this->event->productRecordUpdate("" , $this->event->getHash($item));
+			if (is_array($product)) {				
+				$this->event->productRecordUpdate("" , $this->event->getHash($cache));
+
 				$this->updateProductImages($product , $item);
 				$this->postUpdateProduct($product , $data , $item);					
 			} else {
@@ -449,22 +386,135 @@ class NovosteerDealership extends Export implements ExportInterface{
 		global $_LANG_ID; 
 
 		$this->log("Deleting product %s" , [$sku]);
-
+		$this->log("\tDeleting database records");
 		$this->db->Query(
-			"DELETE FROM %s WHERE product_sku LIKE '%s' AND dealership_id=%d",
+			"DELETE FROM %s WHERE dealership_id=%d AND product_sku LIKE '%s'",
 			[
 				$this->module->tables["plugin:novosteer_vehicles_export"],
+				$this->info["dealership_id"],
 				$sku
 			]
 		);
 
-		$this->log("Deleging images & resources");
+		$this->log("\tDeleting images & resources");
 		$this->module->storage->resources->deleteDirectoryRecursive(
 			$this->info["dealership_location_prefix"] . "/export/{$sku}/"
 		);
 
-		$this->log("Done");
+		$this->log("Done\n");
 	}
+	
+	/**
+	* description
+	*
+	* @param
+	*
+	* @return
+	*
+	* @access
+	*/
+	function runPostProcess() {
+		global $_LANG_ID; 
+
+		if (!is_array($this->skus["all"])) {
+			return null;
+		}
+		
+
+		$delete = $this->db->QFetchRowArray(
+			"SELECT product_sku FROM %s WHERE dealership_id = %d AND product_sku NOT IN (':cond')",
+			[
+				$this->module->tables["plugin:novosteer_vehicles_export"],
+				$this->info["dealership_id"],
+				
+			],
+			[ ":cond" => implode("','" , $this->skus["all"])]
+		);
+
+		if (is_array($delete)) {
+			foreach ($delete as $key => $product) {
+				$this->deleteProduct($product["product_sku"]);
+			}			
+		}
+
+		$this->log(
+			"Final Stats: \n\tUpdated %d, \n\tCreated %d, \n\tDeleted %d, \n\tIgnored %d\n",
+			[
+				count($this->skus["updated"]),
+				count($this->skus["created"]),
+				count((array)$delete),
+				count($this->skus["ignored"]),
+			]
+		);
+
+		$this->deleteImages();
+	}
+
+	/**
+	* description
+	*
+	* @param
+	*
+	* @return
+	*
+	* @access
+	*/
+	function deleteImages() {
+		global $_LANG_ID; 
+
+
+		$images = 	$this->db->QFetchRowArray(
+			"SELECT 
+				product_sku,product_id,images.* 
+			FROM %s as images
+				INNER JOIN 
+					%s as products
+				ON 
+					products.product_id = image.product_id
+			
+			WHERE 
+				dealership_id = %d AND
+				images.image_deleted = 1
+			",
+			[
+				$this->module->tables["plugin:novosteer_vehicles_export_images"],
+				$this->module->tables["plugin:novosteer_vehicles_export"],
+				$this->info["dealership_id"],
+				
+			]
+		);
+
+		if (is_array($images)) {
+			foreach ($images as $key => $image) {
+				$source = $this->info["dealership_location_prefix"] . "/export/" . $image['product_sku'] . "/original/" . $image["image_id"] . ".jpg";
+				$overlay = $this->info["dealership_location_prefix"] . "/export/" . $image['product_sku'] . "/original/" . $image["image_id"] . ".jpg";
+
+				if ($image["image_downloaded"] && $this->module->storage->resources->fileExists($source)) {
+					$this->log("Deleting original %s" , [$source]);
+					$this->module->storage->resources->delete($source);
+				}
+
+				if ($image["image_overlay"] && $this->module->storage->resources->fileExists($overlay)) {
+					$this->log("Deleting overlay %s" , [$overlay]);
+					$this->module->storage->resources->delete($overlay);
+				}
+				
+				$this->log("Deleting database record.\n");
+				$this->db->Query(
+					"DELETE FROM %s WHERE image_id = %d",
+					[
+						$this->module->tables["plugin:novosteer_vehicles_export_images"],
+						$image["image_id"]
+					]
+				);
+			}
+			
+			$this->log("Deleted %d schedule images." , [count($images)]);
+		}
+		
+
+	}
+	
 	
 	
 }

@@ -668,5 +668,91 @@ class Export extends Base{
 	function runPreProcess() {
 		global $_LANG_ID; 
 	}
+
+	/**
+	* description
+	*
+	* @param
+	*
+	* @return
+	*
+	* @access
+	*/
+	function processCondition($data , $pref = " AND ") {
+		global $_LANG_ID; 
+
+		$data = explode("\n" , $data);
+		$cond = [];
+
+		if (count($data)) {
+			foreach ($data as $key => $val) {
+
+				if (!trim($val)) {
+					unset($data[$key]);
+				} else {
+
+					$format = explode("|" , trim($val));
+
+					if ($format[0][0] != "#") {
+
+						switch ($format[1]) {
+							case "in":
+								$cond[] = $format[0] . " in ('" . implode("','" , explode("," , $format[2])) . "')" ;
+							break;
+
+							case "!in":
+								$cond[] = $format[0] . " not in ('" . implode("','" , explode("," , $format[2])) . "')" ;
+							break;
+
+							case "!=":
+								$cond[] = $this->db->Statement("%s != %d" , [$format[0] , $format[2]]);
+							break;
+
+							case ">":
+								$cond[] = $this->db->Statement("%s > %d" , [$format[0] , $format[2]]);
+							break;
+
+							case "<":
+								$cond[] = $this->db->Statement("%s < %d" , [$format[0] , $format[2]]);
+							break;
+
+							case "=":
+								$cond[] = $this->db->Statement("%s = %d" , [$format[0] , $format[2]]);
+							break;
+						}				
+					}
+				}				
+			}			
+		}
+
+		if (count($cond)) {
+			return $pref . " ( " . implode(" AND " , $cond) ." ) ";
+		}
+
+		return "";
+		
+	}
+	
+
+	/**
+	* description
+	*
+	* @param
+	*
+	* @return
+	*
+	* @access
+	*/
+	function getSyndicationProducts() {
+		global $_LANG_ID; 
+
+		return $this->db->QFetchRowArray(
+			"SELECT product_id from %s WHERE feed_id = %d" , 
+			[
+				$this->module->tables["plugin:novosteer_addon_export_products"],
+				$this->info["feed_id"]
+			]
+		);
+	}
 	
 }

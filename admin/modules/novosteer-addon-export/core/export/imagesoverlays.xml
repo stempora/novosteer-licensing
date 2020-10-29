@@ -6,6 +6,12 @@
 				<set_image_width type="textbox" suffix="px" title="Output Width" required="true" validate="A:1:4"></set_image_width>
 				<set_image_quality type="textbox"  title="Output Quality" required="true" validate="A:1:2"></set_image_quality>
 
+				<set_condition type="textarea" script="true" title="Conditions">
+					<description><![CDATA[
+						<p>Eg: [database_table_field]|[condition: &gt;, &lt;, =, in,]|[value1,value2,value3]</p>
+					]]></description>
+				</set_condition>
+
 				<subtitle_w1 type="subtitle" title="Watermark #1">Watermark #1</subtitle_w1>
 
 				<set_w1 valign="top" adminwidth="200" type="image" path="novosteer/export/overlays/" absolute="false" editable="true" extend="false" title="List">
@@ -110,6 +116,12 @@
 			</fields>
 		</box>
 	</fields>
+
+	<javascript>
+		<after>
+			CM("set_condition");
+		</after>
+	</javascript>
 
 	<remove_fields>
 	</remove_fields>

@@ -263,5 +263,255 @@ class CNovosteerAddonExportBackend extends CPlugin{
 		return $fields;
 	}
 
+
+	/**
+	* description
+	*
+	* @param
+	*
+	* @return
+	*
+	* @access
+	*/
+	function getAllFeedsByName($name) {
+		global $_LANG_ID; 
+
+		$this->__init();
+
+
+		$feeds = $this->db->QFetchRowArray(
+			"SELECT * FROM %s as feeds 
+				INNER JOIN 
+					%s as dealerships
+				ON 
+					feeds.dealership_id = dealerships.dealership_id					
+			WHERE 
+				feeds.feed_extension LIKE '%s' AND
+				feed_status = 1",
+			[
+				$this->tables["plugin:novosteer_addon_export_feeds"],
+				$this->tables["plugin:novosteer_dealerships"],
+				$name
+			]
+		);
+
+		$feeds = array_map(
+			function($feed) {
+				if ($feed["feed_settings"]) {
+					$feed["settings"] = json_decode($feed["feed_settings"] ,true);
+				}
+
+				return $feed;				
+			},
+			$feeds
+		);
+
+		return $feeds;
+	}
+
 	
+	/**
+	* description
+	*
+	* @param
+	*
+	* @return
+	*
+	* @access
+	*/
+	function getExportProductsCount($feed) {
+		global $_LANG_ID; 
+
+		return $this->db->QFetchArray(
+			"SELECT count(product_id) as cnt FROM %s WHERE feed_id = %d ",
+			[
+				$this->tables["plugin:novosteer_addon_export_products"],
+				$feed["feed_id"]
+			]
+		)["cnt"];
+	}
+	
+
+	/**
+	* description
+	*
+	* @param
+	*
+	* @return
+	*
+	* @access
+	*/
+	function getExportProducts($feed , $start , $batch) {
+		global $_LANG_ID; 
+
+		$products = $this->db->QFetchRowArray(
+			"SELECT * FROM %s as feeds
+				INNER JOIN 
+					%s as products 
+				ON 
+					feeds.product_id= products.product_id 
+				INNER JOIN 
+					%s as brands
+				ON 
+					products.brand_id = brands.brand_id
+				INNER JOIN 
+					%s as models
+				ON 
+					products.model_id = models.model_id
+			WHERE
+				feeds.feed_id = %d
+			ORDER BY 
+				products.product_id
+			LIMIT 
+				%d , %d",			[
+				$this->tables["plugin:novosteer_addon_export_products"],
+				$this->tables["plugin:novosteer_vehicles_export"],
+				$this->tables["plugin:novosteer_addon_autobrands_brands"],
+				$this->tables["plugin:novosteer_addon_autobrands_models"],
+				$feed["feed_id"] ,
+				$start,
+				$batch
+			]
+		);
+
+		$fields = ["options" , "options_exterior" , "options_interior" , "options_mechanical" , "options_safety" , "factory-codes" ];
+
+		if (is_array($products)) {
+			$_products = [];
+			foreach ($products as $key => $product) {
+
+				foreach ($fields as $k => $val) {
+					$product[$val] = json_decode($product[$val], true);
+				}
+
+				$_products[$product["product_id"]] = $product;
+				$pids[] = $product["product_id"];
+			}
+			
+			$products = $_products;
+
+			$images = $this->db->QFetchRowArray(
+				"SELECT * FROM %s WHERE product_id in (%s) and image_deleted = 0 ORDER BY image_order ASC" ,
+				[
+					$this->tables["plugin:novosteer_vehicles_export_images"],
+					implode("," , $pids)
+				]
+			);
+
+			if (is_array($images)) {
+				foreach ($images as $k => $image) {
+					if (!is_array($products[$image["product_id"]]["gallery"])) {
+						$products[$image["product_id"]]["gallery"] = [];
+					}
+
+					$products[$image["product_id"]]["gallery"][] = [
+						"original"	=> $image["image_downloaded"] 
+							? $this->storage->resources->getUrl($feed["dealership_location_prefix"] . "/export/" . $products[$image["product_id"]]['product_sku'] . "/original/" . $image["image_id"] . ".jpg")
+							: $image["image_source"],
+
+						"overlay"	=> $image["image_overlay"] 
+							? $this->storage->resources->getUrl($feed["dealership_location_prefix"] . "/export/" . $products[$image["product_id"]]['product_sku'] . "/final/" . $image["image_id"] . ".jpg")
+							: null,
+
+						"date"		=> $image["image_last_update"]
+							
+					];
+				}				
+			}			
+		}
+		
+
+		return $products;
+	}
+	
+
+	/**
+	* description
+	*
+	* @param
+	*
+	* @return
+	*
+	* @access
+	*/
+	public function uploadFileToFTP($options , $verbose = true , $job) {
+		global $base , $_USER; 
+
+		$job->log("Connecting to {$options['server']} ...");
+
+		if ($options['ssl']) {
+			$conn_id = ftp_ssl_connect($options['server'] , $options['port'] ? $options['port']  : 21);
+		} else {				
+			$conn_id = ftp_connect($options['server'] , $options['port'] ? $options['port']  : 21);
+		}
+
+		if (!$conn_id) {
+			$job->log("Error connecting to {$options['server']}");
+			return false;
+		}
+		
+
+		$login_result = @ftp_login(
+			$conn_id, 
+			$options["username"],
+			$options["password"]
+		);
+
+		if (!$login_result) {
+			$job->log("Error loggin into the server");
+			return false;
+		} else {
+			$job->log("Connection OK");
+		}
+
+		if ($options["passive"]) {
+			$job->log("Entering passive mode");
+			ftp_pasv($conn_id, true);
+		}
+
+		if (is_resource($options["local_file"])) {
+
+			fseek($options["local_file"],0);
+
+			if (ftp_fput(
+				$conn_id, 
+				$options["remote_file"], 
+				$options["local_file"], 			
+				FTP_BINARY
+				)
+			) {
+
+				$job->log("Successfully uploaded " . $options['remote_file']);
+			} else {
+				$error = error_get_last();
+				$job->log("There was a problem uploading the file: " . $error['message']);
+				return null;
+			}
+		} else {		
+			if (ftp_put(
+				$conn_id, 
+				$options["remote_file"], 
+				$options["local_file"], 			
+				FTP_BINARY
+				)
+			) {
+
+				$job->log("Successfully uploaded " . $options['remote_file']);
+			} else {
+				$error = error_get_last();
+				$job->log("There was a problem uploading the file: " . $error['message']);
+				return null;
+			}
+		}
+
+		// close the connection
+		ftp_close($conn_id);
+
+		if (is_resource($options["local_file"])) {
+			fclose($options["local_file"]);
+		}		
+
+		$job->log("Closed ftp connection");
+		return true;
+	}	
 }
