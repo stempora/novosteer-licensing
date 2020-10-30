@@ -39,6 +39,9 @@
 			</sql>
 		</products>
 
+		<button_run onclick="" type="button" width="44" align="center" icon="spinner11" color="DarkGray" acl="novosteeer-addon-export:feeds.run" protected="feed_forced">
+				<location>javascript:DeleteConfirm('Do you want to force runing this job next time crontab runs?' , 'index.php?mod=novosteer-addon-export&sub=feeds.force&feed_id={FEED_ID}&_tb={TRAIL.HERE}');</location>
+		</button_run>
 
 		<button_delete type="button" width="44" align="center" onclick="" button="/small/delete" acl="novosteer-addon-export:feeds.delete">
 			<location>{SELF.URI.DELETE}</location>
@@ -53,6 +56,10 @@
 	<header>
 		<titles>true</titles>
 		<buttons>
+			<button_run icon="spinner11" acl="novosteeer-addon-export:feeds.run" title="Force Re-Run">
+					<location>javascript:DeleteConfirm('Do you want to force runing this job next time crontab runs?' , 'index.php?mod=novosteer-addon-export&sub=feeds.force&feed_extension=syndicateautotrader&_tb={TRAIL.HERE}');</location>
+			</button_run>
+
 		</buttons>
 	</header>
 
