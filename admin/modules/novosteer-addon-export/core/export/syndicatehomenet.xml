@@ -1,0 +1,37 @@
+<form>
+	<fields>
+		<box title="Settings" width="7">
+			<fields>				
+				<set_condition type="textarea" script="true" title="Conditions">
+					<description><![CDATA[
+						<p>Eg: [database_table_field]|[condition: &gt;, &lt;, =, in,]|[value1,value2,value3]</p>
+					]]></description>
+				</set_condition>
+
+				
+				<subtitle_ftp type="subtitle" title="FTP Server" ></subtitle_ftp>
+
+				<set_server type="textbox" title="Server" referers="set_port" width="70%"></set_server>
+				<set_port type="textbox" title="Port" referer="true" width="30%" preffix=":" default="21"></set_port>
+
+				<set_username type="textbox" title="Username" />
+				<set_password type="textbox" title="Password" />
+				<set_passive type="checkbox" checked="1" label="yes|no" title="Passive"/>
+				<set_ssl type="checkbox" checked="1" label="yes|no" title="SSL"/>
+
+				<set_path type="textbox" preffix="/" script="true" title="File Path" ></set_path>	
+
+			</fields>
+		</box>
+	</fields>
+
+	<javascript>
+		<after>
+			CM("set_condition");
+		</after>
+	</javascript>
+
+	<remove_fields>
+	</remove_fields>
+</form>
+

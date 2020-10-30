@@ -1,0 +1,9 @@
+<menu>
+				<link 
+				active="isMod('novosteer-addon-syndicate-homenet');" 
+				link="index.php?mod=novosteer-addon-syndicate-homenet&sub=landing" 
+				icon="transmission" 
+				title="Syndicate Homenet" 
+				acl="novosteer-addon-syndicate-homenet:*"
+				subtitle="Manage exporter settings & view queue." />
+</menu>

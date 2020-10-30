@@ -1,0 +1,49 @@
+<perms _module="Syndicate Homenet" _parent="Novosteer">
+
+	<rules>	
+		<g1 type="group" title="Module">
+			<acl>
+				<acl name="settings.general">General Settings</acl>
+				<acl name="settings.advanced">Advanced Settings</acl>
+			</acl>
+		</g1>
+
+
+		<acl name="exports">Exports</acl>
+		<acl name="vehicles">Vehicles</acl>
+
+		<g2 type="group" title="Maping Table">
+			<acl>
+				<acl name="map.list">List</acl>
+				<acl name="map.add">Add</acl>
+				<acl name="map.edit">Edit</acl>
+				<acl name="map.delete">Delete</acl>
+			</acl>
+		</g2>
+
+		<g3 type="group" title="Logs">
+			<acl>
+				<acl name="log.list">List</acl>
+				<acl name="log.edit">Download</acl>
+				<acl name="log.delete">View Online</acl>
+			</acl>
+		</g3>
+
+	</rules>
+
+	<sections>
+		<sub name="landing">exports</sub>
+		<sub name="exports">exports</sub>
+		<sub name="vehicles">vehicles</sub>
+		<sub name="log">log.list</sub>
+		<sub name="map">map.list,map.edit,map.delete,map.add</sub>
+
+		<sub name="download">log.download,log.view</sub>
+
+	</sections>
+
+	<internal>
+		<sub name="download">true</sub>
+	</internal>
+
+</perms>

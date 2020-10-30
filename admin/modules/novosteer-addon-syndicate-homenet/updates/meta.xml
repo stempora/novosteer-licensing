@@ -1,0 +1,22 @@
+<module>
+	<id>412</id>
+	<name>Syndicate Homenet</name>
+	<code>novosteer-addon-syndicate-homenet</code>
+	<parent>novosteer-dealerships</parent>
+	<type>system</type>
+	<version>1.0</version>
+	<url></url>
+	<install>			
+
+		<version>1.0</version>
+		<files>
+		</files>
+
+		<data>
+		</data>
+	</install>
+
+	<history>
+
+	</history>
+</module>
