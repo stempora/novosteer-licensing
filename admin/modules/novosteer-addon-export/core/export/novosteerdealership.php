@@ -139,9 +139,9 @@ class NovosteerDealership extends Export implements ExportInterface{
 		if ($res->getStatusCode() !== 200) {
 			return null;
 		}
-
 		
 		$data = json_decode($res->getBody()->getContents() , true);
+
 
 		return $data;
 	}

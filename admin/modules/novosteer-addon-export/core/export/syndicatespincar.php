@@ -15,12 +15,8 @@ if (!defined("STPBase")) {
 }
 
 
-use \Stembase\Modules\Novosteer_Addon_Export\Core\Models\Export;
-use \Stembase\Modules\Novosteer_Addon_Export\Core\Models\Locks;
-use \Stembase\Modules\Novosteer_Addon_Export\Core\Interfaces\ExportInterface;
-use \CTemplateStatic;
-use \CFile;
+use \Stembase\Modules\Novosteer_Addon_Export\Core\Models\Syndicate;
 
-class ImagesOverlays extends Export implements ExportInterface{
+class SyndicateSpinCar extends Syndicate{
 
 }

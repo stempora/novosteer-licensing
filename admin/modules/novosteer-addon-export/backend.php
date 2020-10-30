@@ -98,19 +98,31 @@ class CNovosteerAddonExportBackend extends CPlugin{
 			[
 				"feed_id"			=> $feed["feed_id"],
 				"file_date"			=> time(),
-				"history_file"			=> "1",
+				"history_file"		=> "1",
+				"feed_extension"	=> $feed["feed_extension"],
 				"history_file_file"	=> $file
 			]
 		);
 
 		//update the feeed last run
-		$this->db->QueryUpdateByID(
-			$this->tables["plugin:novosteer_addon_export_feeds"],
-			[
-				"feed_lastrun"	=> time()
-			],
-			$feed["feed_id"]
-		);
+		if ($feed["feed_id"]) {
+			$this->db->QueryUpdateByID(
+				$this->tables["plugin:novosteer_addon_export_feeds"],
+				[
+					"feed_lastrun"	=> time()
+				],
+				$feed["feed_id"]
+			);
+		} else {
+			$this->db->QueryUpdate(
+				$this->tables["plugin:novosteer_addon_export_feeds"],
+				[
+					"feed_lastrun"	=> time()
+				],
+				$this->db->Statement("feed_status = 1 AND feed_extension LIKE '%s'" , [$feed["feed_extension"]])
+			);
+		}
+		
 
 		$this->storage->private->saveStream(
 			"novosteer/export/" . $id . ".file",
