@@ -1,9 +1,9 @@
 <menu>
 				<link 
-				active="isMod('novosteer-addon-import');" 
-				link="index.php?mod=novosteer-addon-import&sub=landing" 
+				active="isMod('novosteer-addon-export');" 
+				link="index.php?mod=novosteer-addon-export&sub=landing" 
 				icon="cloud-download" 
 				title="Export" 
-				acl="novosteer-addon-import:*"
-				subtitle="Manage importers and mapping table." />
+				acl="novosteer-addon-export:*"
+				subtitle="Manage exporters and mapping table." />
 </menu>

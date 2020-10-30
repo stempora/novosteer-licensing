@@ -20,6 +20,16 @@ class CNovosteerAddonExportBackend extends CPlugin{
 
 	var $_field = "_locked_fields";
 
+	/**
+	* description
+	*
+	* @var type
+	*
+	* @access type
+	*/
+	var $mapRules = [];
+	
+
 
 	function __construct() {
 		$this->name = "novosteer-addon-export";
@@ -78,26 +88,42 @@ class CNovosteerAddonExportBackend extends CPlugin{
 	*
 	* @access
 	*/
-	function recordHistory($feed , $path , $file) {
+	function recordHistory($feed , $file , $stream) {
 		global $base , $_USER , $_SESS; 
 
+		fseek($stream , 0);
+
 		$id = $this->db->QueryInsert(
-			$this->tables["plugin:products_addon_export_history"],
+			$this->tables["plugin:novosteer_addon_export_history"],
 			[
 				"feed_id"			=> $feed["feed_id"],
 				"file_date"			=> time(),
-				"file_file"			=> "1",
-				"file_file_file"	=> $file
+				"history_file"			=> "1",
+				"history_file_file"	=> $file
 			]
 		);
 
-		CFile::Copy(
-			$path , 
-			"upload/products/export/history/" . $id . ".file"
+		//update the feeed last run
+		$this->db->QueryUpdateByID(
+			$this->tables["plugin:novosteer_addon_export_feeds"],
+			[
+				"feed_lastrun"	=> time()
+			],
+			$feed["feed_id"]
 		);
 
-		return true;
+		$this->storage->private->saveStream(
+			"novosteer/export/" . $id . ".file",
+			$stream
+		);
 
+		if (is_resource($stream)) {
+			fclose($stream);
+		}		
+
+		return $this->storage->private->getStream(
+			"novosteer/export/" . $id . ".file",
+		);
 	}
 	
 
@@ -514,4 +540,88 @@ class CNovosteerAddonExportBackend extends CPlugin{
 		$job->log("Closed ftp connection");
 		return true;
 	}	
+
+	/**
+	* description
+	*
+	* @param
+	*
+	* @return
+	*
+	* @access
+	*/
+	function MapRuleLoadByFeed($feed) {
+		global $_LANG_ID; 
+
+		//reset rules
+		$this->mapRules = [];
+
+		$rules = $this->db->QFetchRowArray(
+			"SELECT * FROM %s WHERE (find_in_set(%d , export_feeds) OR export_all = 1 )AND export_extension LIKE '%s'",
+			[
+				$this->tables["plugin:novosteer_addon_export_map"],
+				$feed["feed_id"],
+				$feed["feed_extension"]
+			]
+		);
+
+		if (is_Array($rules)) {
+			foreach ($rules as $key => $val) {
+				$original = explode("\n" , $val["map_source"]);
+				$final = explode("\n" , $val["map_destination"]);
+
+				$data = [
+					"from"	=> [],
+					"to"	=> [],
+				];
+				foreach ($original as $k => $v) {
+					$_tmp = explode("|" , trim($v));
+					$data["from"][$_tmp[0]] = $_tmp[1];
+				}
+
+				foreach ($final as $k => $v) {
+					$_tmp = explode("|" , trim($v));
+					$data["to"][$_tmp[0]] = $_tmp[1];
+				}
+
+				$this->mapRules[] = $data;			
+			}
+
+		}
+		
+	}
+
+	/**
+	* description
+	*
+	* @param
+	*
+	* @return
+	*
+	* @access
+	*/
+	function MapRuleProcess(&$item) {
+		global $_LANG_ID; 
+
+		if (!(is_array($this->mapRules) && count($this->mapRules))) {
+			return $this;
+		}
+
+		foreach ($this->mapRules as $map) {
+
+			if (!count(array_diff($map["from"] , array_intersect($item , $map["from"]))) ) {
+				
+				if (is_array($map["to"])) {
+					$item = array_merge(
+						$item , 
+						$map["to"]
+					);
+				}			
+			}			
+		}
+
+		return $item;	
+	}
+	
+	
 }

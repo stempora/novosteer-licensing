@@ -18,7 +18,11 @@ class CNovosteerAddonSyndicateAutotrader extends CNovosteerAddonSyndicateAutotra
 
 			switch ($sub) {
 				case "landing":
-					$sub = "brands";
+					$sub = "exports";
+				case "exports":
+				case "log":
+				case "vehicles":
+				case "map":
 					$data = new CSQLAdmin($sub, $this->__parent_templates,$this->db,$this->tables,$extra);
 					$data->setAclMod($this->tpl_module);
 					$this->PrepareFields($data->forms["forms"]);					

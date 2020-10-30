@@ -234,12 +234,13 @@ class NovosteerDealership extends Export implements ExportInterface{
 
 		$newData = [
 			//add the field set
-			"product_id"	=> $product["product_id"],
-			"product_sku"	=> $item[$this->skuField],
-			"dealership_id"	=> $this->info["dealership_id"],
+			"product_id"			=> $product["product_id"],
+			"product_sku"			=> $item[$this->skuField],
+			"product_last_update"	=> time(),
+			"dealership_id"			=> $this->info["dealership_id"],
 		];
 
-		$fields = ["options" , "options_exterior" , "options_interior" , "options_mechanical" , "options_safety" , "factory-codes" ];
+		$fields = ["options" , "options_exterior" , "options_interior" , "options_mechanical" , "options_safety" , "factory_codes" ];
 
 		foreach ($fields as $key => $val) {
 			$item[$val] = json_encode($item[$val]);
@@ -292,9 +293,9 @@ class NovosteerDealership extends Export implements ExportInterface{
 			$item[$val] = json_encode($item[$val]);
 		}
 
-		$item["dealership_id"] = $this->info["dealership_id"];	
-		$item["product_sku"] = $item[$this->skuField];
-
+		$item["dealership_id"]			= $this->info["dealership_id"];	
+		$item["product_sku"]			= $item[$this->skuField];
+		$item["product_last_update"]	= time();
 		
 		$item["product_id"] = $this->db->QueryInsert(
 			$this->module->tables["plugin:novosteer_vehicles_export"],
@@ -465,12 +466,12 @@ class NovosteerDealership extends Export implements ExportInterface{
 
 		$images = 	$this->db->QFetchRowArray(
 			"SELECT 
-				product_sku,product_id,images.* 
+				product_sku,products.product_id,images.* 
 			FROM %s as images
 				INNER JOIN 
 					%s as products
 				ON 
-					products.product_id = image.product_id
+					products.product_id = images.product_id
 			
 			WHERE 
 				dealership_id = %d AND

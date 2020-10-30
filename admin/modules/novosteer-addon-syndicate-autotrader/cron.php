@@ -87,20 +87,33 @@ class CNovosteerAddonSyndicateAutotrader extends CNovosteerAddonSyndicateAutotra
 
 		$temp = tmpfile();
 
+		$this->export->MapRuleLoadByFeed($feed);
+
+		$csv = League\Csv\Writer::createFromStream($temp);
+		$csv->insertOne($this->getHeader());
+
+
+		//fputcsv($temp , $this->getHeader());
+
 		do {
 			$products = $this->export->getExportProducts($feed , $start , $batch);
 			$start += $batch;
 
 			if (is_array($products)) {
 				foreach ($products as $key => $product) {
-					fputcsv($temp, $this->processProduct($product));
+					$csv->insertOne($this->processProduct($product));
+
+//					fputcsv($temp, $this->processProduct($product));
 				}				
 			}
 			
 		} while ( $start <= $productsCount);
 
+		
 
 		$job->log("Uploading file to remote ".$feed["settings"]["set_path"]);
+
+		$content = $this->export->recordHistory($feed , "export.csv" , $temp);
 
 		$this->export->uploadFileToFTP(
 			[
@@ -112,11 +125,13 @@ class CNovosteerAddonSyndicateAutotrader extends CNovosteerAddonSyndicateAutotra
 				"passive"		=> $feed["settings"]["set_passive"],
 				"ssl"			=> $feed["settings"]["set_ssl"],
 				"remote_file"	=> $feed["settings"]["set_path"],
-				"local_file"	=> $temp
+				"local_file"	=> $content
 			],
 			true,
 			$job
 		);
+
+
 
 		$job->log("Done\n");
 	}
@@ -134,15 +149,95 @@ class CNovosteerAddonSyndicateAutotrader extends CNovosteerAddonSyndicateAutotra
 	function processProduct($product) {
 		global $_LANG_ID; 
 
+		$this->export->MapRuleProcess($product);
+
+		$images = [];
+		$image = null;
+
+		if (is_array($product["gallery"])) {
+			$image= $product["gallery"][0]["overlay"] ? $product["gallery"][0]["overlay"] : $product["gallery"][0]["original"];
+
+			$last = 0;
+			foreach ($product["gallery"] as $k => $v) {
+
+				$last = max($last , $v["date"]);
+
+				if ($k > 0 ) {
+					$images[] = $v["overlay"] ? $v["overlay"] : $v["original"];
+				}				
+
+			}
+			
+		}
+		
 		return [
-			"vin"		=> $product["vin"],
-			"stock"		=> $product["stock"],
-			"make"		=> $product["brand_name"],
-			"model"		=> $product["model_name"],
+			$product["stock_id"],			
+			$product["vin"],
+			$product["cat"] == "New" ? "New" : "Used",
+			$product["year"],
+			$product["brand_name"],
+			$product["model_name"],
+			$product["trim"],
+			$product["price_sale"],
+			$product["mileage"],
+			$product["color"],
+			$product["exterior_color_detailed"],
+			$product["interior_color_detailed"],
+			$product["fuel"],
+			$product["drivetrain"],
+			$product["engine_displacement"],
+			$product["transmission"],
+			$product["doors"],
+			$product["passengers"],
+			$product["engine_cylinders"],
+			$product["body_style"],
+			implode(',' , $product["options"]),
+			$image,
+			implode("|" , $images),
+			$last ? CDate::toStr("%Y.%m.%d %r" , $last) : null,
+			CDate::toStr("%Y.%m.%d %r" , $product["product_last_update"]),
+		];
+	}
+
+	/**
+	* description
+	*
+	* @param
+	*
+	* @return
+	*
+	* @access
+	*/
+	function getHeader() {
+		global $_LANG_ID; 
+
+		return [			
+			"StockNumber",
+			"Vin"		,		
+			"Status"	,				
+			"Year"		,				
+			"Make"		,				
+			"Model"		,				
+			"Trim"		,				
+			"Price"						,
+			"KMS"		,				
+			"Exterior Color"			,
+			"Mfg Exterior Color"		,
+			"Interior Color"			,
+			"FuelType"					,
+			"Drive"						,
+			"Engine Size"				,
+			"Transmission"				,
+			"Doors"						,
+			"Passenger"					,
+			"Cylinder"					,
+			"Body"						,
+			"Options"					,
+			"MainPhoto"					,
+			"OtherPhoto"				,
+			"ExtraPhotoLastModifiedDate",
+			"AdLastModifiedDate"		,
 
 		];
 	}
-	
-	
-
 }

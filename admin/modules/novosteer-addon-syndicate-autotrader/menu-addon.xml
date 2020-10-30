@@ -1,0 +1,9 @@
+<menu>
+				<link 
+				active="isMod('novosteer-addon-syndicate-autotrader');" 
+				link="index.php?mod=novosteer-addon-syndicate&sub=landing" 
+				icon="cloud-download" 
+				title="Syndicate Autotrader" 
+				acl="novosteer-addon-syndicate-autotrader:*"
+				subtitle="Manage exporter settings & view queue." />
+</menu>

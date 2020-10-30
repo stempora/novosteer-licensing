@@ -330,11 +330,12 @@ class CNovosteerAddonExport extends CNovosteerAddonExportBackend{
 
 		if (is_Array($item)) {
 
-		CHeaders::newInstance()
-			->ContentTypeByExt($item["file_file_file"])
-			->Filename($item["file_file_file"]);
+		
+			CHeaders::newInstance()
+				->ContentTypeByExt($item["history_file_file"])
+				->Filename($item["history_file_file"]);
 
-			readfile("../upload/products/export/history/{$item['file_id']}.file");
+			$this->storage->private->readChunked("novosteer/export/{$item['file_id']}.file");
 			die();
 		}
 		
