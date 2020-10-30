@@ -1,0 +1,9 @@
+<menu>
+				<link 
+				active="isMod('novosteer-addon-syndicate-cargurus');" 
+				link="index.php?mod=novosteer-addon-syndicate-cargurus&sub=landing" 
+				icon="transmission" 
+				title="Syndicate Cargurus" 
+				acl="novosteer-addon-syndicate-cargurus:*"
+				subtitle="Manage exporter settings & view queue." />
+</menu>

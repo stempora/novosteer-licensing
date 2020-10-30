@@ -74,7 +74,9 @@
 				<dealership_syn_city type="textbox" title="City"/>
 				<dealership_syn_state type="textbox" title="State"/>
 				<dealership_syn_zip type="textbox" title="Zip"/>
+				<dealership_syn_phone type="textbox" title="Phone"/>
 				<dealership_syn_email type="textbox" title="Email"/>
+				<dealership_syn_email_adf type="textbox" title="Email ADF"/>
 
 			</fields>
 		</box>
