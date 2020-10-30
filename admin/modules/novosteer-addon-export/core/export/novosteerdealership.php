@@ -296,6 +296,7 @@ class NovosteerDealership extends Export implements ExportInterface{
 		$item["dealership_id"]			= $this->info["dealership_id"];	
 		$item["product_sku"]			= $item[$this->skuField];
 		$item["product_last_update"]	= time();
+		$item["product_date_add"]		= time();
 		
 		$item["product_id"] = $this->db->QueryInsert(
 			$this->module->tables["plugin:novosteer_vehicles_export"],
