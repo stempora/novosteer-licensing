@@ -11,6 +11,10 @@
 
 	<formtag>true</formtag>
 	<border>true</border>
+
+	<vars>
+		<code type="value" import="feed_code"></code>
+	</vars>
 	
 	<buttons>		
 		<set>

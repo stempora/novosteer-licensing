@@ -1,0 +1,70 @@
+<form>
+	<title></title>
+	<action>{SELF.FILE}</action>
+	<name>search</name>
+	<width>100%</width>
+	<method>get</method>
+
+	<skin>Gray</skin>
+
+	<formtag>true</formtag>
+	<border>true</border>
+	<alternance>true</alternance>
+	
+	<buttons>		
+		<set>
+			<header>true</header>
+		</set>
+
+
+		<button_reset location="index.php?mod={GLOBAL.GET.MOD}&sub={GLOBAL.GET.SUB}" icon="undo" title="Reset"/>
+		<button_search type="submit" location="javascript:$('form').first().trigger('submit');" icon="search" title="Search"/>
+
+	</buttons>
+
+
+	<redirect>index.php?sub=units</redirect>
+
+	<fields>
+		<mod type="hidden" default="$_GET['mod']" action="eval"/>
+		<sub type="hidden" default="$_GET['sub']" action="eval"/>
+		<advanced type="hidden" default="0" />
+	</fields>
+
+	<search>
+			<fields>
+
+				<box title="Search" width="6">
+					<fields>					
+						<keywords type="textbox" title="Keywords"></keywords>
+					</fields>
+				</box>
+					
+				<box title="Filter" width="6">
+					<fields>
+						<feed_status type="radiolist" title="Status" empty="true" empty_text="all" newline="false">
+							<options>
+								<option name="1">enabled</option>
+								<option name="2">disabled</option>
+							</options>
+						</feed_status> 
+
+					</fields>
+				</box>
+					
+			</fields>
+
+			<sql_fields>
+				<field name="keywords" type="keyword" search="full" fields="feed_name,dealership_name">keyword</field>			
+				<field name="dealership_id">=</field>			
+			</sql_fields>
+
+	</search>
+
+	<javascript>
+		<after><![CDATA[
+
+		]]></after>
+	</javascript>
+
+</form>

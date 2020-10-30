@@ -1,0 +1,35 @@
+<form>
+	<fields>
+		<box title="Settings" width="7">
+			<fields>				
+				<set_condition type="textarea" script="true" title="Conditions">
+					<description><![CDATA[
+						<p>Eg: [database_table_field]|[condition: &gt;, &lt;, =, in,]|[value1,value2,value3]</p>
+					]]></description>
+				</set_condition>
+
+				
+				<subtitle_ftp type="subtitle" title="Link" restricted="eval:$_GET['action'] != 'details';"></subtitle_ftp>
+				<set_feed_url title="URL" type="textbox" preffix="{SELF.CONF.URL}__novosteer_export/{CODE}/" restricted="eval:$_GET['action'] != 'details';"/>
+
+
+				<subtitle_feed type="subtitle" title="Feed Settings" ></subtitle_feed>				
+				<set_feed_title title="Title" type="textbox"/>
+				<set_feed_pid title="Page ID" type="textbox"/>
+				<set_feed_link title="Link" type="textbox"/>
+				<set_feed_link_privacy title="Privacy Policy" type="textbox"/>
+
+			</fields>
+		</box>
+	</fields>
+
+	<javascript>
+		<after>
+			CM("set_condition");
+		</after>
+	</javascript>
+
+	<remove_fields>
+	</remove_fields>
+</form>
+

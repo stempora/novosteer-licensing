@@ -1,0 +1,9 @@
+<menu>
+				<link 
+				active="isMod('novosteer-addon-syndicate-facebook');" 
+				link="index.php?mod=novosteer-addon-syndicate-facebook&sub=landing" 
+				icon="transmission" 
+				title="Syndicate Facebook" 
+				acl="novosteer-addon-syndicate-facebook:*"
+				subtitle="Manage exporter settings & view queue." />
+</menu>

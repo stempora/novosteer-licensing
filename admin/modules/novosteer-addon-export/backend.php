@@ -91,7 +91,10 @@ class CNovosteerAddonExportBackend extends CPlugin{
 	function recordHistory($feed , $file , $stream) {
 		global $base , $_USER , $_SESS; 
 
-		fseek($stream , 0);
+		try {
+			fseek($stream , 0);
+		} catch (\Exception $e) {
+		}
 
 		$id = $this->db->QueryInsert(
 			$this->tables["plugin:novosteer_addon_export_history"],
