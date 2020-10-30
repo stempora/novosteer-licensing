@@ -1,0 +1,90 @@
+<form>
+	
+	<title>Products</title>
+	<border>true</border>
+	<alternance>true</alternance>
+	<valternance>true</valternance>
+	<skin>Purple</skin>
+	
+	<fields>
+		<_count header="No." suffix="." width="30" align="center" />
+		<dealership_id type="relation" header="Dealership" multi="true">
+			<relation table="plugin:novosteer_dealerships" id="dealership_id" text="dealership_name" order="dealership_name ASC">							
+			</relation>
+		</dealership_id> 
+
+		<feed_id type="relation" header="Export" multi="true">
+			<relation table="plugin:novosteer_addon_export_feeds" id="feed_id" text="feed_name" order="feed_name ASC">							
+			</relation>
+		</feed_id> 
+
+		<vin header="Vin"></vin>
+		<stock header="Stock"></stock>
+
+		<item_last_export header="Last" type="date" params="%F %T" align="center" width="120"/>
+
+		<button_delete type="button" width="44" align="center" onclick="" button="/small/delete" acl="products.delete">
+			<location>{SELF.URI.DELETE}</location>
+		</button_delete>
+
+		<button_details type="button" width="44" align="center" onclick="" button="/small/details" acl="novosteer-vehicles:export.details">
+			<location>index.php?mod=novosteer-vehicles&sub=export&product_id={PRODUCT_ID}&_tb={TRAIL.HERE}</location>
+		</button_details>
+
+	</fields>
+
+	<header>
+		<titles>true</titles>
+		<buttons>
+
+		</buttons>
+	</header>
+
+	<items>50</items>
+
+
+	<sql>
+		<vars>
+
+			<table type="table"/>
+			<table_feeds type="table" import="plugin:novosteer_addon_export_feeds"/>
+			<table_dealers type="table" import="plugin:novosteer_dealerships"/>
+			<table_vehicles type="table" import="plugin:novosteer_vehicles_export"/>
+
+			<page type="page"/>
+			<items type="form" var="items"/>
+
+			<condition type="var" import="" />
+			<req_condition type="var" import="WHERE feed_extension LIKE 'syndicatedealersocket'" />
+
+			<order type="var" import="dealership_name" />
+			<order_mode type="var" import="DESC" />
+
+			<from type="var">
+				<import>					
+					{TABLE} as queue
+
+					INNER JOIN 
+						{TABLE_VEHICLES} as vehicles
+					ON
+						queue.product_id = vehicles.product_id 
+
+					INNER JOIN 
+						{TABLE_FEEDS} as feeds
+					ON 
+						queue.feed_id = feeds.feed_id 
+
+					INNER JOIN 
+						{TABLE_DEALERS} as dealers
+					ON
+						vehicles.dealership_id = dealers.dealership_id
+
+				</import>
+			</from>
+
+		</vars>
+		<query>select * from {FROM} {CONDITION} ORDER BY {ORDER} {ORDER_MODE} LIMIT {PAGE} , {ITEMS} </query>
+		<count table="{FROM} " condition="{CONDITION}" />
+	</sql> 
+
+</form>

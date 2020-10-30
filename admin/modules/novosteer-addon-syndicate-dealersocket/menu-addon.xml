@@ -1,0 +1,9 @@
+<menu>
+				<link 
+				active="isMod('novosteer-addon-syndicate-dealersocket');" 
+				link="index.php?mod=novosteer-addon-syndicate-dealersocket&sub=landing" 
+				icon="transmission" 
+				title="Syndicate DealerSocket" 
+				acl="novosteer-addon-syndicate-dealersocket:*"
+				subtitle="Manage exporter settings & view queue." />
+</menu>

@@ -1,0 +1,106 @@
+<form>
+	<title></title>
+	<action>{SELF.FILE}</action>
+	<name>search</name>
+	<width>100%</width>
+	<method>get</method>
+
+	<skin>Green</skin>
+
+	<formtag>true</formtag>
+	<border>true</border>
+	<alternance>true</alternance>
+	
+	<buttons>		
+		<set>
+			<header>true</header>
+		</set>
+
+
+		<button_reset location="index.php?mod={GLOBAL.GET.MOD}&sub={GLOBAL.GET.SUB}" icon="undo" title="Reset"/>
+		<button_search type="submit" location="javascript:$('form').first().trigger('submit');" icon="search" title="Search"/>
+
+	</buttons>
+
+
+	<redirect>index.php?sub=units</redirect>
+
+	<fields>
+		<mod type="hidden" default="$_GET['mod']" action="eval"/>
+		<sub type="hidden" default="$_GET['sub']" action="eval"/>
+		<advanced type="hidden" default="0" />
+	</fields>
+
+	<search>
+			<fields>
+
+				<box title="Search" width="6">
+					<fields>
+						
+
+						<keywords type="textbox" width="100%" title="Keywords" />
+					</fields>
+				</box>
+					
+				<box title="Filter" width="6">
+					<fields>
+						<export_feeds type="droplist" title="Export" empty="true">
+							<relation id="feed_id">							
+								<text>
+									<f1 field="dealership_name" />
+									<f2 field="feed_name" preffix=" - "/>
+								</text>
+
+								<sql>
+									<vars>
+										<table_feeds type="table" import="plugin:novosteer_addon_export_feeds"/>
+										<table_dealers type="table_lang" import="plugin:novosteer_dealerships"/>
+									</vars>
+
+									<query><![CDATA[
+										SELECT 
+											* 
+										FROM 
+											{TABLE_FEEDS} as feeds 
+										INNER JOIN
+											{TABLE_DEALERS} as dealerships
+										ON 
+											feeds.dealership_id = dealerships.dealership_id
+
+										WHERE
+											feeds.feed_extension like 'syndicatedealersocket'									
+										ORDER BY 
+											dealership_name,feed_name ASC
+									]]></query>
+								</sql>
+							</relation>
+						</export_feeds> 
+
+						<export_all type="radiolist" title="Applies To" newline="false">
+							<options>
+								<option name="">both</option>
+								<option name="1">all</option>
+								<option name="0">individual</option>
+							</options>
+						</export_all>
+
+					</fields>
+				</box>
+					
+			</fields>
+
+			<sql_fields>
+				<field name="keywords" type="keyword" search="full" fields="map_source,map_destination">keyword</field>			
+				<field name="export_feeds">in_set</field>			
+				<field name="export_all">=</field>
+			</sql_fields>
+
+	</search>
+
+	<javascript>
+		<after><![CDATA[
+
+		]]></after>
+	</javascript>
+
+</form>
