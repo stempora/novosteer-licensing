@@ -1,0 +1,9 @@
+<menu>
+				<link 
+				active="isMod('novosteer-addon-syndicate-kjiji');" 
+				link="index.php?mod=novosteer-addon-syndicate-kjiji&sub=landing" 
+				icon="transmission" 
+				title="Syndicate Kjiji" 
+				acl="novosteer-addon-syndicate-kjiji:*"
+				subtitle="Manage exporter settings & view queue." />
+</menu>
