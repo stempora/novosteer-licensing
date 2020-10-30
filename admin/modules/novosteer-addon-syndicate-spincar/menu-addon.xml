@@ -1,0 +1,9 @@
+<menu>
+				<link 
+				active="isMod('novosteer-addon-syndicate-spincar');" 
+				link="index.php?mod=novosteer-addon-syndicate-spincar&sub=landing" 
+				icon="transmission" 
+				title="Syndicate SpinCar" 
+				acl="novosteer-addon-syndicate-spincar:*"
+				subtitle="Manage exporter settings & view queue." />
+</menu>
