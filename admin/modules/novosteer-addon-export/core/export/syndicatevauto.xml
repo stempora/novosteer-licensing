@@ -1,0 +1,27 @@
+<form>
+	<fields>
+		<box title="Settings" width="7">
+			<fields>				
+				<set_condition type="textarea" script="true" title="Conditions">
+					<description><![CDATA[
+						<p>Eg: [database_table_field]|[condition: &gt;, &lt;, =, in,]|[value1,value2,value3]</p>
+					]]></description>
+				</set_condition>
+
+				
+				<subtitle_ftp type="subtitle" title="Dealer Details" ></subtitle_ftp>
+				<set_dealer_id type="textbox" title="Dealer ID#"></set_dealer_id>
+			</fields>
+		</box>
+	</fields>
+
+	<javascript>
+		<after>
+			CM("set_condition");
+		</after>
+	</javascript>
+
+	<remove_fields>
+	</remove_fields>
+</form>
+

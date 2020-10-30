@@ -1,0 +1,9 @@
+<menu>
+				<link 
+				active="isMod('novosteer-addon-syndicate-vauto');" 
+				link="index.php?mod=novosteer-addon-syndicate-vauto&sub=landing" 
+				icon="transmission" 
+				title="Syndicate vAuto" 
+				acl="novosteer-addon-syndicate-vauto:*"
+				subtitle="Manage exporter settings & view queue." />
+</menu>
