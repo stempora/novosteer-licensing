@@ -137,24 +137,44 @@ class CNovosteerAddonSyndicateFacebook extends CNovosteerAddonSyndicateFacebookB
 		$image = null;
 
 		if (is_array($product["gallery"])) {
-			$image= $product["gallery"][0]["overlay"] ? $product["gallery"][0]["overlay"] : $product["gallery"][0]["original"];
-
 			$last = 0;
 			foreach ($product["gallery"] as $k => $v) {
-
 				$last = max($last , $v["date"]);
-
-				if ($k > 0 ) {
-					$images[] = $v["overlay"] ? $v["overlay"] : $v["original"];
-				}				
-
+				$images[] = $v["overlay"] ? $v["overlay"] : $v["original"];
 			}			
 		}
+
+		$product["body_style"] = $this->validateTag($product["body_style"] , ["CONVERTIBLE", "COUPE", "CROSSOVER", "HATCHBACK", "MINIVAN", "TRUCK", "SEDAN", "SMALL_CAR", "SUV", "VAN", "WAGON"] , "OTHER");
+		$product["drivetrain"] = $this->validateTag($product["drivetrain"] , ["4X2", "4X4", "AWD", "FWD", "RWD"] , "OTHER");
+		$product["transmission"] = $this->validateTag($product["transmission"] , ["AUTOMATIC", "MANUAL", "NONE"] , "OTHER");
+		$product["fuel"] = $this->validateTag($product["fuel"] , ["DIESEL", "ELECTRIC", "GASOLINE", "FLEX", "HYBRID", "PETROL", "PLUGIN_HYBRID", "NONE"] , "OTHER");
 
 		$product["images"] = $images;
 		
 		return $product;
 	}
 
+	/**
+	* description
+	*
+	* @param
+	*
+	* @return
+	*
+	* @access
+	*/
+	function validateTag($original, $matches, $default) {
+		global $_LANG_ID; 
+
+		$original = strtoupper($original);
+
+		if (!in_array($original , $matches)) {
+			return $default;
+		} else {
+			return $original;
+		}
+	
+	}
+	
 
 }

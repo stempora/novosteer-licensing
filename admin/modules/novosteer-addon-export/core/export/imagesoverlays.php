@@ -92,7 +92,6 @@ class ImagesOverlays extends Export implements ExportInterface{
 			WHERE				
 				image_alert = 0 AND 
 				dealership_id = %d AND
-				image_downloaded = 1 AND 
 				image_overlay = 0 AND 
 				image_deleted = 0
 
@@ -142,7 +141,7 @@ class ImagesOverlays extends Export implements ExportInterface{
 
 			$image = $this->image->make(
 					$item["image_downloaded"] 
-						? $this->module->storage->resources->get($source)
+						? $this->module->storage->getLocation($this->info["dealership_location"])->get($source)
 						: $source
 				)
 				->resize(
@@ -165,7 +164,7 @@ class ImagesOverlays extends Export implements ExportInterface{
 			}
 
 			//save the image in final		
-			$this->module->storage->resources->saveStream(
+			$this->module->storage->getLocation($this->info["dealership_location"])->saveStream(
 				$destination, 
 				$image->stream("jpg", $this->info["settings"]["set_image_quality"])->detach()
 			);		

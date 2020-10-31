@@ -90,11 +90,16 @@
 			<fields>
 
 				<dealership_status type="checkbox" checked="1" label="enabled|disabled" title="Status" default="1"/>
-				<dealership_location_prefix type="textbox" title="Resources Prefix" preffix="/" suffix="/"></dealership_location_prefix>
-
 				<manufacturer_id type="droplist" empty="true" title="Manufacturer" required="true" validate="A:1:200">
 					<relation table="plugin:novosteer_manufacturers" id="manufacturer_id" text="manufacturer_name" order="manufacturer_name"></relation>
 				</manufacturer_id>
+
+				<subtitle_locations type="subtitle" title="Storage Location"></subtitle_locations>
+				<dealership_location type="droplist" title="Location" required="true" validate="A:1:200" empty="true">
+					<relation table="core:storage_locations" id="location_code" text="location_code"></relation>					
+				</dealership_location>
+
+				<dealership_location_prefix type="textbox" title="Resources Prefix" preffix="/" suffix="/"></dealership_location_prefix>
 
 				<subtitle_calaculator type="subtitle" title="Discounts Calculator"></subtitle_calaculator>
 

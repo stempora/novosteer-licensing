@@ -141,7 +141,7 @@ class ImagesDownload extends Export implements ExportInterface{
 					}
 				);
 			
-			$this->module->storage->resources->saveStream(
+			$this->module->storage->getLocation($this->info["dealership_location"])->saveStream(
 				$destination, 
 				$image->stream("jpg", $this->info["settings"]["set_image_quality"])->detach()
 			);		
