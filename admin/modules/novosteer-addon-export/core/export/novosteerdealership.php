@@ -139,13 +139,50 @@ class NovosteerDealership extends Export implements ExportInterface{
 		if ($res->getStatusCode() !== 200) {
 			return null;
 		}
+
+		$content = $res->getBody()->getContents();
+
+		$this->recordHistory("novosteer.json" , $content);
 		
-		$data = json_decode($res->getBody()->getContents() , true);
+		$data = json_decode($content , true);
 
 
 		return $data;
 	}
 	
+
+
+	/**
+	* description
+	*
+	* @param
+	*
+	* @return
+	*
+	* @access
+	*/
+	function recordHistory($file , $content) {
+		global $base , $_USER , $_SESS; 
+
+		$id = $this->db->QueryInsert(
+			$this->module->tables["plugin:novosteer_addon_export_history"],
+			[
+				"feed_id"			=> $this->info["feed_id"],
+				"file_date"			=> time(),
+				"history_file"			=> "1",
+				"history_file_file"	=> $file
+			]
+		);
+
+		$this->module->storage->private->Save(
+			"novosteer/export/" . $id . ".file",
+			$content
+		);
+
+		return true;
+
+	}
+
 
 	
 
@@ -287,7 +324,7 @@ class NovosteerDealership extends Export implements ExportInterface{
 
 		$this->log("Creating product %s ..." , [$item[$this->skuField]]);
 
-		$fields = ["options" , "options_exterior" , "options_interior" , "options_mechanical" , "options_safety" , "factory-codes" ];
+		$fields = ["options" , "options_exterior" , "options_interior" , "options_mechanical" , "options_safety" , "factory_codes" ];
 
 		foreach ($fields as $key => $val) {
 			$item[$val] = json_encode($item[$val]);
@@ -306,7 +343,7 @@ class NovosteerDealership extends Export implements ExportInterface{
 		$this->event->setProduct($item["product_id"]);
 
 		$this->log("Done");
-		$this->skus["new"][] = $item[$this->skuField];
+		$this->skus["created"][] = $item[$this->skuField];
 
 
 		return $item;

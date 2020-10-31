@@ -9,7 +9,7 @@
 	<skin>Gray</skin>
 
 	<order>
-		<restricted>eval:$_GET['dealeship_id'];</restricted>
+		<restricted>eval:!$_GET['dealeship_id'];</restricted>
 		<drag>true</drag>
 		<field>feed_order</field>
 		<mode>ASC</mode>
@@ -37,10 +37,6 @@
 		</feed_status>
 
 		<feed_lastrun type="date" params="Y-m-d" align="center"  header="Last Run" width="140"/>
-
-		<button_duplicate type="button" width="44" align="center" onclick="" icon="files-empty" color="Blue" acl="importers.add">
-			<location><![CDATA[javascript:DeleteConfirm('Do you want to duplicate this item?<br>It will be douplicated with the same fieldset and the status disabled.','index.php?mod=products-addon-import&sub=importer.duplicate&feed_id={FEED_ID}');]]></location>
-		</button_duplicate>
 
 		<button_delete type="button" width="44" align="center" onclick="" button="/small/delete" acl="importers.delete">
 			<location>{SELF.URI.DELETE}</location>

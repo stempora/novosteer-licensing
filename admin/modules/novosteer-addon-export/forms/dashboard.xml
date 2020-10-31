@@ -9,7 +9,7 @@
 
 			<link 
 				active="isModSub('modules','default');" 
-				link="index.php?mod=novosteer-addon-import&sub=settings.general" 
+				link="index.php?mod=novosteer-addon-export&sub=settings.general" 
 				icon="edit" 
 				title="General Settings" 
 				acl="settings.general"
@@ -17,7 +17,7 @@
 
 			<link 
 				active="isModSub('modules' , 'default-settings');" 
-				link="index.php?mod=novosteer-addon-import&sub=settings.advanced" 
+				link="index.php?mod=novosteer-addon-export&sub=settings.advanced" 
 				icon="advanced-settings" 
 				title="Advanced Settings" 
 				acl="settings.advanced"
@@ -31,7 +31,7 @@
 			subtitle="Add & Edit" 
 			acl="importers.list"
 			title="Exports" 
-			link="index.php?mod=novosteer-addon-import&sub=importers"
+			link="index.php?mod=novosteer-addon-export&sub=exports"
 			/>
 
 		<map 
@@ -40,42 +40,15 @@
 			title="Maping Table" 			
 		>
 			<link 
-				active="isModSub('novosteer-addon-import','map.pre');" 
-				link="index.php?mod=novosteer-addon-import&sub=map.pre" 
+				active="isModSub('novosteer-addon-export','map.pre');" 
+				link="index.php?mod=novosteer-addon-export&sub=map.pre" 
 				icon="edit" 
 				title="Pre Import" 
 				acl="map.list"
-				subtitle="Rules executed before linking feed to fields." />
-
-			<link 
-				active="isModSub('novosteer-addon-import','map.post');" 
-				link="index.php?mod=novosteer-addon-import&sub=map.post" 
-				icon="edit" 
-				title="Post Import" 
-				acl="map.list"
-				subtitle="Rules executed after linking feed to fields." />
-
+				subtitle="Rules executed before linking feed to fields." />		
 
 		</map>
 
-		<locks
-			color="Red" 
-			icon="lock" 
-			subtitle="Add & Edit" 
-			title="Lock Groups" 
-			acl="lock.list"
-			link="index.php?mod=novosteer-addon-import&sub=locks"
-		/>
-
-
-		<products 
-			color="Purple" 
-			icon="list" 
-			subtitle="View & Manage" 
-			title="Locked Products" 
-			acl="products.list"
-			link="index.php?mod=novosteer-addon-import&sub=products"
-			/>
 
 		<history 
 			color="Yellow" 
@@ -83,7 +56,7 @@
 			subtitle="View & Analize" 
 			title="Log" 
 			acl="logs"
-			link="index.php?mod=novosteer-addon-import&sub=log"
+			link="index.php?mod=novosteer-addon-export&sub=log"
 			/>
 
 	</tabs>
