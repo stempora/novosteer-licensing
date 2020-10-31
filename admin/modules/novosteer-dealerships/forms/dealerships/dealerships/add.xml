@@ -64,10 +64,10 @@
 
 				<dealership_name type="textbox" required="true" validate="A:1:200" unique="true" title="Name"/>
 				<dealership_site type="textbox" required="true" validate="A:1:200" unique="true" title="Website"/>
-
+<!--
 				<subtitle type="subtitle" title="Security"></subtitle>
 				<dealership_key type="textbox" required="true" validate="A:1:200" unique="true" title="Secret Key"/>
-
+-->
 				<subtitle_syndication type="subtitle" title="Syndication"></subtitle_syndication>
 				<dealership_syn_name type="textbox" title="Name"/>
 				<dealership_syn_street type="textbox" title="Street"/>
