@@ -6,6 +6,10 @@
 	{% for product in products%}
 	<listing>
 		<vehicle_id>{{ product.item_id }}</vehicle_id>
+		<vehicle_type>CAR_TRUCK</vehicle_type>
+		<stock_number>{{ product.stock_id }}</stock_number>
+		<availability>available</availability>
+		<date_first_on_lot>{{ product.product_date_add|cdate("%Y-%m-%d") }}</date_first_on_lot>
 		<title><![CDATA[{{ product.year }} {{ product.brand_name }} {{ product.model_name }}]]></title>
 		<description><![CDATA[{{ product.description }}]]></description>
 		<url>{{ product.link }}</url>
@@ -13,6 +17,7 @@
 		<make>{{ product.brand_name }}</make>
 		<model>{{ product.model_name }}</model>
 		<year>{{ product.year }}</year>
+		<trim>{{ product.trim }}</trim>
 		<mileage>
 			<value>{{ product.mileage }}</value>
 			<unit>KM</unit>
@@ -22,6 +27,40 @@
 		<vin>{{ product.vin }}</vin>
 		<body_style>{{ product.body_style }}</body_style>
 		<fuel_type>{{ product.fuel }}</fuel_type>
+
+		{% set price = product.price_sale|formatprice('split')%}
+
+		{% if product.cat == 'New' %}
+			{% set price = product.price_retail|formatprice('split')%}
+			<msrp>{{ price.num }} CAD</msrp>
+		{% endif %}
+		<price>{{ price.num }} CAD</price>
+
+		<dealer_id>{{ feed.settings.set_dealer_id}}</dealer_id>
+
+		<exterior_color>{{ product.exterior_color_detailed }}</exterior_color>
+		<interior_color>{{ product.interior_color_detailed }}</interior_color>
+		<state_of_vehicle>{{ product.cat }}</state_of_vehicle>
+
+		<fb_page_id>{{ feed.settings.set_feed_pid }}</fb_page_id>
+
+	    <dealer_communication_channel>{{ feed.settings.set_dealer_channel }}</dealer_communication_channel>
+		<dealer_privacy_policy_url>{{ feed.settings.set_feed_link_privacy }}</dealer_privacy_policy_url>
+		<dealer_phone>{{ feed.dealership_syn_phone }}</dealer_phone>
+		<dealer_name>{{ feed.dealership_syn_name }}</dealer_name>
+		<dealer_id>{{ feed.settings.set_dealer_id }}</dealer_id>
+
+
+		<address format="simple">
+			<component name="addr1">{{ feed.dealership_syn_street }}</component>
+			<component name="city">{{ feed.dealership_syn_city }}</component>
+			<component name="region">{{ feed.dealership_syn_state }}</component>
+			<component name="country">{{ feed.dealership_syn_country }}</component>
+			<component name="postal_code">{{ feed.dealership_syn_zip}}</component>
+		</address>
+		<latitude>{{ feed.dealership_syn_lat }}</latitude>
+		<longitude>{{ feed.dealership_syn_long }}</longitude>
+		<dealer_url>{{ feed.settings.set_feed_link }}</dealer_url>
 
 		{% for image in product.images %}
 		<image>
@@ -35,29 +74,7 @@
 		</features>
 		{% endfor %}
 
-		{% set price = product.price_sale|formatprice('split')%}
 
-		<price>{{ price.num }} CAD</price>
-
-		<dealer_id>{{ feed.settings.set_dealer_id}}</dealer_id>
-
-		<exterior_color>{{ product.color|join(',') }}</exterior_color>
-		<state_of_vehicle>{{ product.cat }}</state_of_vehicle>
-
-		<fb_page_id>{{ feed.settings.set_feed_pid }}</fb_page_id>
-	    <dealer_communication_channel>LEAD_FORM</dealer_communication_channel>
-		<dealer_privacy_policy_url>{{ feed.settings.set_feed_link_privacy }}</dealer_privacy_policy_url>
-
-
-		<address format="simple">
-			<component name="addr1">{{ feed.dealership_syn_street }}</component>
-			<component name="city">{{ feed.dealership_syn_city }}</component>
-			<component name="region">{{ feed.dealership_syn_state }}</component>
-			<component name="country">{{ feed.dealership_syn_country }}</component>
-			<component name="postal_code">{{ feed.dealership_syn_zip}}</component>
-		</address>
-		<latitude>{{ feed.dealership_syn_lat }}</latitude>
-		<longitude>{{ feed.dealership_syn_long }}</longitude>
 	</listing>
 	{% endfor %}
 </listings>
