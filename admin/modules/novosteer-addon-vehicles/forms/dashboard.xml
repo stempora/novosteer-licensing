@@ -9,49 +9,38 @@
 
 			<link 
 				active="isModSub('modules','default');" 
-				link="index.php?mod=novosteer-dealerships&sub=settings.general" 
+				link="index.php?mod=novosteer-addon-vehicles&sub=settings.general" 
 				icon="edit" 
 				title="General Settings" 
 				acl="settings.general"
 				subtitle="Status, URL, display rules & permissions." />
 
-			<link 
-				active="isModSub('modules' , 'default-addons');" 
-				link="index.php?mod=novosteer-dealerships&sub=settings.addons" 
-				icon="puzzle" 
-				title="Addons " 
-				acl="settings.addons"
-				subtitle="Installed addons for this module." />
-
-<!--
 
 			<link 
 				active="isModSub('modules' , 'default-settings');" 
-				link="index.php?mod=novosteer-dealerships&sub=settings.advanced" 
+				link="index.php?mod=novosteer-addon-vehicles&sub=settings.advanced" 
 				icon="advanced-settings" 
 				title="Advanced Settings" 
 				acl="settings.advanced"
 				subtitle="Default layouts, functionality & display style." />
 
-			<link 
-				active="isModSub('modules' , 'default-language');" 
-				link="index.php?mod=novosteer-dealerships&sub=settings.static-texts" 
-				icon="language" 
-				title="Language Variables" 
-				acl="settings.static-texts"
-				subtitle="Predefined text variables of the module." />
--->
 		</t>
 
+		<t5 
+			color="Teal" 
+			icon="cloud-download" 
+			subtitle="Search & View" 
+			acl="importers.list"
+			title="Imported" 
+			link="index.php?mod=novosteer-addon-vehicles&sub=import"
+			/>
 
-		<fields
+		<t6 
 			color="Purple" 
-			icon="store" 
-			acl="fields.list"
-			subtitle="Add & Edit" 
-			title="Dealerships" 
-			link="index.php?mod=novosteer-dealerships&sub=dealerships"
-		/>
+			icon="cloud-upload" 
+			subtitle="Search & View" 
+			title="Exported" 
+			link="index.php?mod=novosteer-addon-vehicles&sub=export"
+			/>
 
-</tabs>
-
+	</tabs>

@@ -1,0 +1,92 @@
+<form>
+	<title>{SELF.TITLE} Vehicle</title>
+	<action>{SELF.URI.STORE}</action>
+	<name>edit_cat</name>
+	<width>100%</width>
+	<alternance>true</alternance>
+	<encoding>multipart/form-data</encoding>
+
+	<skin>Purple</skin>
+
+
+	<formtag>true</formtag>
+	<border>true</border>
+	
+	<buttons>		
+		<set>
+			<header>true</header>
+		</set>
+
+
+		<button_back onclick="" button="return">
+			<location>{TRAIL.PREVIOUS.LINK}</location>
+		</button_back>
+
+	</buttons>
+
+	<redirect>{PHP}?sub=accounts</redirect>
+
+	<fields>		
+		<box title="Details" width="6">
+			<fields>
+				<date_in_stock type="textbox" title="Date In Stock" />
+				<brand_id type="relation" title="Make">
+					<relation table="plugin:novosteer_addon_autobrands_brands" id="brand_id" text="brand_name"></relation>
+				</brand_id>
+				<model_id type="textbox" title="Model">
+					<relation table="plugin:novosteer_addon_autobrands_models" id="model_id" text="model_name"></relation>
+				</model_id>
+
+				<trim type="textbox" title="Trim" />
+				<cat type="textbox" title="Category" />
+				<type type="textbox" title="Type" />
+				<stock_id type="textbox" title="Stock ID" />
+				<vin type="textbox" title="VIN" />
+				<year type="textbox" title="Year" />
+				<body_style type="textbox" title="Body Style" />
+				<model_number type="textbox" title="Model Number" />
+				<doors type="textbox" title="Doors" />
+				<engine type="textbox" title="Engine" />
+				<engine_cylinders type="textbox" title="Engine Cylinders" />
+				<engine_displacement type="textbox" title="Engine Displacement" />
+				<transmission type="textbox" title="Transmission" />
+				<mileage type="textbox" title="Mileage" />
+				<description type="textbox" title="Description" />
+				<title type="textbox" title="Title" />
+				<style_description type="textbox" title="Style Description" />
+				<color type="textbox" title="Exterior Color" />
+				<exterior_color_detailed type="textbox" title="MFG Exterior Color" />
+				<interior_color type="textbox" title="Interior Color" />
+				<interior_color_detailed type="textbox" title="MFG Interior Color" />
+				<int_upholstery type="textbox" title="Upholstery" />
+				<engine_block type="textbox" title="Engine Block" />
+				<engine_aspiration type="textbox" title="Engine Apiration" />
+				<engine_description type="textbox" title="Engine Description" />
+				<transmission_speed type="textbox" title="Transmission Speed" />
+				<transmission_description type="textbox" title="Transmission" />
+				<drivetrain type="textbox" title="Drive Train" />
+				<fuel type="textbox" title="Fuel" />
+				<citympg type="textbox" title="City MPG" />
+				<highwaympg type="textbox" title="Highway MPG" />
+				<wheelbase_code type="textbox" title="Wheelbase Code" />
+				<passengers type="textbox" title="Passengers" />
+				<engine_displacement_inches type="textbox" title="Endine Displacement inc" />
+				<price_retail type="textbox" title="Price Retail" />
+				<price_sale type="textbox" title="Price Sale" />
+				<link type="textbox" title="Link" />
+			</fields>
+		</box>
+
+
+		<box title="Options" width="6">
+			<fields>
+				<factory_codes type="vardump" json="true" title="Factory Codes" with="100%"/>
+				<options type="vardump" json="true" title="Options" />
+				<options_exterior type="vardump" json="true" title="Exterior"/>
+				<options_interior type="vardump" json="true" title="Interior" />
+				<options_mechanical type="vardump" json="true" title="Mechanical" />
+				<options_safety type="vardump" json="true" title="Safety" />
+			</fields>
+		</box>
+	</fields>
+</form>

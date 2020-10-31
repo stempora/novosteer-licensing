@@ -1,0 +1,67 @@
+<form>
+	<title>Images</title>
+	<border>true</border>
+
+	<skin>Purple</skin>
+
+	<fields>
+		<_count header="No." width="20" align="right" suffix="."/>
+
+		<image_source header="Source" width="200" html="true">
+			
+		</image_source>
+
+		<image_downloaded header="Downloaded" width="200" html="true">
+			
+		</image_downloaded>
+
+
+		<image_overlay header="Overlay" width="200" html="true">
+			
+		</image_overlay>
+
+		<image_last_update header="Date" type="date" params="%Y-%m-%d" width="100" align="center"></image_last_update>
+
+		<image_error_download header="Dl Error"></image_error_download>
+		<image_error_overlay header="Overlay Error"></image_error_overlay>
+
+	</fields>
+
+	<header>
+		<titles>true</titles>
+		<nolinks>true</nolinks>
+		<buttons>
+		</buttons>
+	</header>
+
+	<items>50</items>
+
+
+	<sql>
+		<vars>
+
+			<table type="table"/>
+
+			<page type="page"/>
+			<items type="form" var="items"/>
+			<lang_id type="eval" import="$_GET[lang_id];" />
+			<parent type="eval" import="(int)$_GET['product_id'];" />
+
+			<from type="var">
+				<import><![CDATA[
+					{TABLE} 
+				]]></import>
+			</from>
+			<condition type="var" import="WHERE product_id = {PARENT} AND image_deleted=0" />
+
+			<order type="var" import="image_order" />
+			<order_mode type="var" import="ASC" />
+
+		</vars>
+		<query>select * FROM {FROM} {CONDITION} ORDER BY {ORDER} {ORDER_MODE} LIMIT {PAGE} , {ITEMS} </query>
+		<count table="{FROM} " condition="{CONDITION}" />
+
+	</sql> 
+
+
+</form>
