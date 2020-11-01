@@ -167,7 +167,7 @@ class Export extends Base{
 		$this->info = $data;
 
 		$this->event->setFeed($this->info["feed_id"]);
-		$this->map->setFeed($this->info["feed_id"]);
+		$this->map->setFeed($this->info);
 
 		return $this;
 	}

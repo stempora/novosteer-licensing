@@ -8,7 +8,7 @@
 		<list>map/list.xml</list>
 	</forms>
 
-	<table>plugin:products_addon_importer_map</table>
+	<table>plugin:novosteer_addon_export_map</table>
 	<table_uid>map_id</table_uid>
 
 
@@ -26,18 +26,18 @@
 	</URIdata>
 
 	<acl>
-		<add>avize.achizitii.add</add>
-		<edit>avize.achizitii.edit</edit>
-		<list>avize.achizitii.list</list>
-		<details>avize.achizitii.details</details>
-		<delete>avize.achizitii.delete</delete>
+		<add>map.add</add>
+		<edit>map.edit</edit>
+		<list>map.list</list>
+		<details>map.details</details>
+		<delete>map.delete</delete>
 	</acl>
 
 	<URIlinks>
-		<add>{SELF.LINK.ADD}&attribute_id={ATTRIBUTE_ID}&importer_id={IMPORTER_ID}&returnurl={SELF.LOCATION}</add>
-		<edit>{SELF.LINKUID.EDIT}&returnurl={SELF.LOCATION}</edit>
-		<details>{SELF.LINKUID.DETAILS}&returnurl={SELF.LOCATION}</details>
-		<delete>javascript:DeleteConfirm('Are you sure you want to delete this item?' , '{SELF.LINKUID.DELETE}&returnURL={SELF.LOCATION}');</delete>
+		<add>{SELF.LINK.ADD}&_tb={TRAIL.HERE}</add>
+		<edit>{SELF.LINKUID.EDIT}&_tb={TRAIL.HERE}</edit>
+		<details>{SELF.LINKUID.DETAILS}&_tb={TRAIL.HERE}</details>
+		<delete>javascript:DeleteConfirm('Are you sure you want to delete this item?' , '{SELF.LINKUID.DELETE}&_tb={TRAIL.HERE}');</delete>
 		<store>{SELF.LINK}{SELF.ACTION.STORE}</store>
 	</URIlinks>
 

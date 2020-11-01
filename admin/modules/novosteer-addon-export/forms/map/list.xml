@@ -8,28 +8,27 @@
 	
 	<fields>
 		<_count header="No." suffix="." width="30" align="center" />
-		<map_original header="From"/>
-		<map_final header="To"/>
+		<map_source header="From" allownl="true"/>
+		<map_destination header="To" allownl="true"/>
 
-		<attribute_id type="relation" header="Attribute">
-			<relation table="plugin:products_fields" table_lang="plugin:products_fields_lang" id="field_id" order="field_name ASC">							
-				<text>
-					<f1 field="field_name" />
-					<f2 field="field_code" preffix="(" suffix=")"/>
-				</text>
+		<export_extension header="Extension"></export_extension>
+
+		<export_feeds type="relation" header="Export(s)" multi="true" empty="ALL Exports">
+			<relation id="feed_id" table="plugin:novosteer_addon_export_feeds" text="feed_name">							
 			</relation>
-		</attribute_id> 
+		</export_feeds> 
 
-		<importer_id type="relation" header="Export(s)" multi="true">
-			<relation table="plugin:products_addon_importer_feeds" id="feed_id" text="feed_name" order="feed_name ASC">							
-			</relation>
-		</importer_id> 
+		<export_all type="relation" header="All" align="center" width="70">
+			<options>
+				<option name="1">yes</option>
+			</options>
+		</export_all>
 
-		<button_delete type="button" width="44" align="center" onclick="" button="/small/delete" acl="avize.achizitii.delete" >
+		<button_delete type="button" width="44" align="center" onclick="" button="/small/delete" acl="map.delete" >
 			<location>{SELF.URI.DELETE}</location>
 		</button_delete>
 
-		<button_details onclick="" type="button" width="44" align="center" button="/small/edit" acl="avize.achizitii.details">
+		<button_details onclick="" type="button" width="44" align="center" button="/small/edit" acl="map.edit">
 			<location>{SELF.URI.EDIT}</location>
 		</button_details>
 
@@ -43,7 +42,7 @@
 	<header>
 		<titles>true</titles>
 		<buttons>
-			<add button="addnew" acl="avize.achizitii.add">
+			<add button="addnew" acl="map.add">
 				<location>{SELF.URI.ADD}</location>
 			</add>
 
@@ -64,7 +63,7 @@
 
 			<condition type="var" import="" />
 
-			<order type="var" import="map_original" />
+			<order type="var" import="map_source" />
 			<order_mode type="var" import="ASC" />
 
 		</vars>

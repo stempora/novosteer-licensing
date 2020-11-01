@@ -37,16 +37,10 @@
 		<map 
 			color="Green" 
 			icon="merge" 
-			title="Maping Table" 			
+			title="Maping Table" 	
+			subtitle="Add & Edit"
+			link="index.php?mod=novosteer-addon-export&sub=map" 
 		>
-			<link 
-				active="isModSub('novosteer-addon-export','map.pre');" 
-				link="index.php?mod=novosteer-addon-export&sub=map.pre" 
-				icon="edit" 
-				title="Pre Import" 
-				acl="map.list"
-				subtitle="Rules executed before linking feed to fields." />		
-
 		</map>
 
 

@@ -44,20 +44,46 @@
 					
 				<box title="Filter" width="6">
 					<fields>
-
-						<attribute_id type="droplist" title="Attribute" empty="true">
-							<relation table="plugin:products_fields" table_lang="plugin:products_fields_lang" id="field_id" order="field_name ASC">							
+						<export_feeds type="droplist" title="Export" empty="true">
+							<relation id="feed_id">							
 								<text>
-									<f1 field="field_name" />
-									<f2 field="field_code" preffix="(" suffix=")"/>
+									<f1 field="dealership_name" />
+									<f2 field="feed_name" preffix=" - "/>
 								</text>
-							</relation>
-						</attribute_id> 
 
-						<importer_id type="droplist" title="Export" empty="true">
-							<relation table="plugin:products_addon_importer_feeds" id="feed_id" text="feed_name" order="feed_name ASC">							
+								<sql>
+									<vars>
+										<table_feeds type="table" import="plugin:novosteer_addon_export_feeds"/>
+										<table_dealers type="table_lang" import="plugin:novosteer_dealerships"/>
+									</vars>
+
+									<query><![CDATA[
+										SELECT 
+											* 
+										FROM 
+											{TABLE_FEEDS} as feeds 
+										INNER JOIN
+											{TABLE_DEALERS} as dealerships
+										ON 
+											feeds.dealership_id = dealerships.dealership_id
+
+										ORDER BY 
+											dealership_name,feed_name ASC
+									]]></query>
+								</sql>
 							</relation>
-						</importer_id> 
+						</export_feeds> 
+
+						<export_extension type="fileslist" empty="true" title="Extension" path="locals/admin/modules/novosteer-addon-export/core/export" extension=".php" hideextension="true">
+						</export_extension>
+
+						<export_all type="radiolist" title="Applies To" newline="false">
+							<options>
+								<option name="">both</option>
+								<option name="1">all</option>
+								<option name="0">individual</option>
+							</options>
+						</export_all>
 
 					</fields>
 				</box>
@@ -65,9 +91,10 @@
 			</fields>
 
 			<sql_fields>
-				<field name="keywords" type="keyword" search="full" fields="map_original,map_final">keyword</field>			
-				<field name="importer_id">in_set</field>			
-				<field name="attribute_id">=</field>			
+				<field name="keywords" type="keyword" search="full" fields="map_source,map_destination">keyword</field>			
+				<field name="export_feeds">in_set</field>			
+				<field name="export_extension">=</field>			
+				<field name="export_all">=</field>
 			</sql_fields>
 
 	</search>

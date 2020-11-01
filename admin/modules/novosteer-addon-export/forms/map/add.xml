@@ -17,7 +17,7 @@
 		</set>
 
 		<button_back onclick="" button="return">
-			<location>{PRIVATE.FORM_PREVIOUS_PAGE}</location>
+			<location>{TRAIL.PREVIOUS.LINK}</location>
 		</button_back>
 
 		<button_edit onclick="" button="edit" acl="avize.achizitii.edit">
@@ -34,32 +34,66 @@
 
 	<fields>
 		<map_id type="hidden"/>
+		<export_extension type="fileslist" required="true" validate="A:4:200" empty="true" title="Extension" path="locals/admin/modules/novosteer-addon-export/core/export" extension=".php" hideextension="true">
+		</export_extension>
 
-		<box title="Conversion" width="6">
+		<export_feeds type="droplist" title="Export(s)" multi="true">
+			<relation id="feed_id">							
+				<text>
+					<f1 field="dealership_name" />
+					<f2 field="feed_name" preffix=" - "/>
+				</text>
+
+				<sql>
+					<vars>
+						<table_feeds type="table" import="plugin:novosteer_addon_export_feeds"/>
+						<table_dealers type="table_lang" import="plugin:novosteer_dealerships"/>
+					</vars>
+
+					<query><![CDATA[
+						SELECT 
+							* 
+						FROM 
+							{TABLE_FEEDS} as feeds 
+						INNER JOIN
+							{TABLE_DEALERS} as dealerships
+						ON 
+							feeds.dealership_id = dealerships.dealership_id
+
+						WHERE
+							feeds.feed_extension like 'syndicateautotrader'									
+						ORDER BY 
+							dealership_name,feed_name ASC
+					]]></query>
+				</sql>
+			</relation>
+		</export_feeds> 
+
+		<export_all type="checkbox" title="All Exports" checked="1" label="yes|no"></export_all>
+
+		<box title="Original" width="6">
 			<fields>
-				<map_original type="textbox" width="100%" title="Original" />
-				<map_final type="textbox" width="100%" title="Final" />
+				<map_source type="textarea" script="true" width="100%" extend="true" _title="Original">
+					<description><![CDATA[Put one field of the feed and the value it must have in order to be active the final field. Ex: Make|BMW<br>Model|5Er]]></description>
+				</map_source>
 			</fields>
 		</box>
 
-		<box title="Settings" width="6">
+		<box title="Final" width="6">
 			<fields>
-				<attribute_id type="droplist" title="Attribute" empty="true" required="true" validate="A:1:20" default="eval:$_GET['attribute_id'];">
-					<relation table="plugin:products_fields" table_lang="plugin:products_fields_lang" id="field_id" order="field_name ASC">							
-						<text>
-							<f1 field="field_name" />
-							<f2 field="field_code" preffix="(" suffix=")"/>
-						</text>
-					</relation>
-				</attribute_id> 
-
-				<importer_id type="droplist" title="Export(s)" multi="true" required="true" validate="A:1:20000" default="eval:$_GET['importer_id'];">
-					<relation table="plugin:products_addon_importer_feeds" id="feed_id" text="feed_name" order="feed_name ASC">							
-					</relation>
-				</importer_id> 
-
+				<map_destination type="textarea" script="true" width="100%" extend="true" _title="Final">
+					<description>Put one field of the feed and the new values. Ex: Model|5er Series</description>
+				</map_destination>
 			</fields>
 		</box>
 	</fields>
+
+	<javascript>
+		<after>
+			CM("map_source");
+			CM("map_destination");
+		</after>
+
+	</javascript>
 
 </form>
