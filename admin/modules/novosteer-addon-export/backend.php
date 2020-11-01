@@ -447,11 +447,11 @@ class CNovosteerAddonExportBackend extends CPlugin{
 
 					$products[$image["product_id"]]["gallery"][] = [
 						"original"	=> $image["image_downloaded"] 
-							? $this->storage->getLocation($feed["dealership_location"])->getUrl($feed["dealership_location_prefix"] . "/export/" . $products[$image["product_id"]]['product_sku'] . "/original/" . $image["image_id"] . ".jpg")
+							? $this->storage->getLocation($feed["dealership_location"])->getUrl($feed["dealership_location_prefix"] . "/export/" . $products[$image["product_id"]]['product_sku'] . "/original/" . $image["image_id"] . ".jpg" , $image["image_last_update"])
 							: $image["image_source"],
 
 						"overlay"	=> $image["image_overlay"] 
-							? $this->storage->getLocation($feed["dealership_location"])->getUrl($feed["dealership_location_prefix"] . "/export/" . $products[$image["product_id"]]['product_sku'] . "/final/" . $image["image_id"] . ".jpg")
+							? $this->storage->getLocation($feed["dealership_location"])->getUrl($feed["dealership_location_prefix"] . "/export/" . $products[$image["product_id"]]['product_sku'] . "/final/" . $image["image_id"] . ".jpg", $image["image_last_update"])
 							: null,
 
 						"date"		=> $image["image_last_update"]
