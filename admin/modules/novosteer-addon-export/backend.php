@@ -177,6 +177,40 @@ class CNovosteerAddonExportBackend extends CPlugin{
 
 		return $data;
 	}
+	/**
+	* description
+	*
+	* @param
+	*
+	* @return
+	*
+	* @access
+	*/
+	function getExportByCode($code) {
+		global $_LANG_ID;
+
+		$data = $this->db->QFetchArray(
+			"SELECT * FROM 	%s  as feeds
+			INNER JOIN 
+				%s AS dealerships
+				ON
+					feeds.dealership_id = dealerships.dealership_id
+			WHERE				
+				feed_code LIKE '%s'
+			",
+			[
+				$this->tables['plugin:novosteer_addon_export_feeds'],
+				$this->tables['plugin:novosteer_dealerships'],
+				$code
+			]			
+		);
+
+		if ($data["feed_settings"]) {
+			$data["settings"] = json_decode($data["feed_settings"] , true );
+		}
+
+		return $data;
+	}
 
 	/**
 	* description

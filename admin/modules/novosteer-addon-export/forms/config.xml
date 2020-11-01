@@ -3,7 +3,6 @@
 	
 		<instance></instance>
 		<system>
-			<module_url>false</module_url>
 			<subtitle_private>false</subtitle_private>
 			<module_protected>false</module_protected>
 			<module_groups>false</module_groups>

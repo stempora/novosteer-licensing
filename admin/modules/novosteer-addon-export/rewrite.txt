@@ -1,0 +1,1 @@
+RewriteRule ^__novosteer_export/([^/]+)/$			stembase.php?_PAGE=ajax&mod=novosteer-addon-export&sub=feed.run&feed_code=$1
