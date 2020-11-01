@@ -180,7 +180,7 @@ class CNovosteerAddonSyndicateDealerSocket extends CNovosteerAddonSyndicateDeale
 			$product["interior_color_detailed"],
 			$product["price_retail"],
 			$product["price_sale"],
-			 CDate::toStr("%m/%d/%Y" ,$product["date_in_stock"])
+			CDate::toStr("%m/%d/%Y" ,$product["date_in_stock"] ? $product["date_in_stock"] : $product["product_date_add"])
 		];
 	}
 

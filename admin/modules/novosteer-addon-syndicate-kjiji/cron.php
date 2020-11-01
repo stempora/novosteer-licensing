@@ -178,7 +178,7 @@ class CNovosteerAddonSyndicateKjiji extends CNovosteerAddonSyndicateKjijiBackend
 			$product["vin"],
 			$product["stock_id"],			
 			$product["cat"] == "New"? "New" : "Used",
-			$product["cat"] == "Certified"? "1" : "0",
+			$product["cat"] == "Certified"? "True" : "False",
 			$product["year"],
 			$product["brand_name"],
 			$product["model_name"],
