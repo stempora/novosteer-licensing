@@ -91,7 +91,7 @@ class Map extends Base{
 		$data = $this->db->QFetchRowArray(
 			"SELECT * FROM %s where find_in_set(%d , export_id) OR export_all = 1 AND export_extension LIKE '%s'",
 			[
-				$this->module->tables['plugin:novosteer_addon_export_map_pre'],
+				$this->module->tables['plugin:novosteer_addon_export_map'],
 				$this->feed["feed_id"],
 				$this->feed["feed_extension"],
 			]
