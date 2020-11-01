@@ -55,7 +55,7 @@
 			<items type="form" var="items"/>
 
 			<condition type="var" import="" />
-			<req_condition type="var" import="WHERE feed_extension LIKE 'syndicatefacebook'" />
+			<req_condition type="var" import="WHERE feeds.feed_extension LIKE 'syndicatefacebook'" />
 
 			<order type="var" import="dealership_name" />
 			<order_mode type="var" import="DESC" />

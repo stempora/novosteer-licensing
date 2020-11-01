@@ -71,7 +71,7 @@
 			<items type="form" var="items"/>
 
 			<condition type="var" import="" />
-			<req_condition type="var" import="WHERE feed_extension LIKE 'syndicatekjiji'" />
+			<req_condition type="var" import="WHERE feeds.feed_extension LIKE 'syndicatekjiji'" />
 
 			<order type="var" import="feed_name" />
 			<order_mode type="var" import="ASC" />

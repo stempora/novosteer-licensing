@@ -75,7 +75,7 @@
 			<items type="form" var="items"/>
 
 			<condition type="var" import="" />
-			<req_condition type="var" import="WHERE feed_extension LIKE 'syndicatehomenet'" />
+			<req_condition type="var" import="WHERE feeds.feed_extension LIKE 'syndicatehomenet'" />
 
 			<order type="var" import="feed_name" />
 			<order_mode type="var" import="ASC" />

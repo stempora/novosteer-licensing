@@ -52,7 +52,7 @@
 			<items type="form" var="items"/>
 
 			<condition type="var" import="" />
-			<req_condition type="var" import="WHERE feed_extension LIKE 'syndicateautotrader'" />
+			<req_condition type="var" import="WHERE feeds.feed_extension LIKE 'syndicateautotrader'" />
 
 			<order type="var" import="file_date" />
 			<order_mode type="var" import="DESC" />
