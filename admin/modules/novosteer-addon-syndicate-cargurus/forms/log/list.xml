@@ -43,7 +43,7 @@
 			<items type="form" var="items"/>
 
 			<condition type="var" import="" />
-			<req_condition type="var" import="WHERE feeds.feed_extension LIKE 'syndicatecargurus'" />
+			<req_condition type="var" import="WHERE history.feed_extension LIKE 'syndicatecargurus'" />
 
 			<order type="var" import="file_date" />
 			<order_mode type="var" import="DESC" />

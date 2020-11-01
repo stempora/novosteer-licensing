@@ -168,7 +168,7 @@ class CNovosteerAddonSyndicateHomenet extends CNovosteerAddonSyndicateHomenetBac
 			$product["stock_id"],			
 			$product["price_sale"],
 			$product["link"],
-			implode("|" , $images),
+			implode("," , $images),
 			$product["title"],
 			$product["description"],
 		];
