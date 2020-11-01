@@ -78,8 +78,12 @@
 		</box>
 
 
-		<box title="Options" width="6">
+		<box title="Vehicle" width="6">
 			<fields>
+				<dealership_id type="relation" title="Dealership">
+					<relation table="plugin:novosteer_dealerships" id="dealership_id" text="dealership_name"></relation>
+				</dealership_id>
+				<subtitle_options title="Options" type="subtitle"></subtitle_options>
 				<factory_codes type="vardump" json="true" title="Factory Codes" with="100%"/>
 				<options type="vardump" json="true" title="Options" />
 				<options_exterior type="vardump" json="true" title="Exterior"/>

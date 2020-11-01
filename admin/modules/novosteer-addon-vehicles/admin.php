@@ -76,15 +76,14 @@ class CNovosteerAddonVehicles extends CNovosteerAddonVehiclesBackend{
 				}				
 
 				if ($image["image_downloaded"]) {
-					$source = $this->storage->resources->getUrl($dealership["dealership_location_prefix"] . "/export/" . $vehicle['product_sku'] . "/original/" . $image["image_id"] . ".jpg");
+					$source = $this->storage->getLocation($dealership["dealership_location"])->getUrl($dealership["dealership_location_prefix"] . "/export/" . $vehicle['product_sku'] . "/original/" . $image["image_id"] . ".jpg");
 					$image["image_downloaded"] = "<img width=\"100%\" src=\"" . $source . "\" />";
 				}				
 
 				if ($image["image_overlay"]) {
-					$source = $this->storage->resources->getUrl($dealership["dealership_location_prefix"] . "/export/" . $vehicle['product_sku'] . "/final/" . $image["image_id"] . ".jpg");
+					$source = $this->storage->getLocation($dealership["dealership_location"])->getUrl($dealership["dealership_location_prefix"] . "/export/" . $vehicle['product_sku'] . "/final/" . $image["image_id"] . ".jpg");
 					$image["image_overlay"] = "<img width=\"100%\" src=\"" . $source . "\" />";
 				}				
-
 			}
 			
 		}

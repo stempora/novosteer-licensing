@@ -44,7 +44,7 @@ class CNovosteerAddonExport extends CNovosteerAddonExportBackend{
 		
 			switch ($_GET["sub"]) {
 				case  "landing":
-					$sub = "products";
+					$sub = "exports";
 
 				case "exports":
 					$data = new CSQLAdmin($sub, $this->__parent_templates,$this->db,$this->tables,$extra);

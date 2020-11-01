@@ -42,7 +42,6 @@
 						</dealership_id> 
 
 						<feed_id type="droplist" title="Export" empty="true">
-
 							<relation id="feed_id" text="name">
 								<sql>
 									<vars>
@@ -52,7 +51,7 @@
 
 									<query><![CDATA[
 										SELECT 
-											concat(dealership_name , ' ' , feed_name) as name
+											concat(dealership_name , ' - ' , feed_name) as name, feed_id
 										FROM 
 											{TABLE} as t, 
 											{TABLE_LANG} as l  
@@ -67,6 +66,27 @@
 
 
 						</feed_id> 
+
+						<feed_extension type="droplist" title="Extension" empty="true">
+							<relation id="feed_extension" text="feed_extension">
+								<sql>
+									<vars>
+										<table type="table" import="plugin:novosteer_addon_export_feeds"/>
+									</vars>
+
+									<query><![CDATA[
+										SELECT 
+											distinct feed_extension
+										FROM 
+											{TABLE} as t
+										ORDER BY
+											feed_extension ASC
+									]]></query>
+									<field>feed_extension</field>
+								</sql>
+							</relation>
+						</feed_extension> 
+
 					</fields>
 				</box>
 					
@@ -80,8 +100,9 @@
 			</fields>
 
 			<sql_fields>
-				<field name="feed_id">=</field>			
-				<field name="dealership_id">=</field>			
+				<field name="feed_id" type="=" field="feeds.feed_id">=</field>			
+				<field name="feed_extension" type="=" field="feeds.feed_extension">=</field>			
+				<field name="dealership_id" type="=" field="dealers.dealership_id"></field>			
 				<field name="file_date">range</field>			
 			</sql_fields>
 

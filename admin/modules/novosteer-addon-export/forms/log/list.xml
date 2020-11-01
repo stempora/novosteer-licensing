@@ -13,13 +13,12 @@
 			</relation>
 		</dealership_id> 
 
-		<feed_id type="relation" header="Export" multi="true">
-			<relation table="plugin:novosteer_addon_export_feeds" id="feed_id" text="feed_name" order="feed_name ASC">							
-			</relation>
-		</feed_id> 
+		<feed_name header="Service"></feed_name>
+
+		<feed_extension header="Extension"></feed_extension>
 
 		<file_date header="Date" type="date" params="%F %T" align="center" width="120px"/>
-		<file_file_file header="File Name"/>
+		<history_file_file header="File Name"/>
 
 		<button_view type="button" icon="file-excel" width="20" align="center" onclick="" color="Green" protected="eval:!strstr($field['history_file_file'] , '.csv');">
 			<location>javascript:STBCSVReader.show('index.php?mod=novosteer-addon-export&sub=download&file_id={FILE_ID}')</location>
@@ -45,18 +44,34 @@
 		<vars>
 
 			<table type="table"/>
+			<table_feeds type="table" import="plugin:novosteer_addon_export_feeds"/>
+			<table_dealers type="table" import="plugin:novosteer_dealerships"/>
 
 			<page type="page"/>
 			<items type="form" var="items"/>
 
 			<condition type="var" import="" />
 
+			<from type="var">
+				<import>
+					{TABLE} as log
+					LEFT JOIN 
+						{TABLE_FEEDS} as feeds
+					ON
+						log.feed_id = feeds.feed_id
+					LEFT JOIN 
+						{TABLE_DEALERS} as dealers
+					ON
+						feeds.dealership_id = dealers.dealership_id
+				</import>
+			</from>
+
 			<order type="var" import="file_date" />
 			<order_mode type="var" import="DESC" />
 
 		</vars>
-		<query>select * from {TABLE} {CONDITION} ORDER BY {ORDER} {ORDER_MODE} LIMIT {PAGE} , {ITEMS} </query>
-		<count table="{TABLE}" condition="{CONDITION}" />
+		<query>select *,log.* from {FROM} {CONDITION} ORDER BY {ORDER} {ORDER_MODE} LIMIT {PAGE} , {ITEMS} </query>
+		<count table="{FROM}" condition="{CONDITION}" />
 	</sql> 
 
 </form>
