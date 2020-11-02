@@ -436,7 +436,7 @@ class NovosteerDealership extends Export implements ExportInterface{
 		);
 
 		$this->log("\tDeleting images & resources");
-		$this->module->storage->resources->deleteDirectoryRecursive(
+		$this->module->storage->getLocation($this->info["dealership_location"])->deleteDirectoryRecursive(
 			$this->info["dealership_location_prefix"] . "/export/{$sku}/"
 		);
 
@@ -526,16 +526,16 @@ class NovosteerDealership extends Export implements ExportInterface{
 		if (is_array($images)) {
 			foreach ($images as $key => $image) {
 				$source = $this->info["dealership_location_prefix"] . "/export/" . $image['product_sku'] . "/original/" . $image["image_id"] . ".jpg";
-				$overlay = $this->info["dealership_location_prefix"] . "/export/" . $image['product_sku'] . "/original/" . $image["image_id"] . ".jpg";
+				$overlay = $this->info["dealership_location_prefix"] . "/export/" . $image['product_sku'] . "/final/" . $image["image_id"] . ".jpg";
 
-				if ($image["image_downloaded"] && $this->module->storage->resources->fileExists($source)) {
+				if ($image["image_downloaded"] && $this->module->storage->getLocation($this->info["dealership_location"])->fileExists($source)) {
 					$this->log("Deleting original %s" , [$source]);
-					$this->module->storage->resources->delete($source);
+					$this->module->storage->getLocation($this->info["dealership_location"])->delete($source);
 				}
 
-				if ($image["image_overlay"] && $this->module->storage->resources->fileExists($overlay)) {
+				if ($image["image_overlay"] && $this->module->storage->getLocation($this->info["dealership_location"])->fileExists($overlay)) {
 					$this->log("Deleting overlay %s" , [$overlay]);
-					$this->module->storage->resources->delete($overlay);
+					$this->module->storage->getLocation($this->info["dealership_location"])->delete($overlay);
 				}
 				
 				$this->log("Deleting database record.\n");
