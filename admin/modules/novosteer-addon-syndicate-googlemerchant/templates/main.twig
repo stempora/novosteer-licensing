@@ -14,7 +14,7 @@
 
 			<g:image_link>{{ product.tn.main }}</g:image_link> 
 
-			{% if product.images.length %}
+			{% if product.images|length %}
 				{% for image in product.images %}
 					{% if loop.first %}
 						<g:image_link>{{ image }}</g:image_link> 

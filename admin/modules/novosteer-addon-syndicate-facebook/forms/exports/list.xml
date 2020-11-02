@@ -40,7 +40,7 @@
 		</products>
 
 		<button_view onclick="" type="button" width="44" align="center" icon="file-xml" color="Green" acl="novosteeer-addon-export:feeds.view" target="_blank">
-				<location>/__novosteer/{FEED_CODE}/</location>
+				<location>/__novosteer_export/{FEED_CODE}/</location>
 		</button_view>
 
 
