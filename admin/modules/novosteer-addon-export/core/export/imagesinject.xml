@@ -1,0 +1,39 @@
+<form>
+	<fields>
+		<box title="Settings" width="7">
+			<fields>		
+
+				<set_condition type="textarea" script="true" title="Conditions">
+					<description><![CDATA[
+						<p>Eg: [database_table_field]|[condition: &gt;, &lt;, =, in,]|[value1,value2,value3]</p>
+					]]></description>
+				</set_condition>
+
+				<subtitle_w1 type="subtitle" title="Image">Image</subtitle_w1>
+
+				<set_image valign="top" adminwidth="200" type="image" path="novosteer/export/inject/" absolute="false" editable="true" extend="false" title="Image">
+					<file default="image_" field="feed_id" ext=".jpg" />			
+					<error>No file available.</error>						
+				</set_image>
+
+				<set_position type="droplist" title="Position">
+					<options>
+						<option name="1">Second after main image</option>
+						<option name="2">Middle of images list</option>
+						<option name="3">Last image</option>
+					</options>
+				</set_position>
+			</fields>
+		</box>
+	</fields>
+
+	<javascript>
+		<after>
+			CM("set_condition");
+		</after>
+	</javascript>
+
+	<remove_fields>
+	</remove_fields>
+</form>
+

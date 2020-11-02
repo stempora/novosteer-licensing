@@ -204,7 +204,7 @@ class NovosteerDealership extends Export implements ExportInterface{
 	public function updateProductImages($product , $data) {
 
 		$old = $this->db->qFetchRowArray(
-			"SELECT * FROM %s WHERE product_id = %d AND image_deleted = 0",
+			"SELECT * FROM %s WHERE product_id = %d AND image_deleted = 0 and image_system =- 0",
 			[
 				$this->module->tables['plugin:novosteer_vehicles_export_images'],
 				$product["product_id"]
@@ -241,7 +241,7 @@ class NovosteerDealership extends Export implements ExportInterface{
 			$this->db->QueryUpdate(
 				$this->module->tables["plugin:novosteer_vehicles_export_images"],
 				[ "image_deleted" => "1"] ,
-				$this->db->Statement("image_id in (%s)" , [implode("," , $ids)])
+				$this->db->Statement("image_system = 0 AND image_id in (%s)" , [implode("," , $ids)])
 			);
 		}
 
@@ -500,6 +500,7 @@ class NovosteerDealership extends Export implements ExportInterface{
 	*/
 	function deleteImages() {
 		global $_LANG_ID; 
+		
 
 
 		$images = 	$this->db->QFetchRowArray(
@@ -524,6 +525,8 @@ class NovosteerDealership extends Export implements ExportInterface{
 		);
 
 		if (is_array($images)) {
+			$this->log("Detected %d images marked for download",[count($images)]);
+
 			foreach ($images as $key => $image) {
 				$source = $this->info["dealership_location_prefix"] . "/export/" . $image['product_sku'] . "/original/" . $image["image_id"] . ".jpg";
 				$overlay = $this->info["dealership_location_prefix"] . "/export/" . $image['product_sku'] . "/final/" . $image["image_id"] . ".jpg";
