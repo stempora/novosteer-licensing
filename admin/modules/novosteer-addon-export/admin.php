@@ -39,8 +39,6 @@ class CNovosteerAddonExport extends CNovosteerAddonExportBackend{
 
 			$sub = $_GET["sub"];
 			$action = $_GET["action"];
-
-
 		
 			switch ($_GET["sub"]) {
 				case  "landing":
@@ -55,6 +53,7 @@ class CNovosteerAddonExport extends CNovosteerAddonExportBackend{
 
 					$data->functions = [
 							"onstore" => [&$this , "ExportStore" ],
+							"ondelete" => [&$this , "ExportDelete" ],
 							"ondetails"			=> array(&$this , "ExportDecodeValues" ),
 							"onedit"			=> array(&$this , "ExportDecodeValues" ),
 
@@ -521,9 +520,29 @@ class CNovosteerAddonExport extends CNovosteerAddonExportBackend{
 					[$record["feed_id"]]
 				)
 			);
+
+			$client = $this->getExportObject($record["feed_id"]);
+			$client->runOnUpdate($old);
 		}		
 	}
 
+
+	/**
+	* description
+	*
+	* @param
+	*
+	* @return
+	*
+	* @access
+	*/
+	function exportDelete($record) {
+		global $_LANG_ID; 
+
+		$client = $this->getExportObject($record);
+		$client->runOnDelete();
+	}
+	
 
 
 	/**
@@ -615,7 +634,6 @@ class CNovosteerAddonExport extends CNovosteerAddonExportBackend{
 			}
 
 		} 
-
 	}
 	
 	

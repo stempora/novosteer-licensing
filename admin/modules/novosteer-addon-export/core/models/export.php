@@ -754,5 +754,34 @@ class Export extends Base{
 			]
 		);
 	}
+
+
+	/**
+	* description
+	*
+	* @param
+	*
+	* @return
+	*
+	* @access
+	*/
+	function runOnUpdate($old = null) {
+		global $_LANG_ID; 
+	}
+
+	/**
+	* description
+	*
+	* @param
+	*
+	* @return
+	*
+	* @access
+	*/
+	function runOnDelete() {
+		global $_LANG_ID; 
+	}
+	
+	
 	
 }

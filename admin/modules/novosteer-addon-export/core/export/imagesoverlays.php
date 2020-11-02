@@ -219,7 +219,43 @@ class ImagesOverlays extends Export implements ExportInterface{
 			
 		}
 	}
-	
+
+
+	/**
+	* description
+	*
+	* @param
+	*
+	* @return
+	*
+	* @access
+	*/
+	function runOnDelete() {
+		global $_LANG_ID;
+		
+		$this->db->QueryUpdate(
+			["image_deleted" => "1"],
+			$this->db->Statement("image_overlay=%d" , $this->feed["feed_id"])
+		);
+	}			
+
+	/**
+	* description
+	*
+	* @param
+	*
+	* @return
+	*
+	* @access
+	*/
+	function runOnUpdate($old) {
+		global $_LANG_ID; 
+
+		$this->db->QueryUpdate(
+			["image_overlay" => "0"],
+			$this->db->Statement("image_overlay=%d" , $this->feed["feed_id"])
+		);
+	}
 	
 
 }
