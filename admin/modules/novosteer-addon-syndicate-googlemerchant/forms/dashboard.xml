@@ -1,0 +1,65 @@
+<tabs>
+		<t 
+			icon="settings"
+			title="Add-on" 
+			link="" 
+			color="Blue"
+		>
+
+
+			<link 
+				active="isModSub('modules','default');" 
+				link="index.php?mod=novosteer-addon-syndicate-googlemerchant&sub=settings.general" 
+				icon="edit" 
+				title="General Settings" 
+				acl="settings.general"
+				subtitle="Status, URL, display rules & permissions." />
+
+<!--
+			<link 
+				active="isModSub('modules' , 'default-settings');" 
+				link="index.php?mod=novosteer-addon-syndicate-googlemerchant&sub=settings.advanced" 
+				icon="advanced-settings" 
+				title="Advanced Settings" 
+				acl="settings.advanced"
+				subtitle="Default layouts, functionality & display style." />
+-->
+		</t>
+
+		<t5 
+			color="Gray" 
+			icon="cloud-download" 
+			subtitle="Add & Edit" 
+			acl="importers.list"
+			title="Exports" 
+			link="index.php?mod=novosteer-addon-syndicate-googlemerchant&sub=exports"
+			/>
+
+		<t6 
+			color="Purple" 
+			icon="car" 
+			subtitle="Add & Edit" 
+			acl="importers.list"
+			title="Vehicles" 
+			link="index.php?mod=novosteer-addon-syndicate-googlemerchant&sub=vehicles"
+			/>
+
+		<map 
+			color="Green" 
+			icon="merge" 
+			subtitle="Add & Edit" 
+			acl="importers.list"
+			title="Maping Table" 
+			link="index.php?mod=novosteer-addon-syndicate-googlemerchant&sub=map"
+			/>
+
+		<history 
+			color="Yellow" 
+			icon="quill" 
+			subtitle="View & Analize" 
+			title="Log" 
+			acl="logs"
+			link="index.php?mod=novosteer-addon-syndicate-googlemerchant&sub=log"
+			/>
+
+	</tabs>

@@ -1,0 +1,9 @@
+<menu>
+				<link 
+				active="isMod('novosteer-addon-syndicate-googlemerchant');" 
+				link="index.php?mod=novosteer-addon-syndicate-googlemerchant&sub=landing" 
+				icon="transmission" 
+				title="Syndicate GoogleMerchant" 
+				acl="novosteer-addon-syndicate-googlemerchant:*"
+				subtitle="Manage exporter settings & view queue." />
+</menu>

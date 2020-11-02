@@ -1,0 +1,74 @@
+<form>
+	
+	<title>Map Table</title>
+	<border>true</border>
+	<alternance>true</alternance>
+	<valternance>true</valternance>
+	<skin>Green</skin>
+	
+	<fields>
+		<_count header="No." suffix="." width="30" align="center" />
+		<map_source header="From" allownl="true"/>
+		<map_destination header="To" allownl="true"/>
+
+		<export_feeds type="relation" header="Export(s)" multi="true" empty="ALL Exports">
+			<relation id="feed_id" table="plugin:novosteer_addon_export_feeds" text="feed_name">							
+			</relation>
+		</export_feeds> 
+
+		<export_all type="relation" header="All" align="center" width="70">
+			<options>
+				<option name="1">yes</option>
+			</options>
+		</export_all>
+
+		<button_delete type="button" width="44" align="center" onclick="" button="/small/delete" acl="map.delete" >
+			<location>{SELF.URI.DELETE}</location>
+		</button_delete>
+
+		<button_details onclick="" type="button" width="44" align="center" button="/small/edit" acl="map.edit">
+			<location>{SELF.URI.EDIT}</location>
+		</button_details>
+
+	</fields>
+
+	<vars>
+		<attribute_id type="eval" import="$_GET['attribute_id']" />
+		<importer_id type="eval" import="$_GET['importer_id']" />
+	</vars>
+
+	<header>
+		<titles>true</titles>
+		<buttons>
+			<add button="addnew" acl="map.add">
+				<location>{SELF.URI.ADD}</location>
+			</add>
+
+
+		</buttons>
+	</header>
+
+	<items>50</items>
+
+
+	<sql>
+		<vars>
+
+			<table type="table"/>
+
+			<page type="page"/>
+			<items type="form" var="items"/>
+
+			<condition type="var" import="" />
+			<req_condition type="var" import="WHERE export_extension LIKE 'syndicategooglemerchant'"></req_condition>
+
+			<order type="var" import="map_source" />
+			<order_mode type="var" import="ASC" />
+
+		</vars>
+		<query>select * from {TABLE} {CONDITION} ORDER BY {ORDER} {ORDER_MODE} LIMIT {PAGE} , {ITEMS} </query>
+		<count table="{TABLE}" condition="{CONDITION}" />
+
+	</sql> 
+
+</form>

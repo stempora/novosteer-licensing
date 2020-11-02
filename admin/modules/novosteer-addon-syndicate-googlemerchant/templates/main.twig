@@ -1,0 +1,65 @@
+{% block Main %}<?xml version="1.0"?>
+<rss version="2.0" xmlns:g="http://base.google.com/ns/1.0">
+	<channel>
+		<title>{{ feed.settings.set_feed_title }}</title> 
+		<link>{{ feed.settings.set_feed_link }}</link> 
+		<description><![CDATA[{{ feed.settings.set_feed_description }}]]></description> 
+
+		{% for product in products %}
+		<item> 
+			<g:title>{{ product.year }} {{ product.brand_name }} {{ product.model_name }} {{ product.trim }}</g:title> 
+			<g:link>{{ product.link }}</g:link> 
+			<g:description><![CDATA[{{ product.description }}]]></g:description>
+			<g:brand>{{ product.brand_name }}</g:brand>
+
+			<g:image_link>{{ product.tn.main }}</g:image_link> 
+
+			{% if product.images.length %}
+				{% for image in product.images %}
+					{% if loop.first %}
+						<g:image_link>{{ image }}</g:image_link> 
+					{% elseif loop.index < 12 %}
+						<g:additional_image_link>{{ image }}</g:additional_image_link>
+					{% endif %}
+				{% endfor %}
+			{% endif %}
+
+			<g:product_type>{{ product.year }} &gt; {{ product.brand_name }} &gt; {{ product.model_name }}{{ product.trim ? ' &gt; ' ~ product.trim : ''}}</g:product_type> 
+
+			<g:age_group>adult</g:age_group>
+
+			<g:condition>{{ product.cat == 'New' ? 'new' : 'used'}}</g:condition>
+
+			<g:color>{{ product.exterior_color_detailed }}</g:color>
+
+			<g:google_product_category>916</g:google_product_category>
+
+			<g:id>{{ product.stock_id }}</g:id>
+			{% if product.price_retail %}
+				{% set price = product.price_retail|formatprice %}	
+				<g:price>{{ (price.num ~ ' CAD')|trim }}</g:price>
+
+				{% set price = product.price_sale|formatprice %}	
+				<g:sale_price>{{ (price.num ~ ' CAD')|trim }}</g:sale_price>
+			{% else %}
+				{% set price = product.price_sale|formatprice %}	
+				<g:price>{{ (price.num ~ ' CAD')|trim }}</g:price>
+			{% endif %}
+			<g:availability>in stock</g:availability>
+			<g:mpn>{{ product.vin }}</g:mpn>
+
+
+			{% if product.details %}
+				{% for detail in product.details %}	
+					<g:product_detail>
+						<g:section_name>{{ detail.section }}</g:section_name>
+						<g:attribute_name>{{ detail.attribute }}</g:attribute_name>
+						<g:attribute_value>{{ detail.value }}</g:attribute_value>
+					</g:product_detail>
+				{% endfor %}
+			{% endif %}
+		</item>
+		{% endfor %}
+	</channel> 
+</rss>
+{% endblock %}

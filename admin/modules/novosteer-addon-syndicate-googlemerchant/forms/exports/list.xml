@@ -1,0 +1,105 @@
+<form>
+	<title>Exports</title>
+	<border>true</border>
+
+
+	<alternance>true</alternance>
+	<valternance>true</valternance>
+
+	<skin>Gray</skin>
+
+	<fields>
+
+		<_count header="No." width="20" align="right" suffix="."/>
+
+		<dealership_name header="Dealeship">
+		</dealership_name>
+
+		<feed_name header="Admin Note" />
+
+		<feed_status type="relation" align="center" width="100" header="Status">
+			<options>
+				<option name="1" color="green" value="enabled" />
+				<option name="0" color="red" value="disabled" />
+			</options>
+		</feed_status>
+
+		<feed_lastrun type="date" params="Y-m-d" align="center"  header="Last Run" width="140"/>
+
+
+		<products type="sql" header="Vehicles" width="100" align="center">
+			<sql>
+				<vars>
+					<table type="table" import="plugin:novosteer_addon_export_products"/>
+					<field type="field" import="feed_id" />
+				</vars>
+
+				<query>SELECT count(DISTINCT product_id) as cnt from {TABLE} WHERE feed_id={FIELD} </query>
+				<field>cnt</field>
+			</sql>
+		</products>
+
+		<button_view onclick="" type="button" width="44" align="center" icon="file-xml" color="Green" acl="novosteeer-addon-export:feeds.view" target="_blank">
+				<location>/__novosteer/{FEED_CODE}/</location>
+		</button_view>
+
+
+		<button_run onclick="" type="button" width="44" align="center" icon="spinner11" color="DarkGray" acl="novosteeer-addon-export:feeds.run" protected="feed_forced">
+				<location>javascript:DeleteConfirm('Do you want to force runing this job next time crontab runs?' , 'index.php?mod=novosteer-addon-export&sub=feeds.force&feed_id={FEED_ID}&_tb={TRAIL.HERE}');</location>
+		</button_run>
+
+		<button_delete type="button" width="44" align="center" onclick="" button="/small/delete" acl="novosteer-addon-export:feeds.delete">
+			<location>{SELF.URI.DELETE}</location>
+		</button_delete>
+
+		<button_details type="button" width="44" align="center" onclick="" button="/small/details" acl="novosteer-addon-export:feeds.details">
+			<location>{SELF.URI.DETAILS}</location>
+		</button_details>
+
+	</fields>
+
+	<header>
+		<titles>true</titles>
+		<buttons>
+			<button_run icon="spinner11" acl="novosteeer-addon-export:feeds.run" title="Force Re-Run">
+					<location>javascript:DeleteConfirm('Do you want to force runing this job next time crontab runs?' , 'index.php?mod=novosteer-addon-export&sub=feeds.force&feed_extension=syndicategooglemerchant&_tb={TRAIL.HERE}');</location>
+			</button_run>
+
+		</buttons>
+	</header>
+
+	<items>50</items>
+
+	<sql>
+		<vars>
+
+			<table type="table"/>
+			<table_dealers type="table" import="plugin:novosteer_dealerships"/>
+
+			<page type="page"/>
+			<items type="form" var="items"/>
+
+			<condition type="var" import="" />
+			<req_condition type="var" import="WHERE feeds.feed_extension LIKE 'syndicategooglemerchant'" />
+
+			<order type="var" import="feed_name" />
+			<order_mode type="var" import="ASC" />
+
+			<from type="var">
+				<import>
+					{TABLE} as feeds
+					INNER JOIN 
+						{TABLE_DEALERS} as dealers
+					ON
+						feeds.dealership_id = dealers.dealership_id
+				</import>
+			</from>
+
+		</vars>
+		<query>select * from {FROM} {CONDITION} ORDER BY {ORDER} {ORDER_MODE} LIMIT {PAGE} , {ITEMS} </query>
+		<count table="{FROM} " condition="{CONDITION}" />
+
+	</sql> 
+
+
+</form>
