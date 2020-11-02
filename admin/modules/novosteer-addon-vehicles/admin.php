@@ -40,7 +40,7 @@ class CNovosteerAddonVehicles extends CNovosteerAddonVehiclesBackend{
 
 			switch ($sub) {	
 				case "landing":
-					$_GET["sub"] = $sub = "import";
+					$_GET["sub"] = $sub = "export";
 				case "import":
 				case "export":
 					$data = new CSQLAdmin($sub, $this->__parent_templates,$this->db,$this->tables,$extra);
@@ -72,17 +72,20 @@ class CNovosteerAddonVehicles extends CNovosteerAddonVehiclesBackend{
 			foreach ($images as $key => &$image) {
 
 				if ($image["image_source"]) {
-					$image["image_source"] = "<img width=\"100%\" src=\"" . $image["image_source"] . "\" />";
+					$image["image_source"] = "<a href=\"{$image['image_source']}\" rel=\"prettyPhoto\"><img width=\"100%\" src=\"" . $image["image_source"] . "\" /></a>";
 				}				
 
 				if ($image["image_downloaded"]) {
 					$source = $this->storage->getLocation($dealership["dealership_location"])->getUrl($dealership["dealership_location_prefix"] . "/export/" . $vehicle['product_sku'] . "/original/" . $image["image_id"] . ".jpg");
-					$image["image_downloaded"] = "<img width=\"100%\" src=\"" . $source . "\" />";
+					$image["image_downloaded"] = "<a href=\"{$source}\" rel=\"prettyPhoto\"><img width=\"100%\" src=\"" . $source . "\" /></a>";
 				}				
 
-				if ($image["image_overlay"]) {
-					$source = $this->storage->getLocation($dealership["dealership_location"])->getUrl($dealership["dealership_location_prefix"] . "/export/" . $vehicle['product_sku'] . "/final/" . $image["image_id"] . ".jpg");
-					$image["image_overlay"] = "<img width=\"100%\" src=\"" . $source . "\" />";
+				if ($image["image_overlay"] ) {
+					$source = $image["image_overlay_url"] 
+						? $image["image_overlay_url"] 
+						: $this->storage->getLocation($dealership["dealership_location"])->getUrl($dealership["dealership_location_prefix"] . "/export/" . $vehicle['product_sku'] . "/final/" . $image["image_id"] . ".jpg");
+
+					$image["image_overlay"] = "<a href=\"{$source}\" rel=\"prettyPhoto\"><img width=\"100%\" src=\"" . $source . "\" /></a>";
 				}				
 			}
 			
