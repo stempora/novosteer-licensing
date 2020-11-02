@@ -248,7 +248,7 @@ class ImagesOverlays extends Export implements ExportInterface{
 	*
 	* @access
 	*/
-	function runOnUpdate($old) {
+	function runOnUpdate($old = null) {
 		global $_LANG_ID; 
 
 		$this->db->QueryUpdate(

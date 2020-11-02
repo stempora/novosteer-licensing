@@ -254,6 +254,7 @@ class ImagesInject extends Export implements ExportInterface{
 		);		
 
 		$this->db->QueryUpdate(
+			$this->tables["plugin:novosteer_vehicles_export_images"],
 			[
 				"image_overlay_url" => $this->module->storage->getLocation($dealership["dealership_location"])->getUrl($path,$this->info["settings"]["set_image_date"])
 			],
