@@ -33,6 +33,7 @@
 
 		<add>index.php?mod=novosteer-addon-import&sub=dealership.feeds.add&dealership_id={GLOBAL.GET.DEALERSHIP_ID}&_tb={TRAIL.HERE}</add>
 		<edit>{SELF.URI.MAIN}&feed_id={FEED_ID}&action=edit&_tb={TRAIL.HERE}</edit>
+		<details>{SELF.URI.MAIN}&feed_id={FEED_ID}&action=details&_tb={TRAIL.HERE}</details>
 		<delete>javascript:DeleteConfirm('Are you sure you want to delete this record?' , '{SELF.URI.MAIN}feed_id={FEED_ID}&action=delete&_tb={TRAIL.HERE}');</delete>
 		<store>{SELF.LINK}{SELF.ACTION.STORE}</store>
 

@@ -288,7 +288,7 @@ class Export extends Base{
 	public function runFeed() {
 		global $_LANG_ID;
 		$start = time();
-		$this->log("Starting feed importer %s \n" , [$this->info['feed_name']]);
+		$this->log("Starting feed importer %s (%s) \n" , [$this->info['feed_name'] , $this->info["feed_extension"]]);
 
 		$file = $this->getFile();
 
@@ -317,7 +317,7 @@ class Export extends Base{
 		}
 		$this->runPostProcess();
 
-		$this->log("Finished feed importer %s after %d seconds" , [$this->info['feed_name'] , time() - $start]);
+		$this->log("Finished feed importer %s (%s) after %d seconds" , [$this->info['feed_name'] , $this->info["feed_extension"], time() - $start]);
 	}
 
 

@@ -1,0 +1,57 @@
+<importer>
+	<fields>
+		<box title="Settings" width="7">
+			<fields>		
+				<set_request_key type="textbox" title="Request Key" default="eval:hash('sha256', time());">
+					<description>This key must be set in the dealer Novosteer Client, else the system wont provide the feed.</description>
+				</set_request_key>
+
+				<set_condition type="textarea" script="true" title="Conditions">
+					<description><![CDATA[
+						<p>Eg: [database_table_field]|[condition: &gt;, &lt;, =, in,]|[value1,value2,value3]</p>
+					]]></description>
+				</set_condition>
+
+				<subtitle_ftp type="subtitle" title="Link" restricted="eval:$_GET['action'] != 'details';"></subtitle_ftp>
+				<set_feed_url title="URL" type="textbox" preffix="{SELF.CONF.URL}__novosteer_import/{CODE}/" restricted="eval:$_GET['action'] != 'details';"/>
+
+
+				<subtitle_ping type="subtitle" title="Ping Dealer" />
+				<set_dealer_client type="textbox" title="Connect Link" preffix="https://" suffix="/__novosteer/*"/>
+				<set_dealer_key type="textbox" title="Authorisation Key">
+					<description>Dealer key to send the notification for new products.</description>
+				</set_dealer_key>
+			</fields>
+		</box>
+	</fields>
+
+	<javascript>
+		<after>
+			CM("set_condition");
+		</after>
+	</javascript>
+
+	<remove_fields>
+		<subtitle_feed_location></subtitle_feed_location>
+		<feed_data_type></feed_data_type>
+		<subtitle_feed_manual></subtitle_feed_manual>
+		<comment_manual></comment_manual>
+		<feed_data_file></feed_data_file>
+		<subtitle_feed_ftp></subtitle_feed_ftp>
+		<feed_data_server></feed_data_server>
+		<feed_data_port></feed_data_port>
+		<feed_data_enc></feed_data_enc>
+		<feed_data_passive></feed_data_passive>
+		<feed_data_user></feed_data_user>
+		<feed_data_pass></feed_data_pass>
+		<feed_data_path></feed_data_path>
+		<subtitle_feed_web></subtitle_feed_web>
+		<feed_data_link></feed_data_link>
+		<cache_control></cache_control>
+		<button_all></button_all>
+		<button_info></button_info>
+		<button_list></button_list>
+		<button_details></button_details>
+	</remove_fields>
+</importer>
+

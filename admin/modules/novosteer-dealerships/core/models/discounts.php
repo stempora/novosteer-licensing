@@ -169,7 +169,7 @@ class Discounts extends Base{
 	function setVehicle($vehicle) {
 		global $base , $_USER , $_SESS , $_CONF , $_LANG_ID; 
 
-		$vehicle["factory_codes"] = explode("," ,$vehicle["factory_codes"]);
+		$vehicle["factory_codes"] = json_decode($vehicle["factory_codes"] , true);
 
 		$this->vehicle = $vehicle;
 		

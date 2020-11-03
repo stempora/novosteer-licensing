@@ -403,7 +403,7 @@ class CNovosteerAddonImport extends CNovosteerAddonImportBackend{
 			if (is_object($client)) {
 				$fields = $client->getAdminFields();
 
-				if (is_array($fields)) {
+				if (is_array($fields) && count($fields)) {
 
 					$forms["forms"]["edit"]["fields"]["box"][] = $fields["fields"]["box"];
 					$forms["forms"]["details"]["fields"]["box"][] = $fields["fields"]["box"];
@@ -491,77 +491,6 @@ class CNovosteerAddonImport extends CNovosteerAddonImportBackend{
 				);
 			}
 		}		
-	}
-
-
-
-	/**
-	* description
-	*
-	* @param
-	*
-	* @return
-	*
-	* @access
-	*/
-	function productAddField(&$forms) {
-		global $base , $_USER , $_SESS; 
-
-		$this->__init();
-
-		if ($_GET["sub"] == "products/products") {
-
-			if ($_REQUEST["item_id"]) {
-
-				$set = $this->plugins["products-addon-attributes"]->getProductSet($_REQUEST["item_id"]);
-
-				if (!in_array($set , $this->getImportersSets())) {
-					return null;
-				}
-
-
-				$forms["details"]["fields"]["box"]["1"]["fields"][$this->_field] = 
-				$forms["edit"]["fields"]["box"]["1"]["fields"][$this->_field] = [
-					"title"			=> "Lock Field(s)",
-					"type"			=> "droplist",
-					"multi"			=> "true",
-					"default"		=> $this->getProductLockFields($_REQUEST["item_id"])["lock_id"],
-					"description"	=> "Select the fields to be ingnored from update by the importers linked to product's field set.",
-
-					"relation"		=> [
-						"table"	=> 'plugin:novosteer_addon_importer_locks_groups',
-						"id"	=> "lock_id",
-						"text"	=> "lock_name"
-					]
-				];
-			}
-
-		} 
-
-	}
-
-
-
-	/**
-	* description
-	*
-	* @param
-	*
-	* @return
-	*
-	* @access
-	*/
-	function productStore(&$record) {
-		global $base , $_USER , $_SESS; 
-
-
-		$set = $this->plugins["products-addon-attributes"]->getProductSet($record["item_id"]);
-
-		if (!in_array($set , $this->getImportersSets())) {
-			return null;
-		}
-
-		$this->updateProductLockFields($record["item_id"] , $record[$this->_field]);
 	}
 
 

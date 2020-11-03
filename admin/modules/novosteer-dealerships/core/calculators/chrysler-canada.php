@@ -69,7 +69,7 @@ class Chrysler_Canada extends Calculator {
 						$v = trim($v);
 
 						if (stristr($k , "d:")) {
-							$rules["discounts"][str_replace("d:" , "" , $k)] = $v;
+							$rules["discounts"][str_replace("d:" , "" , $k)] = strstr($v, "%" ) ? $v : str_replace("," ,'' , $v);
 						} elseif (!in_array($k , ["y1" , "y2" , "y3" , "y4" , "y5" , "y6" , "y7" , "y8"])) {						
 							if (stristr($v , "|not")) {
 								$rule["type"] = "2";
@@ -92,8 +92,6 @@ class Chrysler_Canada extends Calculator {
 				$this->discounts->addRule($rules);				
 			}
 		}
-
-
 		return $this;		
 	}
 
@@ -108,10 +106,6 @@ class Chrysler_Canada extends Calculator {
 	*/
 	function calculatePrice() {
 		global $base , $_USER , $_SESS , $_CONF , $_LANG_ID; 
-
-		if ($this->vehicle["type"] != "New") {
-			return false;
-		}
 
 		$this->loadDiscounts();
 

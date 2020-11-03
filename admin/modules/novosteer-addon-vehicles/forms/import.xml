@@ -1,14 +1,14 @@
 <form>
 
 	<forms>
-		<add>export/add.xml</add>
-		<edit>export/add.xml</edit>
+		<add>import/add.xml</add>
+		<edit>import/add.xml</edit>
 		<details>SHOW::add</details>
-		<list>export/list.xml</list>
-		<search>export/search.xml</search>
+		<list>import/list.xml</list>
+		<search>import/search.xml</search>
 	</forms>
 
-	<table>plugin:novosteer_vehicles_export</table>
+	<table>plugin:novosteer_vehicles_import</table>
 	<table_uid>product_id</table_uid>
 
 
@@ -41,5 +41,8 @@
 
 	</URIlinks>
 
+	<after>
+		<details type="sqladmin" xml="import.images" />
+	</after>
 
 </form>

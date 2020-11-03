@@ -8,6 +8,12 @@
 					<description>Calculator to be used to calculate the discounts for the msrp.</description>
 				</set_calculator>
 
+				<set_condition type="textarea" script="true" title="Conditions">
+					<description><![CDATA[
+						<p>Eg: [database_table_field]|[condition: &gt;, &lt;, =, in,]|[value1,value2,value3]</p>
+					]]></description>
+				</set_condition>
+
 				<subtitle_fields type="subtitle" title="Fields Relation"></subtitle_fields>
 			
 				<set_msrp_field type="droplist" required="true" validate="A:1:2000" title="MSRP Field" empty="true">
@@ -28,10 +34,15 @@
 					</relation>
 				</set_price_field>
 
-
 			</fields>
 		</box>
 	</fields>
+
+	<javascript>
+		<after>
+			CM("set_condition");
+		</after>
+	</javascript>
 
 	<remove_fields>
 		<feed_missing_status></feed_missing_status>

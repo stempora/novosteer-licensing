@@ -181,32 +181,6 @@ class Importer extends Base{
 	*
 	* @access
 	*/
-	function setSearch($search , $clone = false) {
-		global $base , $_USER , $_SESS; 
-
-		if ($clone) {
-			$this->search = clone $search;
-		} else {
-			$this->search = $search;
-		}
-
-
-		$this->search->disableHooks();
-		$this->search->resetConditions();
-	
-		return true;
-	}
-	
-
-	/**
-	* description
-	*
-	* @param
-	*
-	* @return
-	*
-	* @access
-	*/
 	public function setForm($data) {
 		global $base , $_USER , $_SESS; 
 
@@ -232,6 +206,8 @@ class Importer extends Base{
 		$this->event->setModule($module);
 		$this->lock->setModule($module);
 		$this->map->setModule($module);
+
+		$this->module = $module;
 
 		return $this;
 	}
@@ -288,7 +264,7 @@ class Importer extends Base{
 	public function runFeed() {
 		global $_LANG_ID;
 		$start = time();
-		$this->log("Starting feed importer %s \n" , [$this->info['feed_name']]);
+		$this->log("Starting feed importer %s (%s)\n" , [$this->info['feed_name'] , $this->info["feed_extension"]]);
 
 		$file = $this->getFile();
 
@@ -310,66 +286,17 @@ class Importer extends Base{
 
 		foreach ($items as $key => $item) {
 			$item = $this->lowerKeys($item);			
+
 			$this->processPreMapItem($item);
 			$this->processFeedItem($item);
 			$this->processPostMapItem($item);
 
-			$data = null;
-
-			//$this->log("Queries as far: " . $this->db->queries_cnt );
-			if ($item[$this->skuField]) {
-				$this->log();
-				$this->log("Processing %s" , [$item[$this->skuField]]);
-				$this->updateCronJob();
-
-				$data = null;
-
-
-				//check if exists a product with this sku already
-				$product = $this->getProduct($item);
-				$changeLog = null;
-
-				$this->skus["all"][] = $item[$this->skuField];
-
-				if (is_Array($product)) {
-					$this->event->setProduct($product["product_id"]);
-					$this->lock->setProduct($product["product_id"]);
-
-
-					if ($this->info['feed_duplicates'] == '2') {
-						$this->log("Checking %s for changes..." , [$item[$this->skuField]]);
-
-						if ($this->wasUpdated("" , $this->event->getHash($item))) {
-							$this->updateProduct($product , $item , $data);
-						} else {
-							$this->log("No Change, skipping \n");
-							$this->skus["ignored"][] = $item[$this->skuField];
-						}							
-					} else {
-						$this->skus["ignored"][] = $item[$this->skuField];
-					}
-					
-				} else {
-					$product = $this->createNewProduct($item , $data);
-				}
-
-				if (is_array($product)) {
-					$this->event->productRecordUpdate("" , $this->event->getHash($item));
-
-					$this->postUpdateProduct($product , $data , $item);					
-				} else {
-					$this->log("Ignoring");
-				}
-				
-				
-			}
-			
+			$this->runItem($item);			
 		}
 
-		$this->processMissing();
 		$this->runPostProcess();
 
-		$this->log("Finished feed importer %s after %d seconds" , [$this->info['feed_name'] , time() - $start]);
+		$this->log("Finished feed importer %s (%s) after %d seconds" , [$this->info['feed_name'] , $this->info["feed_extension"], time() - $start]);
 	}
 
 
@@ -413,7 +340,7 @@ class Importer extends Base{
 	function loadFeedFile($file) {
 		global $base , $_USER , $_SESS; 
 
-		return CFile::LoadArray($file , true);
+		return $this->module->storage->tmp->LoadArray($file , true);
 	}
 	
 
@@ -482,25 +409,20 @@ class Importer extends Base{
 	*/
 	public function getFile() {
 
-		$local_file = "upload/tmp/feed_" . $this->info["feed_id"] . ".csv";	
-
-		if (file_exists($local_file)) {
-			unlink($local_file);
-		}
-		
+		$local_file = "feed_" . $this->info["feed_id"] . ".csv";	
 
 		switch ($this->info["feed_data_type"]) {
 			//local file
 			case "1":
 				if ($this->info["feed_data_file"]) {
 
-					CFile::Copy(
-						"upload/novosteer/import/feeds/" . $this->info["feed_id"] . ".csv",
-						$local_file
+					$this->module->storage->tmp->saveStream(
+						$local,
+						$this->module->storage->private->readStream("novosteer/import/feeds/" . $this->info["feed_id"] . ".csv")
 					);
 
 					$this->recordHistory(
-						"upload/novosteer/import/feeds/" . $this->info["feed_id"] . ".csv",
+						$this->module->storage->tmp->getStream($local),
 						"feed.csv"
 					);
 
@@ -536,10 +458,12 @@ class Importer extends Base{
 					ftp_pasv($conn_id, true);
 				}
 				
+				$temp = tmpfile();
+
 				// try to download $server_file and save to $local_file
-				if (ftp_get(
+				if (ftp_fget(
 					$conn_id, 
-					$local_file, 
+					$temp, 
 					$this->info["feed_data_path"], 
 					FTP_BINARY
 					)) {
@@ -555,8 +479,16 @@ class Importer extends Base{
 				// close the connection
 				ftp_close($conn_id);
 
+				fseek($temp,0);
+
+				$this->module->storage->tmp->saveStream(
+					$local_file , 
+					$temp
+				);
+
+
 				$this->recordHistory(
-					$local_file,
+					$this->module->storage->tmp->getStream($local_file),
 					basename($this->info["feed_data_path"])
 				);
 
@@ -567,20 +499,25 @@ class Importer extends Base{
 
 			//web
 			case "3":
-				$data = CHTTP::newInstance()
-					->Get($this->info["feed_data_link"])
-					->Raw();
+				$client = new \GuzzleHttp\Client();
+				$res = $client->request(
+					"GET" , 
+					$this->info["feed_data_link"]
+				);
 
-				CFile::Save(
-					$local_file,
-					$data						
+				if ($res->getStatusCode() !== 200) {
+					return null;
+				}
+				
+				$this->module->storage->tmp->saveStream(
+					$local_file , 
+					$res->getBody()->detach()
 				);
 
 				$this->recordHistory(
-					$local_file,
+					$this->module->storage->tmp->getStream($local_file),
 					basename($this->info["feed_data_path"])
 				);
-
 
 				return $local_file;
 			break;
@@ -661,16 +598,8 @@ class Importer extends Base{
 	*
 	* @access
 	*/
-	function processProductData(&$data , $item) {
-		global $base , $_USER , $_SESS; 
-
-		if (is_Array($data) && is_array($item)) {
-			$data = array_merge(
-				$data , 
-				$item
-			);
-		}
-		
+	public function processProductData(&$item) {
+		global $base , $_USER , $_SESS; 		
 	}
 
 	/**
@@ -682,43 +611,29 @@ class Importer extends Base{
 	*
 	* @access
 	*/
-	public function updateProduct(&$product , &$item , &$data) {
+	public function updateProduct($product , $item) {
 		global $base , $_USER , $_SESS , $_LANG_ID; 
 
-		$this->log("Updating %s..." , [$item[$this->skuField]]);
+		if ($this->wasUpdated("" , $this->event->getHash($item))) {
 
-		if ($this->isLocked($product["product_id"] , Locks::LOCK_UPDATE)) {
-			$this->log("\tProduct locked for any update");
-			return null;
-		}
+			$this->log("Updating %s..." , [$item[$this->skuField]]);
 
-		$newData = [
-			//add the field set
-			"product_id"	=> $product["product_id"],
-			"product_sku"	=> $item[$this->skuField]
-		];
-
-		$this->processProductData($newData , $item);
-		$this->removeLockedFields($product["product_id"] , $newData);
-
-		$compare = [
-			"msrp","sellingprice","bookvalue" , "misc_price1" , "misc_price2" , "misc_price3"
-		];
-
-		//update only if i have any differences
-		if (count($newData) > 3) {
-
-			//compare the prices in order to see if we need to recalculate anything		
-			foreach ($compare as $k => $v) {
-				if (isset($newData[$v]) && ($product[$v] != $newData[$v])) {
-					$newData["product_status"] = NOVOSTEER_VEHICLE_STATUS_PENDING;
-				}				
+			if ($this->isLocked($product["product_id"] , Locks::LOCK_UPDATE)) {
+				$this->log("\tProduct locked for any update");
+				return null;
 			}
-			
+
+			$this->removeLockedFields($product["product_id"] , $item);		
 
 			$this->db->QueryUpdate(
-				$this->module->tables["plugin:novosteer_vehicles"],
-				$newData,
+				$this->module->tables["plugin:novosteer_vehicles_import"],
+				array_merge(
+					$product , 
+					$item,
+					[
+						"product_date_last_update" => time()
+					]
+				),
 				$this->db->Statement(
 					"product_id = %d",
 					$product["product_id"]
@@ -726,35 +641,14 @@ class Importer extends Base{
 			);
 
 			$this->skus["updates"][] = $item[$this->skuField];
+		} else {
+			$this->log("No Change, skipping \n");
+			$this->skus["ignored"][] = $item[$this->skuField];
 		}
-			
 
 		return $product;
 
 	}
-	
-	/**
-	* description
-	*
-	* @param
-	*
-	* @return
-	*
-	* @access
-	*/
-	function CreateProduct($data) {
-		global $base , $_USER , $_SESS; 
-
-		$data["product_id"] = $this->db->QueryInsert(
-			$this->module->tables["plugin:novosteer_vehicles"],
-			$data
-		);
-
-		return $data;
-
-		
-	}
-
 	
 	/**
 	* description
@@ -781,7 +675,8 @@ class Importer extends Base{
 	*
 	* @access
 	*/
-	function recordHistory($path , $file) {
+
+	function recordHistory($stream , $file) {
 		global $base , $_USER , $_SESS; 
 
 		$id = $this->db->QueryInsert(
@@ -795,9 +690,9 @@ class Importer extends Base{
 			]
 		);
 
-		CFile::Copy(
-			$path , 
-			"upload/novosteer/import/history/" . $id . ".file"
+		$this->module->storage->private->saveStream(
+			"novosteer/import/history/" . $id . ".file",
+			$stream
 		);
 
 		return true;
@@ -814,58 +709,10 @@ class Importer extends Base{
 	*
 	* @access
 	*/
-	function postUpdateProduct($product , $data, $item ) {
-		global $base , $_USER , $_SESS; 
-	}
-
-	
-	/**
-	* description
-	*
-	* @param
-	*
-	* @return
-	*
-	* @access
-	*/
-	function processMissing() {
+	function postUpdateProduct($product , $item ) {
 		global $base , $_USER , $_SESS; 
 
-		if ($this->info["feed_missing"] < 2) {
-			return true;
-		}
-		
-	}
-	
-
-	/**
-	* description
-	*
-	* @param
-	*
-	* @return
-	*
-	* @access
-	*/
-	function missingProductDelete($product) {
-		global $base , $_USER , $_SESS; 
-
-		$this->log("Deleting missing product %s ..." , $product["product_sku"] , "");
-
-		if ($this->isLocked($product["product_id"] , Locks::LOCK_DELETE)) {
-			$this->log("\n\tProduct locked for deletion");
-			return false;
-		}
-
-		$this->db->Query(
-			"DELETE FROM %s WHERE product_id = %d",
-			[
-				$this->module->tables["plugin:novosteer_vehicles"],
-				$product["product_id"]
-			]
-		);
-
-		$this->log("done");
+		$this->event->productRecordUpdate("" , $this->event->getHash($item));
 	}
 
 	/**
@@ -965,29 +812,36 @@ class Importer extends Base{
 	*
 	* @access
 	*/
-	public function createNewProduct(&$item , &$data) {
+	public function CreateProduct($item) {
 		global $base , $_USER , $_SESS , $_CONF , $_LANG_ID; 
 
 
-		$data = [
-			"product_sku"	=> $item[$this->skuField],
-			"dealership_id"	=> $this->info["dealership_id"],
-			"product_status" => NOVOSTEER_VEHICLE_STATUS_PENDING,
-		];
+		$item["product_sku"]	= $item[$this->skuField];
+		$item["dealership_id"]	= $this->info["dealership_id"];
+		$item["product_status"] = NOVOSTEER_VEHICLE_STATUS_PENDING;
+		$item["feed_id"]		= $this->info["feed_id"];
+		$item["product_date_create"]	= time();
+		$item["product_date_last_update"] = time();
 
 		$this->lock->setProduct(null);
-		$this->processProductData($data , $item);
-
 
 		$this->log("Creating product %s ..." , [$item[$this->skuField]]);
-		$product = $this->createProduct($data);
+
+		$item["product_id"] = $this->db->QueryInsert(
+			$this->module->tables["plugin:novosteer_vehicles_import"],
+			$item
+		);
+
+		$this->event->setProduct($item["product_id"]);
+		$this->lock->setProduct($item["product_id"]);
+
 		$this->log("Done");
 
-		$this->event->setProduct($product["product_id"]);
+		$this->event->setProduct($item["product_id"]);
 
 		$this->skus["new"][] = $item[$this->skuField];
 
-		return $product;
+		return $item;
 	}
 
 
@@ -1019,14 +873,272 @@ class Importer extends Base{
 
 	public function getProduct(&$item) {
 
-		return $this->db->QFetchArray(
+		$product = $this->db->QFetchArray(
 			"SELECT * FROM %s WHERE dealership_id = %d AND product_sku LIKE '%s'",
 			[
-				$this->module->tables['plugin:novosteer_vehicles'],
+				$this->module->tables['plugin:novosteer_vehicles_import'],
 				$this->info["dealership_id"],
 				$item[$this->skuField]
 			]
 		);
+
+		if (is_array($product)) {
+			$this->event->setProduct($product["product_id"]);
+			$this->lock->setProduct($product["product_id"]);
+		}
+
+		return $product;
+		
 	}
+
+
+	/**
+	* description
+	*
+	* @param
+	*
+	* @return
+	*
+	* @access
+	*/
+	function processCondition($data , $pref = " AND ") {
+		global $_LANG_ID; 
+
+		$data = explode("\n" , $data);
+		$cond = [];
+
+		if (count($data)) {
+			foreach ($data as $key => $val) {
+
+				if (!trim($val)) {
+					unset($data[$key]);
+				} else {
+
+					$format = explode("|" , trim($val));
+
+					if ($format[0][0] != "#") {
+
+						switch ($format[1]) {
+							case "in":
+								$cond[] = $format[0] . " in ('" . implode("','" , explode("," , $format[2])) . "')" ;
+							break;
+
+							case "!in":
+								$cond[] = $format[0] . " not in ('" . implode("','" , explode("," , $format[2])) . "')" ;
+							break;
+
+							case "!=":
+								$cond[] = $this->db->Statement("%s != %d" , [$format[0] , $format[2]]);
+							break;
+
+							case ">":
+								$cond[] = $this->db->Statement("%s > %d" , [$format[0] , $format[2]]);
+							break;
+
+							case "<":
+								$cond[] = $this->db->Statement("%s < %d" , [$format[0] , $format[2]]);
+							break;
+
+							case "=":
+								$cond[] = $this->db->Statement("%s = %d" , [$format[0] , $format[2]]);
+							break;
+						}				
+					}
+				}				
+			}			
+		}
+
+		if (count($cond)) {
+			return $pref . " ( " . implode(" AND " , $cond) ." ) ";
+		}
+
+		return "";		
+	}
+
+
+	/**
+	* description
+	*
+	* @param
+	*
+	* @return
+	*
+	* @access
+	*/
+	public function runItem($item) {
+		global $_LANG_ID; 
+
+		//$this->log("Queries as far: " . $this->db->queries_cnt );
+		if ($item[$this->skuField]) {
+			$this->log();
+			$this->log("Processing %s" , [$item[$this->skuField]]);
+			$this->updateCronJob();
+
+
+			//check if exists a product with this sku already
+			$product = $this->getProduct($item);
+			$changeLog = null;
+
+			$this->skus["all"][] = $item[$this->skuField];
+
+			if (is_Array($product)) {
+				$this->updateProduct($product , $item);
+			} else {
+				$product = $this->createProduct($item);
+			}
+
+			if (is_array($product)) {
+
+				$this->postUpdateProduct($product , $item);					
+			} else {
+				$this->log("Ignoring");
+			}
+			
+			
+		}
+	}
+	
+	
+	public function updateProductImages($product , $data) {
+
+		$old = $this->db->qFetchRowArray(
+			"SELECT * FROM %s WHERE product_id = %d AND image_deleted = 0 and image_system = 0",
+			[
+				$this->module->tables['plugin:novosteer_vehicles_import_images'],
+				$product["product_id"]
+			]
+		);
+
+		$new = [];
+
+		if (is_array($data)) {
+			$cnt = 1;
+			foreach ($data as $key => $val) {
+				$new[$val] = [
+					"product_id"		=> $product["product_id"],
+					"image_order"		=> $cnt ++,
+					"image_main"		=> $first,
+					"image_source"		=> $val,
+					"feed_id"			=> $this->info["feed_id"],
+					"image_last_update"	=> time()
+				];
+			}			
+		}
+
+		if (is_array($old)) {
+			foreach ($old as $k => $v) {
+				if ($new[$v["image_source"]]) {
+					unset($new[$v["image_source"]]);
+					unset($old[$k]);
+				}
+			}
+		}
+
+		if (is_array($old) && count($old)) {
+			$ids = array_map(function($item) { return $item["image_id"]; } ,$old );
+
+			$this->db->QueryUpdate(
+				$this->module->tables["plugin:novosteer_vehicles_import_images"],
+				[ "image_deleted" => "1"] ,
+				$this->db->Statement("image_system = 0 AND image_id in (%s)" , [implode("," , $ids)])
+			);
+		}
+
+		if (is_array($new) && count($new)) {
+			$this->db->QueryInsertMulti(
+				$this->module->tables["plugin:novosteer_vehicles_import_images"],
+				$new
+			);
+		}	
+		
+		$this->db->QueryUpdateByID(
+			$this->module->tables["plugin:novosteer_vehicles_import"],
+			[ "images" => $cnt],
+			$product["product_id"]
+		);
+
+	}
+
+
+	/**
+	* description
+	*
+	* @param
+	*
+	* @return
+	*
+	* @access
+	*/
+	function deleteProduct($sku) {
+		global $_LANG_ID; 
+
+		$this->log("Deleting product %s" , [$sku]);
+		$this->log("\tDeleting database records");
+		$this->db->Query(
+			"DELETE FROM %s WHERE dealership_id=%d AND product_sku LIKE '%s'",
+			[
+				$this->module->tables["plugin:novosteer_vehicles_import"],
+				$this->info["dealership_id"],
+				$sku
+			]
+		);
+
+		$this->log("\tDeleting images & resources");
+		$this->module->storage->getLocation($this->info["dealership_location"])->deleteDirectoryRecursive(
+			$this->info["dealership_location_prefix"] . "/import/{$sku}/"
+		);
+
+		$this->log("Done\n");
+	}
+
+
+	
+	/**
+	* description
+	*
+	* @param
+	*
+	* @return
+	*
+	* @access
+	*/
+	function getVehicleByID($id) {
+		global $base , $_USER , $_SESS , $_CONF , $_LANG_ID; 
+
+		//get all products that are not published 
+		return $this->db->QFetchArray(
+			"SELECT * FROM 
+				%s as vehicles 
+			INNER JOIN 
+				%s as brands
+				ON
+					vehicles.brand_id = brands.brand_id
+			INNER JOIN 
+				%s as models 
+				ON 
+					vehicles.model_id = models.model_id 
+			LEFT JOIN 
+				%s as trims
+				ON 
+					vehicles.trim_id = trims.trim_id
+		
+			WHERE 
+				product_id = %d
+			",
+			[
+				$this->module->tables["plugin:novosteer_vehicles_import"],
+				$this->module->tables["plugin:novosteer_addon_autobrands_brands"],
+				$this->module->tables["plugin:novosteer_addon_autobrands_models"],
+				$this->module->tables["plugin:novosteer_addon_autobrands_trims"],
+				$id
+			]
+		);
+
+	}
+
+
+	public function runPreProcess() {
+	}
+
 	
 }

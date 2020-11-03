@@ -69,31 +69,36 @@ class ManufacturerDiscounts extends Importer implements ImporterInterface{
 	function loadFeedFile($file) {
 		global $base , $_USER , $_SESS , $_CONF , $_LANG_ID; 
 
+
 		$items = $this->db->QFetchRowArray(
-			"SELECT product_id,vin,stock,%s FROM %s WHERE type='New' AND dealership_id = %d",
+			"SELECT product_id,vin,stock,%s FROM %s as products
+
+				INNER JOIN 
+					%s as brands
+				ON
+					products.brand_id = brands.brand_id 
+				INNER JOIN 
+					%s as models
+				ON 
+					products.model_id = models.model_id 
+			WHERE				
+				dealership_id = %d
+				:cond				
+			",
 			[
 				$this->info["settings"]["set_msrp_field"],
-				$this->module->tables["plugin:novosteer_vehicles"],
-				$this->info["dealership_id"]				
+				$this->module->tables["plugin:novosteer_vehicles_import"],
+				$this->module->tables["plugin:novosteer_addon_autobrands_brands"],
+				$this->module->tables["plugin:novosteer_addon_autobrands_models"],
+				$this->info["dealership_id"]
+			],
+
+			[ 
+				":cond" => $this->processCondition($this->info["settings"]["set_condition"]) 
 			]
 		);
 
 		return $items;
-	}
-
-	/**
-	* description
-	*
-	* @param
-	*
-	* @return
-	*
-	* @access
-	*/
-	function getProduct(&$item) {
-		global $base , $_USER , $_SESS , $_CONF , $_LANG_ID; 
-
-		return $item;
 	}
 
 	/**
@@ -116,12 +121,21 @@ class ManufacturerDiscounts extends Importer implements ImporterInterface{
 
 		if ($price === false) {
 			$this->log("No rule matched for %s" , [$item["vin"]]);
-			$this->errors[] = $item["stock"] . " " . $vehicle["year"] . " " . $vehicle["brand_name"] . " " . $vehicle["model_name"] . " ";
+			$this->errors[$item["vin"]] = $item["stock"] . " " . $vehicle["year"] . " " . $vehicle["brand_name"] . " " . $vehicle["model_name"] . " ";
+
+			$this->db->QueryUpdateBYID(
+				$this->module->tables["plugin:novosteer_vehicles_import"],
+				[
+					"alert_price" => "1"
+				],
+				$vehicle["product_id"]
+			);
+
 		} else {
 			$this->log("Calculated discount price of %d" , [$price]);
 		}
 
-		$item[$this->info["settings"]["set_price_field"]] = $price !== false ? $price : -1;
+		$item[$this->info["settings"]["set_price_field"]] = $price !== false ? $price : 0;
 	}
 	
 	/**
@@ -133,25 +147,30 @@ class ManufacturerDiscounts extends Importer implements ImporterInterface{
 	*
 	* @access
 	*/
-	function updateProduct(&$product , &$data , &$item) {
+	function updateProduct($product , $item) {
 		global $base , $_USER , $_SESS; 
 
+		$hash = $this->event->getHash($item);
 
 
-		if ($this->isLocked($product["product_id"] , Locks::LOCK_UPDATE)) {
-			return null;
+		if ($this->wasUpdated("" , $hash)) {	
+			$this->log("Updating pricing...\n");
+			$this->db->QueryUpdateByID(
+				$this->module->tables["plugin:novosteer_vehicles_import"],
+				[
+					$this->info["settings"]["set_price_field"] => $item[$this->info["settings"]["set_price_field"]],
+				],
+				$product["product_id"]
+			);
+
+		} else {
+			$this->log("No Change, skipping.\n");
 		}
-		
-		$this->db->QueryUpdateByID(
-			$this->module->tables["plugin:novosteer_vehicles"],
-			[
-				$this->info["settings"]["set_price_field"] => $data[$this->info["settings"]["set_price_field"]],
-			],
-			$data["product_id"]
-		);
 				
 		return $product;
 	}
+
+
 
 	/**
 	* description
@@ -165,14 +184,11 @@ class ManufacturerDiscounts extends Importer implements ImporterInterface{
 	function runPreProcess() {
 		$this->setSKUField("vin");
 
-		//force to update the exiting
-		$this->info['feed_duplicates'] = '2';
-
 		$this->calculator = $this->module->plugins["novosteer-dealerships"]->getCalculatorObject($this->info["settings"]["set_calculator"]);
 		$this->calculator->setJob($this->cronJob);
 		$this->calculator->setMSRPField($this->info["settings"]["set_msrp_field"]);
-
 	}
+
 
 	/**
 	* description
@@ -183,75 +199,12 @@ class ManufacturerDiscounts extends Importer implements ImporterInterface{
 	*
 	* @access
 	*/
-	function createNewProduct(&$item , &$data) {
+	function createProduct($item) {
 		global $base , $_USER , $_SESS , $_CONF , $_LANG_ID; 
 		
 		//disable new creation of product
 		return null;
 	}
 
-	
-	/**
-	* description
-	*
-	* @param
-	*
-	* @return
-	*
-	* @access
-	*/
-	function getVehicleByID($id) {
-		global $base , $_USER , $_SESS , $_CONF , $_LANG_ID; 
-
-		//get all products that are not published 
-		return $this->db->QFetchArray(
-			"SELECT * FROM 
-				%s as vehicles 
-			INNER JOIN 
-				%s as brands
-				ON
-					vehicles.brand_id = brands.brand_id
-			INNER JOIN 
-				%s as models 
-				ON 
-					vehicles.model_id = models.model_id 
-			LEFT JOIN 
-				%s as trims
-				ON 
-					vehicles.trim_id = trims.trim_id
-		
-			WHERE 
-				product_id = %d
-			",
-			[
-				$this->module->tables["plugin:novosteer_vehicles"],
-				$this->module->tables["plugin:novosteer_addon_autobrands_brands"],
-				$this->module->tables["plugin:novosteer_addon_autobrands_models"],
-				$this->module->tables["plugin:novosteer_addon_autobrands_trims"],
-				$id
-			]
-		);
-
-	}
-
-	/**
-	* description
-	*
-	* @param
-	*
-	* @return
-	*
-	* @access
-	*/
-	function runPostProcess() {
-		global $base , $_USER , $_SESS , $_CONF , $_LANG_ID; 
-
-		if (count($this->errors)) {
-
-			$this->log("Error vehicles: \n%s "  , [ implode("\n" , $this->errors) ]);
-		}
-		
-	}
-	
 	
 }

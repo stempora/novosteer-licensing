@@ -157,6 +157,27 @@ class CNovoSteerAddonVehiclesBackend extends CPlugin {
 			]
 		);
 	}
+
+/**
+	* description
+	*
+	* @param
+	*
+	* @return
+	*
+	* @access
+	*/
+	function getImportVehicleByID($id) {
+		global $_LANG_ID; 
+
+		return $this->db->QFetchArray(
+			"SELECT * FROM %s WHERE product_id = %d",
+			[
+				$this->tables["plugin:novosteer_vehicles_import"],
+				$id
+			]
+		);
+	}
 	
 	
 	/**

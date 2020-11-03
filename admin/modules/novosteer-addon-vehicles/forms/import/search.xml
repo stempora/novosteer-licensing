@@ -42,31 +42,27 @@
 				<box title="Search" width="6">
 					<fields>
 
-						<dealership_id type="droplist" title="Dealership" empty="true">
-							<relation id="dealership_id" table="plugin:novosteer_dealerships">
+						<year type="droplist" title="Year / Brand" empty="true" referers="brand_id">
+							<relation id="year">
 								<text>
-									<f1 field="dealership_name" />
+									<f1 field="year" />
 								</text>
+
+								<sql>
+									<vars>
+										<table_vehicles type="table" import="plugin:novosteer_vehicles_import"/>
+									</vars>
+
+									<query><![CDATA[
+										SELECT distinct year from {TABLE_VEHICLES}
+										ORDER BY 
+											year DESC
+									]]></query>
+								</sql>
 							</relation>
-						</dealership_id>
+						</year>
 
-						<type type="radiolist" title="Type" newline="false" empty="true" empty_text="All">
-							<options>
-								<option name="New">New</option>
-								<option name="Used">Used</option>
-							</options>
-						</type>
-
-						<keywords type="textbox" title="Keywords"/>
-
-					</fields>
-				</box>
-
-
-				<box title="Filter" width="6">
-					<fields>
-
-						<brand_id type="droplist" title="Brand" empty="true">
+						<brand_id type="droplist" title="Brand" empty="true" referer="true">
 							<relation id="brand_id">
 								<text>
 									<f1 field="brand_name" />
@@ -75,7 +71,7 @@
 								<sql>
 									<vars>
 										<table_brands type="table" import="plugin:novosteer_addon_autobrands_brands"/>
-										<table_vehicles type="table" import="plugin:novosteer_vehicles"/>
+										<table_vehicles type="table" import="plugin:novosteer_vehicles_import"/>
 									</vars>
 
 									<query><![CDATA[
@@ -93,7 +89,7 @@
 						</brand_id>
 
 
-						<model_id type="droplist" title="Brand - Model" empty="true">
+						<model_id type="droplist" title="Model / Trim" empty="true" referers="trim_id">
 							<relation id="model_id">
 								<text>
 									<f1 field="brand_name" />
@@ -104,7 +100,7 @@
 									<vars>
 										<table_brands type="table" import="plugin:novosteer_addon_autobrands_brands"/>
 										<table_models type="table" import="plugin:novosteer_addon_autobrands_models"/>
-										<table_vehicles type="table" import="plugin:novosteer_vehicles"/>
+										<table_vehicles type="table" import="plugin:novosteer_vehicles_import"/>
 									</vars>
 
 									<query><![CDATA[
@@ -123,7 +119,7 @@
 							</relation>
 						</model_id>
 
-						<trim_id type="droplist" title="Brand - Trim" empty="true">
+						<trim_id type="droplist" title="Brand - Trim" empty="true" referer="true">
 							<relation id="trim_id">
 								<text>
 									<f1 field="brand_name" />
@@ -134,7 +130,7 @@
 									<vars>
 										<table_brands type="table" import="plugin:novosteer_addon_autobrands_brands"/>
 										<table_trims type="table" import="plugin:novosteer_addon_autobrands_trims"/>
-										<table_vehicles type="table" import="plugin:novosteer_vehicles"/>
+										<table_vehicles type="table" import="plugin:novosteer_vehicles_import"/>
 									</vars>
 
 									<query><![CDATA[
@@ -154,6 +150,32 @@
 							</relation>
 						</trim_id>
 
+						<keywords type="textbox" title="Keywords"/>
+
+					</fields>
+				</box>
+
+
+				<box title="Filter" width="6">
+					<fields>
+						<dealership_id type="droplist" title="Dealership" empty="true">
+							<relation id="dealership_id" table="plugin:novosteer_dealerships">
+								<text>
+									<f1 field="dealership_name" />
+								</text>
+							</relation>
+						</dealership_id>
+
+						<cat type="radiolist" title="Cat" newline="false" empty="true" empty_text="All">
+							<options>
+								<option name="New">New</option>
+								<option name="Used">Used</option>
+								<option name="Certified">Certified</option>
+							</options>
+						</cat>
+
+<!--
+
 						<type_id type="droplist" title="Type" empty="true">
 							<relation id="type_id" table="plugin:novosteer_addon_autobrands_types">
 								<text>
@@ -161,6 +183,14 @@
 								</text>
 							</relation>
 						</type_id>
+-->
+						<alert_price type="radiolist" title="Price Alert" newline="false">
+							<options>
+								<option name="">all</option>
+								<option name="0">ok</option>
+								<option name="1">error</option>
+							</options>
+						</alert_price>
 
 					</fields>
 				</box>
@@ -175,7 +205,9 @@
 				<field name="model_id" field="models.model_id" type="="></field>			
 				<field name="trim_id" field="trims.trim_id" type="="></field>			
 				<field name="type_id" field="types.type_id" type="="></field>			
-				<field name="type" field="type" type="="></field>			
+				<field name="cat" field="cat" type="="></field>			
+				<field name="alert_price" field="alert_price" type="="></field>			
+				<field name="year" field="year" type="="></field>			
 				<field name="dealership_id" field="dealership.dealership_id" type="="></field>			
 			</sql_fields>
 

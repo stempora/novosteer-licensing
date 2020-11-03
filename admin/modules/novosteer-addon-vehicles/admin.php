@@ -96,5 +96,43 @@ class CNovosteerAddonVehicles extends CNovosteerAddonVehiclesBackend{
 			"count"	=>$count,
 		];
 	}
+
+
+
+	/**
+	* description
+	*
+	* @param
+	*
+	* @return
+	*
+	* @access
+	*/
+	function ImportImages($images , $count) {
+		global $_LANG_ID; 
+
+		$vehicle = $this->getImportVehicleByID($_GET["product_id"]);
+		$dealership = $this->plugins["novosteer-dealerships"]->getDealershipByID($vehicle["dealership_id"]);
+
+		if (is_array($images)) {
+			foreach ($images as $key => &$image) {
+
+				if ($image["image_source"]) {
+					$image["image_source"] = "<a href=\"{$image['image_source']}\" rel=\"prettyPhoto\"><img width=\"100%\" src=\"" . $image["image_source"] . "\" /></a>";
+				}				
+
+				if ($image["image_downloaded"]) {
+					$source = $this->storage->getLocation($dealership["dealership_location"])->getUrl($dealership["dealership_location_prefix"] . "/import/" . $vehicle['product_sku'] . "/original/" . $image["image_id"] . ".jpg");
+					$image["image_downloaded"] = "<a href=\"{$source}\" rel=\"prettyPhoto\"><img width=\"100%\" src=\"" . $source . "\" /></a>";
+				}				
+			}
+			
+		}
+		
+		return [
+			"items"	=>$images,
+			"count"	=>$count,
+		];
+	}
 	
 }

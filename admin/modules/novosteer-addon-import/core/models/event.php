@@ -156,6 +156,11 @@ class Event extends Base{
 	function productRecordUpdate($scope = "" , $hash) {
 		global $base , $_USER , $_SESS; 
 
+		if (!$this->product) {
+			return null;
+		}
+		
+
 		$existing = $this->db->QFetchArray(
 			"SELECT * FROM %s WHERE feed_id = %d AND product_id = %d AND product_scope LIKE '%s'",
 			[

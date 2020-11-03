@@ -27,32 +27,32 @@ class Vauto extends Importer {
 	*
 	* @access
 	*/
-	function processFeedItem(&$item) {
+	function updateProduct($product , $item) {
 		global $base , $_USER , $_SESS; 
 
-		parent::processFeedItem($item);
+		$price = $item["price"];
+		$hash = $this->event->getHash($price);
 
-		$item = [
-			"stock"				=> $item["stock_#"],
-			"vin"				=> $item["vin"],
-			"price_sale"		=> $item["price"],
-			"price_discount"	=> 0,
-			"price"				=> $item["price"],
+		if ($this->wasUpdated("price" , $hash)) {
+			$this->log("Updating prices...");
 
-			"price_msrp"			=> 0,
-			"price_incentives"		=> 0,
-			"price_accessories"		=> 0,
-			"price_protection"		=> 0,
-		];
+			$this->db->QueryUpdateByID(
+				$this->module->tables["plugin:novosteer_vehicles_import"],
+				[
+					$this->info["settings"]["set_price_field"] => $price
+				],
+				$product["product_id"]
+			);
 
-		if ($this->info["settings"]["set_import_discount"]) {	
-
-			if ($item["price_sale"]) {
-				$item["price_sale"]	= $item["price_sale"] * ( (100 + $this->info["settings"]["set_import_discount"]) / 100 );
-				$item["price_discount"] = $item["price_sale"] - $item["price"];
-			}
-			
+			$this->event->productRecordUpdate("price" , $hash);
+		} else {
+			$this->log("No change skipping");
 		}
+		
+		return $product;
+	}
+
+	function postUpdateProduct($product , $item ) {
 	}
 
 	/**
@@ -64,77 +64,17 @@ class Vauto extends Importer {
 	*
 	* @access
 	*/
-	function processProductData(&$data , $item) {
+	function createProduct($item) {
 		global $base , $_USER , $_SESS , $_CONF , $_LANG_ID; 
-
-
-		foreach ($this->info["settings"] as $key => $fid) {
-			if (stristr($key , "set_field_") && $fid) {
-				$this->appendItemField($data , $fid , $item[str_replace("set_field_" , "" , $key )]);
-			}			
-		}
-	}
-	
-	function runPreProcess() {
-		$this->setSKUField("vin");
-		//update what exists
-		$this->info['feed_duplicates'] = "2";
-	}
-
-
-	//disable creation of new products
-	public function createNewProduct(&$item , &$data) {
+		
+		//disable new creation of product
 		return null;
 	}
 
-	//get product by field value
-	public function getProduct(&$item) {
 
-		$product = $this->module->module->getProductByFieldValue(
-			$this->module->module->getFieldByID($this->info["settings"]["set_stock"]),
-			$item["stock"]
-		);
-
-		if (is_array($product)) {
-			return $product;
-		} else {
-			return null;
-		}
+	function runPreProcess() {
+		$this->setSKUField("vin");
 	}
 
-
-
-	/**
-	* description
-	*
-	* @param
-	*
-	* @return
-	*
-	* @access
-	*/
-	function getAdminFields() {
-		global $base , $_USER , $_SESS , $_CONF , $_LANG_ID; 
-
-		$importer = parent::getAdminFields();
-		
-		return $importer;
-	}
-	
-
-	/**
-	* description
-	*
-	* @param
-	*
-	* @return
-	*
-	* @access
-	*/
-	public function _wasUpdated($scope , $hash) {
-		global $base , $_USER , $_SESS , $_CONF , $_LANG_ID; 
-
-		return true;
-	}
 
 }

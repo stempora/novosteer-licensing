@@ -14,10 +14,10 @@ if (!defined("STPBase")) {
 
 return [
 	"tables"	=> [
-		"plugin:novosteer_vehicles"	=> "site_plugin_novosteer_vehicles_import",
-		"plugin:novosteer_vehicles_images"	=> "site_plugin_novosteer_vehicles_import_images",
+		"plugin:novosteer_vehicles_import"			=> "site_plugin_novosteer_vehicles_import",
+		"plugin:novosteer_vehicles_import_images"	=> "site_plugin_novosteer_vehicles_import_images",
 
-		"plugin:novosteer_vehicles_export"	=> "site_plugin_novosteer_vehicles_export",
+		"plugin:novosteer_vehicles_export"			=> "site_plugin_novosteer_vehicles_export",
 		"plugin:novosteer_vehicles_export_images"	=> "site_plugin_novosteer_vehicles_export_images",
 	]
 ];		

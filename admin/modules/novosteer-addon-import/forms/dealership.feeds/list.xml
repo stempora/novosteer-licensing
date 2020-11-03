@@ -41,8 +41,8 @@
 			<location>{SELF.URI.DELETE}</location>
 		</button_delete>
 
-		<button_details type="button" width="44" align="center" onclick="" button="/small/edit">
-			<location>{SELF.URI.EDIT}</location>
+		<button_details type="button" width="44" align="center" onclick="" button="/small/details">
+			<location>{SELF.URI.DETAILS}</location>
 		</button_details>
 	</fields>
 

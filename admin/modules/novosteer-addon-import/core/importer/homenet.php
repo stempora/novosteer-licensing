@@ -46,24 +46,27 @@ class Homenet extends Importer implements ImporterInterface{
 
 		//$item = $this->lowerKeys($item);
 
+		$item["cat"] = $item["type"];
+		unset($item["type"]);
+
 		//dont import new
-		if (($item["type"] == "New") && ($this->info["settings"]["set_import_type"] == "2")) {
+		if (($item["cat"] == "New") && ($this->info["settings"]["set_import_type"] == "2")) {
 			unset($item[$this->skuField]);
 			return false;
 		}
 
 		//dont import used
-		if (($item["type"] != "New") && ($this->info["settings"]["set_import_type"] == "3")) {
+		if (($item["cat"] != "New") && ($this->info["settings"]["set_import_type"] == "3")) {
 			unset($item[$this->skuField]);
 			return false;
 		}
 
 		//remove images field if not activated
-		if (!$this->info["settings"]["set_import_" . strtolower($item["type"]) . "_images"]) {
+		if (!$this->info["settings"]["set_import_" . strtolower($item["cat"]) . "_images"]) {
 			unset($item["imagelist"]);
 		} 
 		//remove thr prices if not activated
-		if (!$this->info["settings"]["set_import_" . strtolower($item["type"]) . "_prices"]) {
+		if (!$this->info["settings"]["set_import_" . strtolower($item["cat"]) . "_prices"]) {
 			unset($item["msrp"]);
 			unset($item["sellingprice"]);
 			unset($item["bookvalue"]);
@@ -74,10 +77,10 @@ class Homenet extends Importer implements ImporterInterface{
 			unset($item["misc_price_3"]);
 		}
 		
-		if ($item["type"] == "Used") {
+		if ($item["cat"] == "Used") {
 
 			if (strtolower($item["certified"]) == "true")  {
-				$item["type"] = "Certified";
+				$item["cat"] = "Certified";
 			}			
 		}
 
@@ -90,10 +93,10 @@ class Homenet extends Importer implements ImporterInterface{
 		$item["age"] = date("Y") - $item["year"];
 
 
-		switch ($item["type"]) {
+		switch ($item["cat"]) {
 			case "New":
 				$item["brand_id"] = $this->module->plugins["novosteer-addon-autobrands"]->getBrandIdByName(
-					$item["make"] , 
+					$item["make"], 
 					true
 				);
 
@@ -117,13 +120,42 @@ class Homenet extends Importer implements ImporterInterface{
 				$item["brand_id"] = $this->module->plugins["novosteer-addon-autobrands"]->getBrandIdByName($item["make"], true);
 				$item["model_id"] = $this->module->plugins["novosteer-addon-autobrands"]->getModelIdByName(
 					$item["brand_id"] , 
-					$item["model"], true, 
+					$item["model"], 
+					true, 
 					$item["model_type"]
 				);				
 			break;
 		}
 
 		$item["feed_id"] = $this->info["feed_id"];
+
+
+		//process categorized options
+		if ($item["categorized_options"]) {
+			$options = explode("~" , $item["categorized_options"]);
+			$data = [];
+
+			foreach ($options as $key => $cat) {
+				$tmp = explode("@" , $cat);
+				$data[strtolower("options_" . $tmp[0])][] = $tmp[1];
+			}	
+			
+			foreach ($data as $k => $v) {
+				$item[$k] = json_encode($v);
+			}			
+		}
+
+
+
+		if (!is_Array($item["options"]) &&  $item["options"]) {
+			$item["options"] = json_encode(explode("," , $item["options"]));
+		}
+
+		$item["engine"] = strtoupper($item["engine_block_type"]) ."-". $item["enginecylinders"] . " " . str_replace(" " , "" , $item["enginedisplacement"]);		
+		$item["factory_codes"] = json_encode(explode(" " , $item["factory_codes"]));
+		
+		$item["age"] = date("Y") - $item["year"];
+
 		return true;
 	}
 
@@ -136,43 +168,44 @@ class Homenet extends Importer implements ImporterInterface{
 	*
 	* @access
 	*/
-	function _processFeed(&$items) {
+	function processFeed(&$items) {
 		global $base , $_USER , $_SESS; 
 
 
-		$data  = $this->getRemoteCSV($this->info["settings"]["set_adjust_doc"]);
+		if ($this->info["settings"]["set_adjust_doc"]) {
+			$data  = $this->getRemoteCSV($this->info["settings"]["set_adjust_doc"]);
 
-		if (is_array($data)) {
-			foreach ($data as $key => $val) {
-				if ($val['Stock']) {
-					$_data[$val['Stock']] = $val;
-				}					
-			}				
-
-			$data = $_data;
-
-			
-			foreach ($items as $key => $val) {
-				if ($_data[$val["Stock"]]) {
-					$this->log("Adjusting %s" , [ $val["Stock"] ]);
-
-
-					foreach ($_data[$val["Stock"]] as $k => $v) {
-						if ($v == "") {
-							unset($_data[$val["Stock"]][$k]);
-						}						
-					}
-					
-
-					$items[$key] = array_merge(
-						$val , 
-						$_data[$val["Stock"]]
-					);
+			if (is_array($data)) {
+				foreach ($data as $key => $val) {
+					if ($val['Stock']) {
+						$_data[$val['Stock']] = $val;
+					}					
 				}				
-			}			
+
+				$data = $_data;
+
+				
+				foreach ($items as $key => $val) {
+					if ($_data[$val["Stock"]]) {
+						$this->log("Adjusting %s" , [ $val["Stock"] ]);
+
+
+						foreach ($_data[$val["Stock"]] as $k => $v) {
+							if ($v == "") {
+								unset($_data[$val["Stock"]][$k]);
+							}						
+						}
+						
+
+						$items[$key] = array_merge(
+							$val , 
+							$_data[$val["Stock"]]
+						);
+					}				
+				}			
+			}
 		}
-
-
+		
 		if ($this->info["settings"]["set_import_stock"]) {
 			$existing = explode("," , trim($this->info["settings"]["set_import_stock"]));
 
@@ -199,5 +232,97 @@ class Homenet extends Importer implements ImporterInterface{
 	function runPreProcess() {
 		$this->setSKUField("vin");
 	}
+
+
+	/**
+	* description
+	*
+	* @param
+	*
+	* @return
+	*
+	* @access
+	*/
+	function updateProduct($product , $item) {
+		global $_LANG_ID; 
+
+		if ($this->info["settings"]['set_duplicates'] == '2') {
+			$this->log("Checking %s for changes..." , [$item[$this->skuField]]);
+
+			parent::updateProduct($product , $item);
+		} else {
+			$this->log("Ignoring existing..." , [$item[$this->skuField]]);
+			$this->skus["ignored"][] = $item[$this->skuField];
+		}
+	}
+
+	/**
+	* description
+	*
+	* @param
+	*
+	* @return
+	*
+	* @access
+	*/
+	function postUpdateProduct($product , $item) {
+		global $_LANG_ID; 
+
+		parent::postUpdateProduct($product , $item);
+
+		if (!isset($item["imagelist"])) {
+			return null;
+		}
+		
+
+		$images = explode(","  , $item["imagelist"]);
+		$hash = $this->event->getHash($images);
+
+		if ($this->wasUpdated("images" , $hash)) {
+			$this->log("Updating images...");
+			$this->updateProductImages($product , $images);
+			$this->event->productRecordUpdate("images" , $hash);
+		}
+	}
+	
+
+	public function runPostProcess() {
+		global $base , $_USER , $_SESS , $_CONF , $_LANG_ID; 
+
+		if ($this->info["settings"]["set_missing"] == "3") {
+
+			//empty feed ?? impossible
+			if (!is_array($this->skus["all"])) {
+				return false;
+			}
+
+			$missing = $this->db->QFetchRowArray(
+				"SELECT product_sku FROM %s WHERE 
+					dealership_id = %d AND 
+					feed_id = %d AND 
+					product_sku not in (':cond')",
+				[
+					$this->module->tables["plugin:novosteer_vehicles_import"],
+					$this->info["dealership_id"],
+					$this->info["feed_id"]
+				],
+				[
+					":cond"	=> implode("','" , $this->skus["all"])
+				]
+			);
+
+			if (is_array($missing)) {
+				foreach ($missing as $key => $product) {
+					$this->deleteProduct($product["product_sku"]);
+				}				
+			}
+
+			//delete the images also 
+			$this->log("done");
+
+		}
+
+	}
+
 
 }

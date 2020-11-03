@@ -1,14 +1,14 @@
 <form>
 
 	<functions>		
-		<list_process function="ExportImages" module="novosteer-addon-vehicles" />
+		<list_process function="ImportImages" module="novosteer-addon-vehicles" />
 	</functions>
 
 	<forms>
-		<list>export.images/list.xml</list>
+		<list>import.images/list.xml</list>
 	</forms>
 
-	<table>plugin:novosteer_vehicles_export_images</table>
+	<table>plugin:novosteer_vehicles_import_images</table>
 	<table_uid>image_id</table_uid>
 
 
@@ -30,7 +30,7 @@
 
 
 	<URIlinks>
-		<main>index.php?mod=novosteer-addon-export&sub=exports&</main>
+		<main>index.php?mod=novosteer-addon-export&sub=import&</main>
 
 		<add>index.php?mod=novosteer-addon-export&sub=dealership.feeds.add&dealership_id={GLOBAL.GET.DEALERSHIP_ID}&_tb={TRAIL.HERE}</add>
 		<edit>{SELF.URI.MAIN}&feed_id={FEED_ID}&action=edit&_tb={TRAIL.HERE}</edit>

@@ -40,66 +40,22 @@ class Spincar extends Importer implements ImporterInterface{
 	*
 	* @access
 	*/
-	function updateProduct(&$product , &$data , &$item) {
+	function updateProduct($product , $item) {
 		global $base , $_USER , $_SESS; 
 
+		$images = explode("|" , $item["photo_url_list"]);
 
-		if ($this->isLocked($product["product_id"] , Locks::LOCK_UPDATE)) {
+		if (!count($images)) {
 			return null;
 		}
-
-
-		$images = explode("|" , $data["photo_url_list"]);
-
-		if (count($images)) {
-			$data["main_image"] = $images[0];
-			$data["gallery"] = $images;
-		}
-
-
-		if ($data["main_image"]) {
-			if ($this->wasUpdated("image" , $this->event->getHash($data["main_image"]))) {
-
-				$this->event->productRecordUpdate("image" , $this->event->getHash($data["main_image"]));
-				$this->log("Adding image to product: %s" , $data["main_image"] );
-
-				$this->plugins["novosteer-addon-vehicles"]->deleteMainImage($product["product_id"]);
-
-				$this->plugins["novosteer-addon-vehicles"]->addImage(
-					$product["product_id"],
-					[
-						"url"	=> $data["main_image"],
-						"main"	=> true
-					]
-				);
-
-			}
-		}
 		
-		
-		if ($data["gallery"]) {
-			if ($this->wasUpdated("galery" , $this->event->getHash($data["gallery"]))) {
-				$this->event->productRecordUpdate("gallery" , $this->event->getHash($data["gallery"]));
+		$hash = $this->event->getHash($images);
 
-				$this->plugins["novosteer-addon-vehicles"]->deleteGalleryImages($product["product_id"]);
-
-				foreach ($data["gallery"] as $key => $val) {
-
-					$this->log("Adding gallery to product: %s" , $val);
-
-					$this->plugins["novosteer-addon-vehicles"]->addImage(
-						$product["product_id"],
-						[
-							"url"	=> $val,
-							"main"	=> false
-						]
-					);
-
-				}
-				
-
-			} 
-		}	
+		if ($this->wasUpdated("images" , $hash)) {
+			$this->log("Updating images...");
+			$this->updateProductImages($product , $images);
+			$this->event->productRecordUpdate("images" , $hash);
+		}
 		
 		return $product;
 	}
@@ -113,11 +69,8 @@ class Spincar extends Importer implements ImporterInterface{
 	*
 	* @access
 	*/
-	function runPreProcess() {
-		$this->setSKUField("vin");
-
-		//force to update the exiting
-		$this->info['feed_duplicates'] = '2';
+	function postUpdateProduct($product , $item ) {
+		global $base , $_USER , $_SESS; 
 	}
 
 	/**
@@ -129,7 +82,20 @@ class Spincar extends Importer implements ImporterInterface{
 	*
 	* @access
 	*/
-	function createNewProduct(&$item , &$data) {
+	function runPreProcess() {
+		$this->setSKUField("vin");
+	}
+
+	/**
+	* description
+	*
+	* @param
+	*
+	* @return
+	*
+	* @access
+	*/
+	function createProduct($item) {
 		global $base , $_USER , $_SESS , $_CONF , $_LANG_ID; 
 		
 		//disable new creation of product

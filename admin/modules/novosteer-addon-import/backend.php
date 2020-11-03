@@ -177,12 +177,17 @@ class CNovosteerAddonImportBackend extends CPlugin{
 
 		$data = $this->db->QFetchArray(
 			"SELECT * FROM 			
-				%s 
+				%s  as feed
+			INNER JOIN 
+				%s as dealership
+			ON
+				feed.dealership_id = dealership.dealership_id			
 			WHERE				
 				feed_id=%d
 			",
 			[
 				$this->tables['plugin:novosteer_addon_importer_feeds'],
+				$this->tables['plugin:novosteer_dealerships'],
 				$id
 			]			
 		);
@@ -193,6 +198,44 @@ class CNovosteerAddonImportBackend extends CPlugin{
 
 		return $data;
 	}
+
+
+	/**
+	* description
+	*
+	* @param
+	*
+	* @return
+	*
+	* @access
+	*/
+	function getImporterByCode($id) {
+		global $_LANG_ID;
+
+		$data = $this->db->QFetchArray(
+			"SELECT * FROM 			
+				%s  as feed
+			INNER JOIN 
+				%s as dealership
+			ON
+				feed.dealership_id = dealership.dealership_id			
+			WHERE				
+				feed_code LIKE '%s'
+			",
+			[
+				$this->tables['plugin:novosteer_addon_importer_feeds'],
+				$this->tables['plugin:novosteer_dealerships'],
+				$id
+			]			
+		);
+
+		if ($data["feed_settings"]) {
+			$data["settings"] = json_decode($data["feed_settings"] , true );
+		}
+
+		return $data;
+	}
+
 
 	/**
 	* description
@@ -219,11 +262,6 @@ class CNovosteerAddonImportBackend extends CPlugin{
 				$this->importers[$feed["feed_id"]] = new $feed["feed_class"]($feed);
 				$this->importers[$feed["feed_id"]]->setModule($this);
 				$this->importers[$feed["feed_id"]]->setInfo($feed);
-
-				if ($this->module->search) {
-					$this->importers[$feed["feed_id"]]->setSearch($this->module->search , true);
-				}
-				
 			}
 		}
 
@@ -245,7 +283,7 @@ class CNovosteerAddonImportBackend extends CPlugin{
 
 		return $this->db->QFetchRowArray("
 			SELECT * FROM 
-				%s
+				%s 
 			LEFT JOIN
 				%s
 				ON 
@@ -271,9 +309,17 @@ class CNovosteerAddonImportBackend extends CPlugin{
 		global $base , $_USER , $_SESS , $_CONF , $_LANG_ID; 
 
 		$jobs = $this->db->QFetchRowArray(
-			"SELECT * FROM %s WHERE dealership_id = %d AND feed_status = 1 ORDER BY feed_order ASC",
+			"SELECT * 
+			FROM %s as feeds
+				INNER JOIN 
+					%s as dealerships
+				ON 
+					feeds.dealership_id = dealerships.dealership_id 
+
+			WHERE feeds.dealership_id = %d AND feed_status = 1 ORDER BY feed_order ASC",
 			[
 				$this->tables["plugin:novosteer_addon_importer_feeds"],
+				$this->tables["plugin:novosteer_dealerships"],
 				$id
 			]
 		);
@@ -392,7 +438,7 @@ class CNovosteerAddonImportBackend extends CPlugin{
 	function getTableFields() {
 		global $base , $_USER , $_SESS , $_CONF , $_LANG_ID; 
 
-		$fields = $this->db->getTableFields($this->tables["plugin:novosteer_vehicles"])["fields"];
+		$fields = $this->db->getTableFields($this->tables["plugin:novosteer_vehicles_import"])["fields"];
 
 		return $fields;
 

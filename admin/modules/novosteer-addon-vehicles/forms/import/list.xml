@@ -7,32 +7,27 @@
 
 		<_count header="No." width="20" align="right" suffix="."/>
 		<dealership_name header="Dealership"></dealership_name>
-		<type header="Type"></type>
-		<vin header="Vin"></vin>
+		<cat header="Cat"></cat>
+		<year header="Year"></year>
+<!--		<vin header="Vin"></vin>-->
 		<stock header="Stock"></stock>
 		<brand_name header="Brand"></brand_name>
 		<model_name header="Model"></model_name>
 		<trim_name header="Trim"></trim_name>
 		<type_name header="Type"></type_name>
+		<msrp header="MSRP"  type="price" align="right"/>
+		<calc_price header="Calc Price" type="price" align="right"/>
+		<misc_price1 header="Misc Price" type="price" align="right"/>
 
-		<dealership_status type="relation" header="Status" align="center" width="100">
-			<options>
-				<option name="1" color="green" value="active" />
-				<option name="0" color="red" value="suspended" />
-			</options>
-		</dealership_status>
-
-		<images header="Img" align="center" type="sql" width="80">
-			<sql>
-				<vars>					
-					<table type="table" import="plugin:novosteer_vehicles_images" />
-					<cond type="field" import="product_id" />
-				</vars>
-				<query>SELECT count(image_id) as cnt FROM {TABLE} WHERE product_id='{COND}'</query>
-				<field>cnt</field>
-			</sql>
+		<images header="Images" width="80" align="center">
 		</images>
 
+		<alert_price type="relation" align="center" width="100" header="Disc">
+			<options>
+				<option name="0" color="green" value="ok" />
+				<option name="1" color="red" value="err" />
+			</options>
+		</alert_price>
 
 		<button_delete type="button" width="44" align="center" onclick="" button="/small/delete" acl="msg.delete">
 			<location>{SELF.URI.DELETE}</location>
@@ -71,7 +66,6 @@
 
 			<page type="page"/>
 			<items type="form" var="items"/>
-			<module_id type="eval" import="$_GET['module_id'];" />
 
 			<from type="var">
 				<import>

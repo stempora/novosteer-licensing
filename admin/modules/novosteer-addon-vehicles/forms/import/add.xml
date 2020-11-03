@@ -1,26 +1,12 @@
 <form>
-	<title>
-		<details>
-			<options>
-				<option 
-					name="o1" 
-					link="index.php?mod=novosteer-dealerships&sub=dealerships/dealerships&dealership_id={GLOBAL.GET.DEALERSHIP_ID}&action=details&_tb={TRAIL.PREVIOUS}" 
-					title="Dealership Brief" 
-					icon="file"
-					active="eval:!$_GET['section'];"/>
-
-		
-			</options>
-		</details>
-		<default>{SELF.TITLE} Dealership</default>
-	</title>
-	<action>{SELF.URI.STORE}&storeredirect=ADDDETAILS</action>
+	<title>{SELF.TITLE} Vehicle</title>
+	<action>{SELF.URI.STORE}</action>
 	<name>edit_cat</name>
 	<width>100%</width>
 	<alternance>true</alternance>
 	<encoding>multipart/form-data</encoding>
 
-	<skin>Purple</skin>
+	<skin>Teal</skin>
 
 
 	<formtag>true</formtag>
@@ -32,61 +18,86 @@
 		</set>
 
 
-		<button_savecontinue button="saveall" title="Save & Continue">
-			<location>javascript:SaveAndContinue();</location>
-		</button_savecontinue>
-
 		<button_back onclick="" button="return">
 			<location>{TRAIL.PREVIOUS.LINK}</location>
 		</button_back>
-
-		<button_edit onclick="" button="edit" acl="elements.edit">
-			<location>{SELF.URI.EDIT}</location>
-		</button_edit>
-
-		<button_save button="saveall">
-			<location>javascript:$('form').first().trigger('submit');</location>
-		</button_save>
 
 	</buttons>
 
 	<redirect>{PHP}?sub=accounts</redirect>
 
-	<fields>
-		<dealership_id type="hidden"/>		
-		<dealership_date type="hidden" default="eval:time();"/>
-
-		<dealership_name type="text" width="100%" title="Title" lang="true" restricted="eval:($_GET['action'] != 'details') || !($_GET['action'] == 'details' && $_GET['section']);"/>
-
-
+	<fields>		
 		<box title="Details" width="6">
 			<fields>
+				<date_in_stock type="textbox" title="Date In Stock" />
+				<brand_id type="relation" title="Make">
+					<relation table="plugin:novosteer_addon_autobrands_brands" id="brand_id" text="brand_name"></relation>
+				</brand_id>
+				<model_id type="textbox" title="Model">
+					<relation table="plugin:novosteer_addon_autobrands_models" id="model_id" text="model_name"></relation>
+				</model_id>
 
-				<dealership_name type="textbox" required="true" validate="A:1:200" unique="true" title="Name"/>
-				<dealership_site type="textbox" required="true" validate="A:1:200" unique="true" title="Website"/>
+				<trim type="textbox" title="Trim" />
+				<cat type="textbox" title="Category" />
+				<type type="textbox" title="Type" />
+				<stock_id type="textbox" title="Stock ID" />
+				<vin type="textbox" title="VIN" />
+				<year type="textbox" title="Year" />
+				<body_style type="textbox" title="Body Style" />
+				<model_number type="textbox" title="Model Number" />
+				<doors type="textbox" title="Doors" />
+				<engine type="textbox" title="Engine" />
+				<engine_cylinders type="textbox" title="Engine Cylinders" />
+				<engine_displacement type="textbox" title="Engine Displacement" />
+				<transmission type="textbox" title="Transmission" />
+				<mileage type="textbox" title="Mileage" />
+				<description type="textbox" title="Description" />
+				<title type="textbox" title="Title" />
+				<style_description type="textbox" title="Style Description" />
+				<color type="textbox" title="Exterior Color" />
+				<exterior_color_detailed type="textbox" title="MFG Exterior Color" />
+				<interior_color type="textbox" title="Interior Color" />
+				<interior_color_detailed type="textbox" title="MFG Interior Color" />
+				<int_upholstery type="textbox" title="Upholstery" />
+				<engine_block type="textbox" title="Engine Block" />
+				<engine_aspiration type="textbox" title="Engine Apiration" />
+				<engine_description type="textbox" title="Engine Description" />
+				<transmission_speed type="textbox" title="Transmission Speed" />
+				<transmission_description type="textbox" title="Transmission" />
+				<drivetrain type="textbox" title="Drive Train" />
+				<fuel type="textbox" title="Fuel" />
+				<citympg type="textbox" title="City MPG" />
+				<highwaympg type="textbox" title="Highway MPG" />
+				<wheelbase_code type="textbox" title="Wheelbase Code" />
+				<passengers type="textbox" title="Passengers" />
+				<engine_displacement_inches type="textbox" title="Endine Displacement inc" />
 
-				<subtitle type="subtitle" title="Security"></subtitle>
-				<dealership_key type="textbox" required="true" validate="A:1:200" unique="true" title="Secret Key"/>
+				<prices type="subtitle" title="Prices"></prices>
+				<selingprice type="textbox" title="Selling" />
+				<msrp type="textbox" title="MSRP" />
+				<calc_price type="textbox" title="Calc Price" />
+				<bookvalue type="textbox" title="BookBalue" />
+				<invoice type="textbox" title="Invoice" />
+				<internet_price type="textbox" title="Internet Price" />
+				<misc_price1 type="textbox" title="Misc Price1" />
+				<misc_price2 type="textbox" title="Misc Price2" />
+				<misc_price3 type="textbox" title="Misc Price3" />
 			</fields>
 		</box>
 
 
-		<box title="Settings" width="6">
+		<box title="Vehicle" width="6">
 			<fields>
-
-				<dealership_status type="checkbox" checked="1" label="enabled|disabled" title="Status" default="1"/>
-
-				<manufacturer_id type="droplist" empty="true" title="Manufacturer" required="true" validate="A:1:200">
-					<relation table="plugin:novosteer_manufacturers" id="manufacturer_id" text="manufacturer_name" order="manufacturer_name"></relation>
-				</manufacturer_id>
-
-				<subtitle_calaculator type="subtitle" title="Discounts Calculator"></subtitle_calaculator>
-
-				<calculator_id type="droplist" empty="true" title="Calculator" required="true" validate="A:1:200">
-					<relation table="plugin:novosteer_manufacturers_calculators" id="calculator_id" text="calculator_name" order="calculator_name"></relation>
-					<description>Calculator to be used to calculate the discounts for the msrp.</description>
-				</calculator_id>
-
+				<dealership_id type="relation" title="Dealership">
+					<relation table="plugin:novosteer_dealerships" id="dealership_id" text="dealership_name"></relation>
+				</dealership_id>
+				<subtitle_options title="Options" type="subtitle"></subtitle_options>
+				<factory_codes type="vardump" json="true" title="Factory Codes" with="100%"/>
+				<options type="vardump" json="true" title="Options" />
+				<options_exterior type="vardump" json="true" title="Exterior"/>
+				<options_interior type="vardump" json="true" title="Interior" />
+				<options_mechanical type="vardump" json="true" title="Mechanical" />
+				<options_safety type="vardump" json="true" title="Safety" />
 			</fields>
 		</box>
 	</fields>
