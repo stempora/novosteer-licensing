@@ -17,7 +17,7 @@
 		</set>
 
 		<button_back onclick="" button="return">
-			<location>{PRIVATE.FORM_PREVIOUS_PAGE}</location>
+			<location>{TRAIL.PREVIOUS.LINK}</location>
 		</button_back>
 
 		<button_edit onclick="" button="edit" acl="avize.achizitii.edit">

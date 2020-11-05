@@ -38,24 +38,10 @@
 			color="Green" 
 			icon="merge" 
 			title="Maping Table" 			
+			subtitle="Add & Edit" 
+			link="index.php?mod=novosteer-addon-import&sub=map.pre" 
+			acl="map.list"
 		>
-			<link 
-				active="isModSub('novosteer-addon-import','map.pre');" 
-				link="index.php?mod=novosteer-addon-import&sub=map.pre" 
-				icon="edit" 
-				title="Pre Import" 
-				acl="map.list"
-				subtitle="Rules executed before linking feed to fields." />
-
-			<link 
-				active="isModSub('novosteer-addon-import','map.post');" 
-				link="index.php?mod=novosteer-addon-import&sub=map.post" 
-				icon="edit" 
-				title="Post Import" 
-				acl="map.list"
-				subtitle="Rules executed after linking feed to fields." />
-
-
 		</map>
 
 		<locks

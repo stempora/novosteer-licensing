@@ -16,6 +16,12 @@
 			</relation>
 		</importer_id> 
 
+		<importer_all type="relation" header="All" align="center" width="70">
+			<options>
+				<option name="1">yes</option>
+			</options>
+		</importer_all>
+
 		<button_delete type="button" width="44" align="center" onclick="" button="/small/delete" acl="map.delete" >
 			<location>{SELF.URI.DELETE}</location>
 		</button_delete>

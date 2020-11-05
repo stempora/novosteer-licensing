@@ -34,10 +34,10 @@
 	</acl>
 
 	<URIlinks>
-		<add>{SELF.LINK.ADD}&attribute_id={ATTRIBUTE_ID}&importer_id={IMPORTER_ID}&returnurl={SELF.LOCATION}</add>
-		<edit>{SELF.LINKUID.EDIT}&returnurl={SELF.LOCATION}</edit>
-		<details>{SELF.LINKUID.DETAILS}&returnurl={SELF.LOCATION}</details>
-		<delete>javascript:DeleteConfirm('Are you sure you want to delete this item?' , '{SELF.LINKUID.DELETE}&returnURL={SELF.LOCATION}');</delete>
+		<add>{SELF.LINK.ADD}&attribute_id={ATTRIBUTE_ID}&importer_id={IMPORTER_ID}&_tb={TRAIL.HERE}</add>
+		<edit>{SELF.LINKUID.EDIT}&_tb={TRAIL.HERE}</edit>
+		<details>{SELF.LINKUID.DETAILS}&_tb={TRAIL.HERE}</details>
+		<delete>javascript:DeleteConfirm('Are you sure you want to delete this item?' , '{SELF.LINKUID.DELETE}&_tb={TRAIL.HERE}');</delete>
 		<store>{SELF.LINK}{SELF.ACTION.STORE}</store>
 	</URIlinks>
 
