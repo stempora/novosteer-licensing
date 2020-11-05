@@ -27,70 +27,95 @@
 	<redirect>{PHP}?sub=accounts</redirect>
 
 	<fields>		
-		<box title="Details" width="6">
+		<box title="Details" width="4">
 			<fields>
+				<dealership_id type="relation" title="Dealership">
+					<relation table="plugin:novosteer_dealerships" id="dealership_id" text="dealership_name"></relation>
+				</dealership_id>
+				<title type="textbox" title="Title" />
+				<link type="textbox" title="Link" />
+				<price_retail type="textbox" title="Price Retail" />
+				<price_sale type="textbox" title="Price Sale" />
 				<date_in_stock type="textbox" title="Date In Stock" />
+
+				<subtitle_overview type="subtitle" title="Overview"/>
+				<cat type="textbox" title="Category" />
 				<brand_id type="relation" title="Make">
 					<relation table="plugin:novosteer_addon_autobrands_brands" id="brand_id" text="brand_name"></relation>
 				</brand_id>
 				<model_id type="textbox" title="Model">
 					<relation table="plugin:novosteer_addon_autobrands_models" id="model_id" text="model_name"></relation>
 				</model_id>
-
 				<trim type="textbox" title="Trim" />
-				<cat type="textbox" title="Category" />
-				<type type="textbox" title="Type" />
-				<stock_id type="textbox" title="Stock ID" />
 				<vin type="textbox" title="VIN" />
+				<stock_id type="textbox" title="Stock ID" />
+				<type type="textbox" title="Type" />
 				<year type="textbox" title="Year" />
-				<body_style type="textbox" title="Body Style" />
-				<model_number type="textbox" title="Model Number" />
-				<doors type="textbox" title="Doors" />
+				<mileage type="textbox" title="Mileage" />
+				<style_description type="textbox" title="Style Description" />
+
+			</fields>
+		</box>
+
+
+		<box title="Engine" width="4">
+			<fields>
 				<engine type="textbox" title="Engine" />
 				<engine_cylinders type="textbox" title="Engine Cylinders" />
 				<engine_displacement type="textbox" title="Engine Displacement" />
-				<transmission type="textbox" title="Transmission" />
-				<mileage type="textbox" title="Mileage" />
-				<description type="textbox" title="Description" />
-				<title type="textbox" title="Title" />
-				<style_description type="textbox" title="Style Description" />
-				<color type="textbox" title="Exterior Color" />
-				<exterior_color_detailed type="textbox" title="MFG Exterior Color" />
-				<interior_color type="textbox" title="Interior Color" />
-				<interior_color_detailed type="textbox" title="MFG Interior Color" />
-				<int_upholstery type="textbox" title="Upholstery" />
+				<engine_displacement_inches type="textbox" title="Endine Displacement inc" />
 				<engine_block type="textbox" title="Engine Block" />
 				<engine_aspiration type="textbox" title="Engine Apiration" />
 				<engine_description type="textbox" title="Engine Description" />
-				<transmission_speed type="textbox" title="Transmission Speed" />
-				<transmission_description type="textbox" title="Transmission" />
-				<drivetrain type="textbox" title="Drive Train" />
 				<fuel type="textbox" title="Fuel" />
 				<citympg type="textbox" title="City MPG" />
 				<highwaympg type="textbox" title="Highway MPG" />
-				<wheelbase_code type="textbox" title="Wheelbase Code" />
-				<passengers type="textbox" title="Passengers" />
-				<engine_displacement_inches type="textbox" title="Endine Displacement inc" />
-				<price_retail type="textbox" title="Price Retail" />
-				<price_sale type="textbox" title="Price Sale" />
-				<link type="textbox" title="Link" />
+
+				<subtitle_transmission type="subtitle" title="Transmission"/>
+				<transmission type="textbox" title="Transmission" />
+				<transmission_speed type="textbox" title="Transmission Speed" />
+				<transmission_description type="textbox" title="Transmission" />
+				<drivetrain type="textbox" title="Drive Train" />
 			</fields>
 		</box>
 
-
-		<box title="Vehicle" width="6">
+		<box title="Exterior" width="4">
 			<fields>
-				<dealership_id type="relation" title="Dealership">
-					<relation table="plugin:novosteer_dealerships" id="dealership_id" text="dealership_name"></relation>
-				</dealership_id>
-				<subtitle_options title="Options" type="subtitle"></subtitle_options>
-				<factory_codes type="vardump" json="true" title="Factory Codes" with="100%"/>
-				<options type="vardump" json="true" title="Options" />
-				<options_exterior type="vardump" json="true" title="Exterior"/>
-				<options_interior type="vardump" json="true" title="Interior" />
-				<options_mechanical type="vardump" json="true" title="Mechanical" />
-				<options_safety type="vardump" json="true" title="Safety" />
+				<color type="textbox" title="Exterior Color" />
+				<exterior_color_detailed type="textbox" title="MFG Exterior Color" />
+				<body_style type="textbox" title="Body Style" />
+				<doors type="textbox" title="Doors" />
+
+
+				<subtitle_interior type="subtitle" title="Interior"/>
+				<interior_color type="textbox" title="Interior Color" />
+				<interior_color_detailed type="textbox" title="MFG Interior Color" />
+				<int_upholstery type="textbox" title="Upholstery" />
+				<passengers type="textbox" title="Passengers" />
+
+				<subtitle_factory type="subtitle" title="Factory"/>
+				<factory_codes type="text" title="Factory Codes" with="100%" forcevalue="eval:implode(', ' , json_decode($values['values']['factory_codes'] , true));"/>
+				<model_number type="textbox" title="Model Number" />
+				<wheelbase_code type="textbox" title="Wheelbase Code" />
+
 			</fields>
 		</box>
+
+		<box title="Options" width="6">
+			<fields>
+				<description extend="true" type="textbox" title="Description" />
+				<options extend="true" type="text" title="Options"  forcevalue="eval:implode(', ' , json_decode($values['values']['options'] , true));"/>
+				<options_exterior extend="true" type="text" title="Exterior" forcevalue="eval:implode(', ' , json_decode($values['values']['options_exterior'] , true));"/>
+			</fields>
+		</box>
+
+		<box title="Options" width="6">
+			<fields>
+				<options_interior extend="true" type="text" title="Interior"  forcevalue="eval:implode(', ' , json_decode($values['values']['options_interior'] , true));"/>
+				<options_mechanical extend="true" type="text" title="Mechanical"  forcevalue="eval:implode(', ' , json_decode($values['values']['options_mechanical'] , true));"/>
+				<options_safety extend="true" type="text" title="Safety" forcevalue="eval:implode(', ' , json_decode($values['values']['options_safety'] , true));" />
+			</fields>
+		</box>
+
 	</fields>
 </form>

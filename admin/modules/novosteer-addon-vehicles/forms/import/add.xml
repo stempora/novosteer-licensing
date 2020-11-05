@@ -27,78 +27,135 @@
 	<redirect>{PHP}?sub=accounts</redirect>
 
 	<fields>		
-		<box title="Details" width="6">
+		<box title="Details" width="4">
 			<fields>
-				<date_in_stock type="textbox" title="Date In Stock" />
+				<dealership_id type="relation" title="Dealership">
+					<relation table="plugin:novosteer_dealerships" id="dealership_id" text="dealership_name"></relation>
+				</dealership_id>
+
+				<product_date_create type="date" params="Y-m-d" title="Create Date"></product_date_create>
+				<product_date_last_update type="date" params="Y-m-d" title="Last Update Date" />
+				<subtitle_overview type="subtitle" title="Overview"></subtitle_overview>
+
+				<cat type="textbox" title="Category" />
+				<year type="textbox" title="Year" />
 				<brand_id type="relation" title="Make">
 					<relation table="plugin:novosteer_addon_autobrands_brands" id="brand_id" text="brand_name"></relation>
 				</brand_id>
-				<model_id type="textbox" title="Model">
+				<model_id type="relation" title="Model">
 					<relation table="plugin:novosteer_addon_autobrands_models" id="model_id" text="model_name"></relation>
 				</model_id>
-
-				<trim type="textbox" title="Trim" />
-				<cat type="textbox" title="Category" />
-				<type type="textbox" title="Type" />
-				<stock_id type="textbox" title="Stock ID" />
-				<vin type="textbox" title="VIN" />
-				<year type="textbox" title="Year" />
-				<body_style type="textbox" title="Body Style" />
-				<model_number type="textbox" title="Model Number" />
-				<doors type="textbox" title="Doors" />
-				<engine type="textbox" title="Engine" />
-				<engine_cylinders type="textbox" title="Engine Cylinders" />
-				<engine_displacement type="textbox" title="Engine Displacement" />
-				<transmission type="textbox" title="Transmission" />
-				<mileage type="textbox" title="Mileage" />
-				<description type="textbox" title="Description" />
-				<title type="textbox" title="Title" />
+				<trim_id type="relation" title="Trim">
+					<relation table="plugin:novosteer_addon_autobrands_trims" id="trim_id" text="trim_name"></relation>
+				</trim_id>
+				<trim type="textbox" title="Trim Text" />
 				<style_description type="textbox" title="Style Description" />
-				<color type="textbox" title="Exterior Color" />
-				<exterior_color_detailed type="textbox" title="MFG Exterior Color" />
-				<interior_color type="textbox" title="Interior Color" />
-				<interior_color_detailed type="textbox" title="MFG Interior Color" />
+				<miles type="textbox" title="Mileage" />
+				<vin type="textbox" title="VIN" />
+				<stock type="textbox" title="Stock ID" />
+				<date_in_stock type="date" params="Y-m-d" title="Date In Stock" />
+
+
+				<subtitle_exterior type="subtitle" title="Exterior"/>
+				<exteriorcolor type="textbox" title="Exterior Color" />
+				<ext_color_generic type="textbox" title="Exterior Color Generic" />
+				<body type="textbox" title="Body Style" />
+				<doors type="textbox" title="Doors" />
+
+
+				<subtitle_interior type="subtitle" title="Interior"/>
+				<interiorcolor type="textbox" title="Interior Color" />
+				<int_color_generic type="textbox" title="Interior Color Generic" />
 				<int_upholstery type="textbox" title="Upholstery" />
-				<engine_block type="textbox" title="Engine Block" />
-				<engine_aspiration type="textbox" title="Engine Apiration" />
+				<passengercapacity type="textbox" title="Passengers" />
+
+			</fields>
+		</box>
+
+		<box title="Engine" width="4">
+			<fields>
+				<engine type="textbox" title="Engine" />
+				<enginecylinders type="textbox" title="Engine Cylinders" />
+				<enginedisplacement type="textbox" title="Engine Displacement" />
+				<enginedisplacementcubicinches type="textbox" title="Endine Displacement inc" />
+				<engine_block_type type="textbox" title="Engine Block" />
+				<engine_aspiration_type type="textbox" title="Engine Apiration" />
 				<engine_description type="textbox" title="Engine Description" />
+				<fuel_type type="textbox" title="Fuel" />
+				<citympg type="textbox" title="City MPG" />
+				<highwaympg type="textbox" title="Highway MPG" />
+
+				<subtitle_transmission type="subtitle" title="Transmission"/>
+				<transmission type="textbox" title="Transmission" />
 				<transmission_speed type="textbox" title="Transmission Speed" />
 				<transmission_description type="textbox" title="Transmission" />
 				<drivetrain type="textbox" title="Drive Train" />
-				<fuel type="textbox" title="Fuel" />
-				<citympg type="textbox" title="City MPG" />
-				<highwaympg type="textbox" title="Highway MPG" />
-				<wheelbase_code type="textbox" title="Wheelbase Code" />
-				<passengers type="textbox" title="Passengers" />
-				<engine_displacement_inches type="textbox" title="Endine Displacement inc" />
 
-				<prices type="subtitle" title="Prices"></prices>
-				<selingprice type="textbox" title="Selling" />
+				<subtitle_factory type="subtitle" title="Factory"/>
+				<factory_codes type="text" title="Factory Codes" with="100%" forcevalue="eval:implode(', ' , json_decode($values['values']['factory_codes'] , true));"/>
+				<modelnumber type="textbox" title="Model Number" />
+				<wheelbase_code type="textbox" title="Wheelbase Code" />
+			</fields>
+		</box>
+
+		<box title="Prices" width="4">
+			<fields>
+				<sellingprice type="textbox" title="Selling" />
 				<msrp type="textbox" title="MSRP" />
-				<calc_price type="textbox" title="Calc Price" />
 				<bookvalue type="textbox" title="BookBalue" />
 				<invoice type="textbox" title="Invoice" />
 				<internet_price type="textbox" title="Internet Price" />
 				<misc_price1 type="textbox" title="Misc Price1" />
 				<misc_price2 type="textbox" title="Misc Price2" />
 				<misc_price3 type="textbox" title="Misc Price3" />
+
+				<subtitle_mfg type="subtitle" title="MFG Discount" restricted="eval:$field['cat'] != 'New';"></subtitle_mfg>
+
+				<alert_price type="droplist" align="center" width="100" title="Status" restricted="eval:$field['cat'] != 'New';">
+					<options>
+						<option name="0" color="green" title="success" />
+						<option name="1" color="red" title="error" />
+					</options>
+				</alert_price>
+				<calculator_rule type="text" title="Applied Rule" restricted="eval:$field['cat'] != 'New';"></calculator_rule>
+				<calculator_discounts type="text" title="Applied Discount" restricted="eval:$field['cat'] != 'New';"></calculator_discounts>
+				<calc_price type="textbox" title="Calculated Discount" restricted="eval:$field['cat'] != 'New';"/>
+
+				<subtitle_prices_local type="subtitle" title="Calculated Prices (Novosteer Side)"></subtitle_prices_local>
+
+				<price_1 type="text" title="Price 1" />
+				<price_2 type="text" title="Price 2" />
+				<price_3 type="text" title="Price 3" />
+				<price_4 type="text" title="Price 4" />
+				<price_5 type="text" title="Price 5" />
+				<price_6 type="text" title="Price 6" />
+
+				<subtitle_comments_local type="subtitle" title="Comments"></subtitle_comments_local>
+				<comment_1 type="textbox" title="Comment 1" />
+				<comment_2 type="textbox" title="Comment 2" />
+				<comment_3 type="textbox" title="Comment 3" />
+				<comment_4 type="textbox" title="Comment 4" />
+				<comment_5 type="textbox" title="Comment 5" />
+
+
 			</fields>
 		</box>
 
-
-		<box title="Vehicle" width="6">
+		<box title="Options" width="6">
 			<fields>
-				<dealership_id type="relation" title="Dealership">
-					<relation table="plugin:novosteer_dealerships" id="dealership_id" text="dealership_name"></relation>
-				</dealership_id>
-				<subtitle_options title="Options" type="subtitle"></subtitle_options>
-				<factory_codes type="vardump" json="true" title="Factory Codes" with="100%"/>
-				<options type="vardump" json="true" title="Options" />
-				<options_exterior type="vardump" json="true" title="Exterior"/>
-				<options_interior type="vardump" json="true" title="Interior" />
-				<options_mechanical type="vardump" json="true" title="Mechanical" />
-				<options_safety type="vardump" json="true" title="Safety" />
+				<description extend="true" type="textbox" title="Description" />
+				<options extend="true" type="text" title="Options"  forcevalue="eval:implode(', ' , json_decode($values['values']['options'] , true));"/>
+				<options_exterior extend="true" type="text" title="Exterior" forcevalue="eval:implode(', ' , json_decode($values['values']['options_exterior'] , true));"/>
 			</fields>
 		</box>
+
+		<box title="Options" width="6">
+			<fields>
+				<options_interior extend="true" type="text" title="Interior"  forcevalue="eval:implode(', ' , json_decode($values['values']['options_interior'] , true));"/>
+				<options_mechanical extend="true" type="text" title="Mechanical"  forcevalue="eval:implode(', ' , json_decode($values['values']['options_mechanical'] , true));"/>
+				<options_safety extend="true" type="text" title="Safety" forcevalue="eval:implode(', ' , json_decode($values['values']['options_safety'] , true));" />
+			</fields>
+		</box>
+
 	</fields>
 </form>
