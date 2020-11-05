@@ -119,11 +119,12 @@ class ManufacturerDiscounts extends Importer implements ImporterInterface{
 		$this->calculator->setVehicle($vehicle);
 		$price = $this->calculator->calculatePrice();
 
+
 		if ($price === false) {
 			$this->log("No rule matched for %s" , [$item["vin"]]);
 			$this->errors[$item["vin"]] = $item["stock"] . " " . $vehicle["year"] . " " . $vehicle["brand_name"] . " " . $vehicle["model_name"] . " ";
 
-			$this->db->QueryUpdateBYID(
+			$this->db->QueryUpdateBYId(
 				$this->module->tables["plugin:novosteer_vehicles_import"],
 				[
 					"alert_price" => "1"
@@ -133,7 +134,23 @@ class ManufacturerDiscounts extends Importer implements ImporterInterface{
 
 		} else {
 			$this->log("Calculated discount price of %d" , [$price]);
+
+			if ($vehicle["alert_price"] == "1") {
+				$this->db->QueryUpdateBYId(
+					$this->module->tables["plugin:novosteer_vehicles_import"],
+					[
+						"alert_price" => "0",
+					],
+					$vehicle["product_id"]
+				);
+			}
+			
 		}
+
+		$rule = $this->calculator->serializeRule();
+		
+		$item["calculator_rule"] = $rule["rules"];
+		$item["calculator_discounts"] = $rule["disc"];
 
 		$item[$this->info["settings"]["set_price_field"]] = $price !== false ? $price : 0;
 	}
@@ -159,6 +176,8 @@ class ManufacturerDiscounts extends Importer implements ImporterInterface{
 				$this->module->tables["plugin:novosteer_vehicles_import"],
 				[
 					$this->info["settings"]["set_price_field"] => $item[$this->info["settings"]["set_price_field"]],
+					"calculator_rule"			=> $item["calculator_rule"],
+					"calculator_discounts"		=> $item["calculator_discounts"]
 				],
 				$product["product_id"]
 			);
@@ -206,5 +225,11 @@ class ManufacturerDiscounts extends Importer implements ImporterInterface{
 		return null;
 	}
 
+
+	public function wasUpdated($scope , $hash) {
+		global $base , $_USER , $_SESS , $_CONF , $_LANG_ID; 
+		return true;
+		return $this->event->productWasUpdated($scope , $hash);
+	}
 	
 }
