@@ -337,5 +337,62 @@ class Calculator extends Base{
 
 		$this->msrpField = $field;
 	}
+
+	
+
+	/**
+	* description
+	*
+	* @param
+	*
+	* @return
+	*
+	* @access
+	*/
+	function serializeRule() {
+		global $_LANG_ID; 
+
+		$rule = $this->current_rule;
+
+		$list = [];
+
+		if (is_array($rule["conds"])) {
+			foreach ($rule["conds"] as $ruleItem) {
+				$data = $ruleItem["field"] . 
+					($ruleItem["type"] == "1" 
+						? " IN "  
+						: " NOT IN  ") . 
+
+					"( " . implode(", " , $ruleItem["values"]) . " )";
+
+				if ($ruleItem["type"] == "1") {					
+					$data = "<span style='color: green'>" . $data . "</span>";
+				} else {
+					$data = "<span style='color: red'>" . $data . "</span>";
+				}
+
+
+				$list[] = $data;
+			}			
+		}
+
+		$disc = [];
+		if (is_array($rule["discounts"])) {
+			foreach ($rule["discounts"] as $discount) {
+				if (stristr($discount , "%")) {
+					$disc[] = $discount;
+				} else {
+					$disc[] = number_format($discount , 0);
+				}				
+			}			
+		} else {
+			$disc[] = "0.00";
+		}
+
+		return [
+			"rules"	=> implode(" <br> " , $list), 
+			"disc"	=> implode(" + "  , $disc), 
+		];		
+	}
 	
 }

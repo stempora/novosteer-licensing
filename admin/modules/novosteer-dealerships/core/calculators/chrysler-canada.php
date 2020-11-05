@@ -109,20 +109,26 @@ class Chrysler_Canada extends Calculator {
 
 		$this->loadDiscounts();
 
-		$rule = $this->discounts
+		$this->current_rule = $this->discounts
 			->setVehicle($this->vehicle)
 			->getMatchingRule();
 		
+		if ($this->vehicle["product_sku"] == "3C4NJDDB9MT538260") {
+			//debug($this->current_rule,1);
+		}
+
+		
 		//no rule found, so i mark the product as with problems to investigate
-		if (!is_array($rule)) {
+		if (!is_array($this->current_rule)) {
 			return false;
 		} else {
 			$price = $this->vehicle[$this->msrpField];
 
-			if (!is_array($rule["discounts"]) || !$this->vehicle[$this->msrpField]) {
-				return false;
+			//i have no discounts for certain vehicles
+			if (!is_array($this->current_rule["discounts"]) || !$this->vehicle[$this->msrpField]) {
+				return $this->vehicle[$this->msrpField];				
 			} else {			
-				foreach ($rule["discounts"] as $key => $discount) {
+				foreach ($this->current_rule["discounts"] as $key => $discount) {
 
 					if (stristr($discount , "%") !== false) {
 						//percentage
