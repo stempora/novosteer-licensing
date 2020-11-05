@@ -152,7 +152,9 @@ class Homenet extends Importer implements ImporterInterface{
 		}
 
 		$item["engine"] = strtoupper($item["engine_block_type"]) ."-". $item["enginecylinders"] . " " . str_replace(" " , "" , $item["enginedisplacement"]);		
-		$item["factory_codes"] = json_encode(explode(" " , $item["factory_codes"]));
+		$item["factory_codes"] = json_encode(explode("," , $item["factory_codes"]));
+
+		$item["dateinstock"] = strtotime($item["dateinstock"]);
 		
 		$item["age"] = date("Y") - $item["year"];
 
@@ -216,10 +218,7 @@ class Homenet extends Importer implements ImporterInterface{
 			}			
 		}
 	}
-	
-	
-	
-
+		
 	/**
 	* description
 	*
@@ -246,14 +245,8 @@ class Homenet extends Importer implements ImporterInterface{
 	function updateProduct($product , $item) {
 		global $_LANG_ID; 
 
-		if ($this->info["settings"]['set_duplicates'] == '2') {
 			$this->log("Checking %s for changes..." , [$item[$this->skuField]]);
-
 			parent::updateProduct($product , $item);
-		} else {
-			$this->log("Ignoring existing..." , [$item[$this->skuField]]);
-			$this->skus["ignored"][] = $item[$this->skuField];
-		}
 	}
 
 	/**
@@ -323,6 +316,4 @@ class Homenet extends Importer implements ImporterInterface{
 		}
 
 	}
-
-
 }
