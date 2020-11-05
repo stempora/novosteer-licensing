@@ -15,6 +15,7 @@ if (!defined("STPBase")) {
 }
 
 use \Stembase\Modules\Novosteer_Addon_Import\Core\Models\Importer;
+use \CHeaders;
 
 class GenerateFeed extends Importer {
 
@@ -121,9 +122,18 @@ class GenerateFeed extends Importer {
 						$items[$image["product_id"]]["images"] = [];
 					}
 
-					$items[$image["product_id"]]["images"][] = $image["image_downloaded"] 
+					$_image = $image["image_downloaded"] 
 						? $this->module->storage->getLocation($this->info["dealership_location"])->getUrl($this->info["dealership_location_prefix"] . "/import/" . $items[$image["product_id"]]['product_sku'] ."/original/" . $image["image_id"] . ".jpg")
 						: $image["image_source"];
+
+
+					if ($image["image_order"] == "1") {
+						$items[$image["product_id"]]["image_main"] = $_image;
+					} else {
+						$items[$image["product_id"]]["images"][] = $_image;
+					}					
+
+					$items[$image["product_id"]]["images_all"][] = $_image;
 				}				
 			}			
 		}
@@ -131,7 +141,6 @@ class GenerateFeed extends Importer {
 		foreach ($items as $key => &$product) {
 			$this->keepKeys($product);
 		}
-
 
 		$data = json_encode([
 			"products"	=> $items
@@ -170,7 +179,7 @@ class GenerateFeed extends Importer {
 	* @param
 	*
 	* @return
-	*
+	* enginecylinders	enginedisplacement
 	* @access
 	*/
 	function keepKeys(&$item) {
@@ -182,6 +191,7 @@ class GenerateFeed extends Importer {
 			"model_name",
 			"trim_name",
 			"type_name",
+			"trim_name",
 			"trim",
 			"cat",
 			"stock",
@@ -243,12 +253,18 @@ class GenerateFeed extends Importer {
 			"price_4",
 			"price_5",
 			"price_6",
+			"image_main",
+			"images_all",
+			"images"
 		];
+
+		//fix some fields
+		$item["trim"] = $item["trim_name"] ? $item["trim_name"] : $item["trim"];
 
 		$array = ["options", "options_exterior","options_interior","options_mechanical","options_safety","factory_codes"];
 
 		foreach ($array as $k => $v) {
-			$item[$k] = json_decode($v , true);
+			$item[$v] = json_decode($item[$v] , true);
 		}
 
 		foreach ($item as $k => $v) {
@@ -307,7 +323,15 @@ class GenerateFeed extends Importer {
 	* @access
 	*/
 	function runWeb() {
-		global $_LANG_ID; 
+		global $_LANG_ID ,$site; 
+
+
+		$headers = getAllHeaders();
+
+		if (!(isset($headers["Novosteer-Authorization"]) && $headers["Novosteer-Authorization"] == $this->info["settings"]["set_request_key"])) {
+			return $site->plugins["redirects"]->ErrorPage("404" , true);
+		}
+
 
 		Cheaders::newInstance()
 			->ContentTypeByExt("novosteer.json")
