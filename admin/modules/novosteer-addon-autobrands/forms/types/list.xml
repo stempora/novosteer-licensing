@@ -18,17 +18,6 @@
 
 		<type_name header="Name"/>
 
-		<products header="Products" align="center" type="sql" width="80">
-			<sql>
-				<vars>					
-					<table type="table" import="plugin:products_field_values_options" />
-					<table_fields type="table" import="plugin:products_fields" />
-					<cond type="field" import="type_id" />
-				</vars>
-				<query>SELECT count(distinct product_id) as cnt FROM {TABLE} WHERE value_val='{COND}' AND field_id in ( SELECT field_id FROM {TABLE_FIELDS} WHERE field_code LIKE 'type')</query>
-				<field>cnt</field>
-			</sql>
-		</products>
 
 		<button_delete type="button" width="44" align="center" onclick="" button="/small/delete" acl="types.delete">
 			<location>{SELF.URI.DELETE}</location>

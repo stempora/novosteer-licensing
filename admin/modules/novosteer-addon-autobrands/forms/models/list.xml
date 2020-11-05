@@ -28,16 +28,27 @@
 			</options>
 		</model_status>
 
-		<products header="Products" align="center" type="sql" width="80">
+		<import header="Import" align="center" type="sql" width="80">
 			<sql>
 				<vars>					
-					<table type="table" import="plugin:novosteer_vehicles" />
+					<table type="table" import="plugin:novosteer_vehicles_import" />
 					<cond type="field" import="model_id" />
 				</vars>
 				<query>SELECT count(distinct product_id) as cnt FROM {TABLE} WHERE model_id='{COND}'</query>
 				<field>cnt</field>
 			</sql>
-		</products>
+		</import>
+
+		<export header="Export" align="center" type="sql" width="80">
+			<sql>
+				<vars>					
+					<table type="table" import="plugin:novosteer_vehicles_export" />
+					<cond type="field" import="model_id" />
+				</vars>
+				<query>SELECT count(distinct product_id) as cnt FROM {TABLE} WHERE model_id='{COND}'</query>
+				<field>cnt</field>
+			</sql>
+		</export>
 
 		<button_delete type="button" width="44" align="center" onclick="" button="/small/delete" acl="models.delete">
 			<location>{SELF.URI.DELETE}</location>
