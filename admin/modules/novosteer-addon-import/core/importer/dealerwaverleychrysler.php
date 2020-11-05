@@ -17,7 +17,7 @@ if (!defined("STPBase")) {
 
 use \Stembase\Modules\Novosteer_Addon_Import\Core\Models\DealerFormula;
 
-class DealerGauthierChrysler extends DealerFormula{
+class DealerWaverleyChrysler extends DealerFormula{
 
 	var $hints = "		
 		<p><b>Formula New Vehicles</b>
@@ -26,9 +26,8 @@ class DealerGauthierChrysler extends DealerFormula{
 			<li>msrp = msrp</li>
 			<li>price_1 = incentives </li>
 			<li>price_2 = sales </li>
-			<li>price_3 = accessories </li>
 			<li>price_4 = protection </li>
-			<li>price_5 = retail ( msrp + accessories + protection ) </li>
+			<li>price_5 = retail  </li>
 		</ul>
 		
 		<p><br><b>Formula Used Vehicles</b>
@@ -61,25 +60,20 @@ class DealerGauthierChrysler extends DealerFormula{
 
 		switch ($item["cat"]) {
 			case "New":
-				if ($item["msrp"] && $item["bookvalue"] && ($item["msrp"] > $item["bookvalue"])) {
-					//incentives
-					$item["price_1"] = $item["msrp"] - $item["bookvalue"];
-				}
-
 				//calculated price from DDC / Novo
-				if ($item["bookvalue"]) {
-					//sale price
-					$item["price_2"]	= $item["bookvalue"];
-
-					if ($item["sellingprice"] && $item["msrp"] && ( $item["sellingprice"] > $item["msrp"])) {
-						//accessories
-						$item["price_3"]	= $item["sellingprice"] - $item["msrp"];
-					}
-											
-					$item["price_4"]	= 999;
+				if ($item["sellingprice"]) {
 
 					//retail price
-					$item["price_5"] = $item["msrp"] + $item["price_3"] + $item["price_4"];
+					$item["price_5"] = $item["sellingprice"];
+
+
+					if ($item["msrp"] && $item["misc_price1"] && ($item["msrp"] > $item["misc_price1"])) {
+						//incentives
+						$item["price_1"] = $item["msrp"] - $item["misc_price1"];
+					}
+
+					$item["price_4"]	= 899;
+					$item["price_2"] = $item["price_5"] - $item["price_1"];
 				}
 			break;
 
