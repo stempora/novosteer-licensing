@@ -153,7 +153,7 @@ class Map extends Base{
 					);
 				}			
 			}			
-		}
+		}		
 	}
 	
 
