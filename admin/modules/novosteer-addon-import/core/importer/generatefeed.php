@@ -28,7 +28,7 @@ class GenerateFeed extends Importer {
 	*
 	* @access
 	*/
-	function getFile() {
+	function getFile($default= null) {
 		global $_LANG_ID; 
 
 		return true;

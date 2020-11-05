@@ -50,7 +50,7 @@ class ImagesDownload extends Importer implements ImporterInterface{
 	*
 	* @access
 	*/
-	function getFile() {
+	function getFile($default = null) {
 		global $_LANG_ID; 
 
 		//just ro return something

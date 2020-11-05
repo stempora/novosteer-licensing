@@ -10,8 +10,6 @@
 					</options>
 				</set_import_type>
 
-				<set_adjust_doc type="textbox" title="Adjustment CSV"></set_adjust_doc>
-
 				<subtitle_product_s type="minititle" title="New"/>
 
 				<set_import_new_images type="checkbox" checked="1" label="yes|no" title="Import Images"/>

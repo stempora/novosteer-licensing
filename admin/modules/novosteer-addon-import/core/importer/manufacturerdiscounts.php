@@ -51,7 +51,7 @@ class ManufacturerDiscounts extends Importer implements ImporterInterface{
 	*
 	* @access
 	*/
-	function getFile() {
+	function getFile($default = null) {
 		global $base , $_USER , $_SESS , $_CONF , $_LANG_ID; 
 		return "fake_file";
 	}

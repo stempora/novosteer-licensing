@@ -407,7 +407,7 @@ class Importer extends Base{
 	*
 	* @access
 	*/
-	public function getFile() {
+	public function getFile($default=null) {
 
 		$local_file = "feed_" . $this->info["feed_id"] . ".csv";	
 
@@ -423,7 +423,7 @@ class Importer extends Base{
 
 					$this->recordHistory(
 						$this->module->storage->tmp->getStream($local),
-						"feed.csv"
+						$default ? $default : "feed.csv"
 					);
 
 					return $local_file;
@@ -489,7 +489,7 @@ class Importer extends Base{
 
 				$this->recordHistory(
 					$this->module->storage->tmp->getStream($local_file),
-					basename($this->info["feed_data_path"])
+					$default ? $default : basename($this->info["feed_data_path"])
 				);
 
 
@@ -513,10 +513,10 @@ class Importer extends Base{
 					$local_file , 
 					$res->getBody()->detach()
 				);
-
+				
 				$this->recordHistory(
 					$this->module->storage->tmp->getStream($local_file),
-					basename($this->info["feed_data_path"])
+					$default ? $default : basename($this->info["feed_data_path"])
 				);
 
 				return $local_file;
@@ -977,6 +977,7 @@ class Importer extends Base{
 
 			//check if exists a product with this sku already
 			$product = $this->getProduct($item);
+
 			$changeLog = null;
 
 			$this->skus["all"][] = $item[$this->skuField];
