@@ -22,11 +22,11 @@
 		<file_file_file header="File Name"/>
 
 		<button_view type="button" icon="file-excel" width="20" align="center" onclick="" color="Green" protected="eval:!strstr($field['file_file_file'] , '.csv');">
-			<location>javascript:STBCSVReader.show('novosteer/import/history/{FILE_ID}.file')</location>
+			<location>javascript:STBCSVReader.show('index.php?mod=novosteer-addon-import&sub=download&file_id={FILE_ID}')</location>
 		</button_view>
 
 		<button_dl type="button" icon="download4" width="20" align="center" onclick="" color="DarkGray">
-			<location>index.php?mod=products-addon-import&sub=download&file_id={FILE_ID}</location>
+			<location>index.php?mod=novosteer-addon-import&sub=download&file_id={FILE_ID}</location>
 		</button_dl>
 
 	</fields>

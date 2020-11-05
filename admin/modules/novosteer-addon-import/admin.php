@@ -331,7 +331,7 @@ class CNovosteerAddonImport extends CNovosteerAddonImportBackend{
 			->ContentTypeByExt($item["file_file_file"])
 			->Filename($item["file_file_file"]);
 
-			readfile("../upload/products/import/history/{$item['file_id']}.file");
+			$this->storage->private->readChunked("novosteer/import/history/{$item['file_id']}.file");
 			die();
 		}
 		
