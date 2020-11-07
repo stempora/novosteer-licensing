@@ -449,15 +449,11 @@ class CNovosteerAddonExportBackend extends CPlugin{
 			]
 		);
 
-		$fields = ["options" , "options_exterior" , "options_interior" , "options_mechanical" , "options_safety" , "factory-codes" ];
-
 		if (is_array($products)) {
 			$_products = [];
 			foreach ($products as $key => $product) {
 
-				foreach ($fields as $k => $val) {
-					$product[$val] = json_decode($product[$val], true);
-				}
+				$this->preProcessProduct($product);
 
 				$_products[$product["product_id"]] = $product;
 				$pids[] = $product["product_id"];
@@ -500,6 +496,32 @@ class CNovosteerAddonExportBackend extends CPlugin{
 
 		return $products;
 	}
+
+	/**
+	* description
+	*
+	* @param
+	*
+	* @return
+	*
+	* @access
+	*/
+	function preProcessProduct(&$product) {
+		global $_LANG_ID; 
+
+		$fields = ["options" , "options_exterior" , "options_interior" , "options_mechanical" , "options_safety" , "factory-codes" ];
+
+		foreach ($fields as $k => $val) {
+			$product[$val] = json_decode($product[$val], true);
+		}
+
+		if ($product["trim"] == "0") {
+			$product["trim"] = "";
+		}
+		
+
+	}
+	
 	
 
 	/**
