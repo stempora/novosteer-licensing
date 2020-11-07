@@ -368,16 +368,10 @@ class CNovosteerAddonAutoBrandsBackend extends CPlugin {
 			"SELECT * 
 			FROM 
 				%s types 
-				INNER JOIN 
-					%s as types_lang 
-				ON 
-					types.type_id = types_lang.type_id AND 
-					types_lang.lang_id = %d 
 			ORDER BY 
 				type_order ASC",
 			[
 				$this->tables["plugin:novosteer_addon_autobrands_types"],
-				$this->tables["plugin:novosteer_addon_autobrands_types_lang"],
 				$_LANG_ID
 			]
 		);
@@ -669,19 +663,12 @@ class CNovosteerAddonAutoBrandsBackend extends CPlugin {
 			"SELECT * 
 			FROM 
 				%s as types
-				INNER JOIN 
-					%s as types_lang 
-				ON	
-					types.type_id = types_lang.type_id AND 
-					types_lang.lang_id = %d
 			WHERE 
 				types.type_id in (%s) 
 			ORDER BY 
 				type_order ASC",
 			[
 				$this->tables["plugin:novosteer_addon_autobrands_types"],
-				$this->tables["plugin:novosteer_addon_autobrands_types_lang"],
-				$_LANG_ID,
 				$ids
 			]
 		);

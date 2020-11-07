@@ -1108,7 +1108,12 @@ class Importer extends Base{
 
 		//get all products that are not published 
 		return $this->db->QFetchArray(
-			"SELECT * FROM 
+			"SELECT *,
+				brands.brand_name as make,
+				models.model_name as model,
+				vehicles.fuel_type as fuel,
+				trims.trim_name as trim
+			FROM 
 				%s as vehicles 
 			INNER JOIN 
 				%s as brands

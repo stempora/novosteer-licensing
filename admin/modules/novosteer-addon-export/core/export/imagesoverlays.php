@@ -233,9 +233,11 @@ class ImagesOverlays extends Export implements ExportInterface{
 	function runOnDelete() {
 		global $_LANG_ID;
 		
+		//mark all images as not havin an overlay, the phisical images will be deleted on product deletion
 		$this->db->QueryUpdate(
-			["image_deleted" => "1"],
-			$this->db->Statement("image_overlay=%d" , $this->feed["feed_id"])
+			$this->module->tables["plugin:novosteer_vehicles_export_images"],
+			["image_overlay" => "0"],
+			$this->db->Statement("image_overlay=%d" , $this->info["feed_id"])
 		);
 	}			
 
@@ -251,10 +253,28 @@ class ImagesOverlays extends Export implements ExportInterface{
 	function runOnUpdate($old = null) {
 		global $_LANG_ID; 
 
-		$this->db->QueryUpdate(
-			["image_overlay" => "0"],
-			$this->db->Statement("image_overlay=%d" , $this->feed["feed_id"])
-		);
+		$compare = [	
+			"set_image_width" , 
+			"set_w1_date" ,"set_w1_position" , "set_w1_offset_x" , "set_w1_offset_y",
+			"set_w2_date" ,"set_w2_position" , "set_w2_offset_x" , "set_w2_offset_y",
+			"set_w3_date" ,"set_w3_position" , "set_w3_offset_x" , "set_w3_offset_y",
+			"set_w4_date" ,"set_w4_position" , "set_w4_offset_x" , "set_w4_offset_y",
+		];
+
+		//reset the overlays 
+		foreach ($compare as $key => $val) {
+			if ($this->info["settings"][$val] != $old["settings"][$val]) {
+				$this->db->QueryUpdate(
+					$this->module->tables["plugin:novosteer_vehicles_export_images"],
+					["image_overlay" => "0"],
+					$this->db->Statement("image_overlay=%d" , $this->info["feed_id"])
+				);
+
+				return true;
+			}
+			
+		}
+	
 	}
 	
 

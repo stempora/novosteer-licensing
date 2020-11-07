@@ -113,10 +113,6 @@ class Chrysler_Canada extends Calculator {
 			->setVehicle($this->vehicle)
 			->getMatchingRule();
 		
-		if ($this->vehicle["product_sku"] == "3C4NJDDB9MT538260") {
-			//debug($this->current_rule,1);
-		}
-
 		
 		//no rule found, so i mark the product as with problems to investigate
 		if (!is_array($this->current_rule)) {

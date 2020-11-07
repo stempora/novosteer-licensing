@@ -70,9 +70,9 @@ class GenerateFeed extends Importer {
 				ON 
 					products.trim_id = trims.trim_id
 
-			WHERE				
-				dealership_id = %d AND
-				alert_price = 0 
+			WHERE	
+				product_id = 468 AND
+				dealership_id = %d 
 				:cond		
 			ORDER BY 
 				products.product_id ASC
@@ -91,8 +91,23 @@ class GenerateFeed extends Importer {
 			]
 		);
 
+			debug($items,1);
+
+		$alerts = explode("," , $this->info["settings"]["set_publish"]);
+
 		if (is_array($items)) {
 			foreach ($items as $k => $v) {
+
+				if (is_array($alerts) && count($alerts)) {
+					foreach ($alerts as $_k => $_v) {
+
+						if ($v[$_v] == "1") {
+							debug("X",1);
+							return $this->alert();
+						}						
+					}					
+				}									
+
 				$_items[$v["product_id"]] = $v;
 			}			
 
@@ -343,6 +358,40 @@ class GenerateFeed extends Importer {
 		}
 		
 		die();
+	}
+
+	/**
+	* description
+	*
+	* @param
+	*
+	* @return
+	*
+	* @access
+	*/
+	function alert() {
+		global $_LANG_ID; 
+
+
+		if ($this->info["settings"]["set_alert_email"]) {
+			$this->log("Sending email alert ...");
+			 $this->module->plugins["mail"]->SendMail(
+				$this->module->plugins["mail"]->GetMail(
+					$this->info["settings"]["set_alert_email"],				
+					$this->info
+				)
+			);
+		}
+
+		if ($this->info["settings"]["set_alert_sms"]) {
+			$this->log("Sending SMS alert ...");
+			$this->plugins["sms"]->SendSMS(
+				$this->plugins["sms"]->getTpl(
+					$this->info["settings"]["set_alert_sms"],
+					$this->info
+				)
+			);
+		}
 	}
 	
 

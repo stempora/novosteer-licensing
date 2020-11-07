@@ -453,7 +453,7 @@ class CNovosteerAddonExport extends CNovosteerAddonExportBackend{
 	*
 	* @access
 	*/
-	function ExportStore($record , $forms , $old ) {
+	function ExportStore($record , $forms , $_old ) {
 
 		if ($record["feed_id"]) {
 
@@ -522,7 +522,12 @@ class CNovosteerAddonExport extends CNovosteerAddonExportBackend{
 			);
 
 			$client = $this->getExportObject($record["feed_id"]);
-			$client->runOnUpdate($old);
+
+			if ($_old["feed_settings"]) {
+				$_old["settings"] = json_decode($_old["feed_settings"],true);
+			}
+			
+			$client->runOnUpdate($_old);
 		}		
 	}
 
