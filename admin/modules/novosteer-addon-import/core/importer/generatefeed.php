@@ -138,7 +138,7 @@ class GenerateFeed extends Importer {
 					}
 
 					$_image = $image["image_downloaded"] 
-						? $this->module->storage->getLocation($this->info["dealership_location"])->getUrl($this->info["dealership_location_prefix"] . "/inventory/" . $items[$image["product_id"]]['product_sku'] ."/original/" . $image["image_id"] . ".jpg")
+						? $this->module->storage->getLocation($this->info["dealership_location"])->getUrl($this->info["dealership_location_prefix"] . "/inventory/" . $items[$image["product_id"]]['product_sku'] ."/" . $image["image_id"] . ".jpg")
 						: $image["image_source"];
 
 

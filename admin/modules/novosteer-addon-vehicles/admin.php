@@ -122,7 +122,7 @@ class CNovosteerAddonVehicles extends CNovosteerAddonVehiclesBackend{
 				}				
 
 				if ($image["image_downloaded"]) {
-					$source = $this->storage->getLocation($dealership["dealership_location"])->getUrl($dealership["dealership_location_prefix"] . "/import/" . $vehicle['product_sku'] . "/original/" . $image["image_id"] . ".jpg");
+					$source = $this->storage->getLocation($dealership["dealership_location"])->getUrl($dealership["dealership_location_prefix"] . "/inventory/" . $vehicle['product_sku'] . "/" . $image["image_id"] . ".jpg");
 					$image["image_downloaded"] = "<a href=\"{$source}\" rel=\"prettyPhoto\"><img width=\"100%\" src=\"" . $source . "\" /></a>";
 				}				
 			}

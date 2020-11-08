@@ -123,7 +123,7 @@ class ImagesDownload extends Importer implements ImporterInterface{
 		global $_LANG_ID; 
 
 		$source = $item["image_source"];
-		$destination = $this->info["dealership_location_prefix"] . "/inventory/" . $item['product_sku'] ."/original/" . $item["image_id"] . ".jpg";
+		$destination = $this->info["dealership_location_prefix"] . "/inventory/" . $item['product_sku'] ."/" . $item["image_id"] . ".jpg";
 
 		$this->log("Downloading image %s" , [$source]);
 
