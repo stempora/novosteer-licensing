@@ -1086,7 +1086,7 @@ class Importer extends Base{
 
 		$this->log("\tDeleting images & resources");
 		$this->module->storage->getLocation($this->info["dealership_location"])->deleteDirectoryRecursive(
-			$this->info["dealership_location_prefix"] . "/import/{$sku}/"
+			$this->info["dealership_location_prefix"] . "/inventory/{$sku}/"
 		);
 
 		$this->log("Done\n");
