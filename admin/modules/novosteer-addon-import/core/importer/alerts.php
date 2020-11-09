@@ -79,6 +79,7 @@ class Alerts extends Importer {
 			);
 
 			if (is_array($brands)) {
+				$this->log("Brands with errors: %s" , implode(", " , $brands));
 				$errors[] = "Brands :" . implode(", " , $brands);
 			}			
 		}
@@ -111,6 +112,7 @@ class Alerts extends Importer {
 			);
 
 			if (is_array($models)) {
+				$this->log("Models with errors: %s" , implode(", " , $models));
 				$errors[] = "Models :" . implode(", " , $models);
 			}			
 		}
@@ -149,6 +151,7 @@ class Alerts extends Importer {
 			);
 
 			if (is_array($trims)) {
+				$this->log("Trims with errors: %s" , implode(", " , $trims));
 				$errors[] = "Trims :" . implode(", " , $trims);
 			}			
 		}
@@ -173,10 +176,11 @@ class Alerts extends Importer {
 			);
 
 			if (is_array($products)) {
+				$this->log("Products with errors: %s" , implode(", " , $products));
 				$errors[] = "Vehicles :" . implode(", " , $products);
 			}			
 		}
-	
+
 
 		if (count($errors) && $this->info["settings"]["set_alert_email"]) {
 			$this->log("Sending email alert ...");

@@ -71,7 +71,6 @@ class GenerateFeed extends Importer {
 					products.trim_id = trims.trim_id
 
 			WHERE	
-				product_id = 468 AND
 				dealership_id = %d 
 				:cond		
 			ORDER BY 
@@ -91,8 +90,6 @@ class GenerateFeed extends Importer {
 			]
 		);
 
-			debug($items,1);
-
 		$alerts = explode("," , $this->info["settings"]["set_publish"]);
 
 		if (is_array($items)) {
@@ -102,7 +99,6 @@ class GenerateFeed extends Importer {
 					foreach ($alerts as $_k => $_v) {
 
 						if ($v[$_v] == "1") {
-							debug("X",1);
 							return $this->alert();
 						}						
 					}					
@@ -113,9 +109,6 @@ class GenerateFeed extends Importer {
 
 			$items = $_items;
 		}
-
-		
-
 
 		$ids = array_map(function($item) { return $item["product_id"]; } ,$items );
 
@@ -175,10 +168,10 @@ class GenerateFeed extends Importer {
 			["feed_reserved" => $hash],
 			$this->info["feed_id"]
 		);
-	
 
 		if ($hash != $this->info["feed_reserved"]) {
 			$this->log("Pinging dealer website to request the new inventory");
+			$this->pingDealer();
 		} else {
 			$this->log("No changes to the inventory.");
 		}		
@@ -212,6 +205,7 @@ class GenerateFeed extends Importer {
 			"stock",
 			"vin",
 			"year",
+			"age",
 			"body",
 			"modelnumber",
 			"doors",		
@@ -270,7 +264,12 @@ class GenerateFeed extends Importer {
 			"price_6",
 			"image_main",
 			"images_all",
-			"images"
+			"images",
+			"reserved_1",
+			"reserved_2",
+			"reserved_3",
+			"reserved_4",
+			"reserved_5",
 		];
 
 		//fix some fields
@@ -372,25 +371,51 @@ class GenerateFeed extends Importer {
 	function alert() {
 		global $_LANG_ID; 
 
+		$this->log("Stoping feed generator because of errors.!");
+	}
 
-		if ($this->info["settings"]["set_alert_email"]) {
-			$this->log("Sending email alert ...");
-			 $this->module->plugins["mail"]->SendMail(
-				$this->module->plugins["mail"]->GetMail(
-					$this->info["settings"]["set_alert_email"],				
-					$this->info
-				)
-			);
+	/**
+	* description
+	*
+	* @param
+	*
+	* @return
+	*
+	* @access
+	*/
+	function pingDealer() {
+		global $_LANG_ID; 
+
+		if (!$this->info["settings"]["set_dealer"]) {
+			return null;
 		}
+		
 
-		if ($this->info["settings"]["set_alert_sms"]) {
-			$this->log("Sending SMS alert ...");
-			$this->plugins["sms"]->SendSMS(
-				$this->plugins["sms"]->getTpl(
-					$this->info["settings"]["set_alert_sms"],
-					$this->info
-				)
-			);
+	
+		$client = new \GuzzleHttp\Client();
+		$res = $client->request(
+			'POST', 
+			'https://' . $this->info["settings"]["set_dealer_client"] . "/__novosteer/action", 
+			[
+				"form_params"	=> [
+					"action"	=> "cron-inventory"
+				],
+				"headers"	=> [
+					"Novosteer-Authorization"	=> $this->info["settings"]["set_dealer_key"]
+				] 			
+			]
+		);
+
+		if ($res->getStatusCode() == 200) {
+			$data = json_decode($res->getBody()->getContents() , true);
+
+			if ($data["response"] == "success") {
+				$this->log("Successfuly sent inventory update command" , [$res->getStatusCode()]);
+			} else {
+				$this->log("Error pinging dealer, dealer refused to take command");
+			}						
+		} else {
+			$this->log("Error pinging dealer code: %s" , [$res->getStatusCode()]);
 		}
 	}
 	

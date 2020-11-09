@@ -61,15 +61,18 @@ class DealerGauthierChrysler extends DealerFormula{
 
 		switch ($item["cat"]) {
 			case "New":
-				if ($item["msrp"] && $item["bookvalue"] && ($item["msrp"] > $item["bookvalue"])) {
+
+				$discPrice = $item[$this->info["settings"]["set_price_field"]];
+
+				if ($item["msrp"] && $discPrice && ($item["msrp"] > $discPrice)) {
 					//incentives
-					$item["price_1"] = $item["msrp"] - $item["bookvalue"];
+					$item["price_1"] = $item["msrp"] - $discPrice;
 				}
 
 				//calculated price from DDC / Novo
-				if ($item["bookvalue"]) {
+				if ($discPrice) {
 					//sale price
-					$item["price_2"]	= $item["bookvalue"];
+					$item["price_2"]	= $discPrice;
 
 					if ($item["sellingprice"] && $item["msrp"] && ( $item["sellingprice"] > $item["msrp"])) {
 						//accessories
@@ -86,17 +89,19 @@ class DealerGauthierChrysler extends DealerFormula{
 			default:
 
 					$item["price_2"] = $item["sellingprice"];
+					$newprice = 0;
 
 					//if set use the value from RR
 					if ($item["msrp"] && ($item["msrp"] > $item["sellingprice"])) {
-						$item["price_5"] = $item["msrp"];
+						$newprice = $item["msrp"];
 					} else {					
 						//add a 20% on top of selling price
-						$item["price_5"] = $item["sellingprice"] * ( (100 + 20) / 100 );
+						$newprice = $item["sellingprice"] * ( (100 + 20) / 100 );
 					}
 
-					if ($item["price_2"] && ($item["price_2"] < $item["price_5"])) {
-						$item["price_6"] = $item["price_5"] - $item["price_2"];
+					if ($item["price_2"] && ($item["price_2"] < $newprice)) {
+						$item["price_6"] = $newprice - $item["price_2"];
+						$item["price_2"] = $newprice;
 					}
 			break;
 		}	

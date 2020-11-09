@@ -11,16 +11,6 @@
 					</options>
 				</set_publish>
 
-				<set_alert_email type="droplist" title="Mail Alert" empty="true">
-					<relation table="plugin:mail_emails" id="email_code" text="email_code" order="email_code"/>
-					<description>Select the mail alert to be sent when the feed wont be pushed to the dealer.</description>
-				</set_alert_email>
-
-				<set_alert_sms type="droplist" title="SMS Alert" empty="true">
-					<relation table="plugin:sms_templates" id="tpl_code" text="tpl_code" order="tpl_code"/>
-					<description>Select the sms alert to be sent when the feed wont be pushed to the dealer.</description>
-				</set_alert_sms>
-
 				<subtitle_settings type="subtitle" title="Settings" skin="Gray"/>
 
 				<set_request_key type="textbox" title="Request Key" default="eval:hash('sha256', time());">
@@ -38,6 +28,7 @@
 
 
 				<subtitle_ping type="subtitle" title="Ping Dealer" skin="Gray"/>
+				<set_dealer type="checkbox" title="Status" checked="1" label="enabled|disabled" />
 				<set_dealer_client type="textbox" title="Connect Link" preffix="https://" suffix="/__novosteer/*"/>
 				<set_dealer_key type="textbox" title="Authorisation Key">
 					<description>Dealer key to send the notification for new products.</description>

@@ -131,4 +131,20 @@ class Adjustment extends Importer implements ImporterInterface{
 		
 	}
 		
+
+	/**
+	* description
+	*
+	* @param
+	*
+	* @return
+	*
+	* @access
+	*/
+	public function wasUpdated($scope , $hash) {
+		global $_LANG_ID; 
+
+		return true;
+	}
+	
 }

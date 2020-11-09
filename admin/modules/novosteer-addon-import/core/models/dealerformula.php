@@ -61,7 +61,7 @@ class DealerFormula extends Importer implements ImporterInterface{
 	*
 	* @access
 	*/
-	function getFile() {
+	function getFile($default = null) {
 		global $base , $_USER , $_SESS , $_CONF , $_LANG_ID; 
 		return "fake_file";
 	}
@@ -122,6 +122,8 @@ class DealerFormula extends Importer implements ImporterInterface{
 			"price_6"			=> $item["price_6"],
 		];
 
+		$this->preUpdateProduct($product , $item , $data);
+	
 		$hash = $this->event->getHash($data);
 
 
@@ -159,6 +161,20 @@ class DealerFormula extends Importer implements ImporterInterface{
 		return null;
 	}
 
+	/**
+	* description
+	*
+	* @param
+	*
+	* @return
+	*
+	* @access
+	*/
+	function preUpdateProduct($product , $item , &$data) {
+		global $_LANG_ID; 
+	}
+	
+
 
 	/**
 	* description
@@ -183,6 +199,20 @@ class DealerFormula extends Importer implements ImporterInterface{
 							"ondetails"			=> "true",
 							"html"				=> "true",
 							"description"		=> $this->hints
+						],
+
+						"set_price_field"		=> [
+							"type"		=> "droplist",
+							"title"		=> "Price w/ Discount",
+							"empty"		=> "true",
+							"function"	=> [
+								"module"	=> "novosteer-addon-import",
+								"function"	=> "getTableFields"
+							],
+							"relation"	=> [
+								"id"	=> "Field",
+								"text"	=> "Field"
+							]
 						]
 					]
 				]

@@ -60,6 +60,9 @@ class DealerWaverleyChrysler extends DealerFormula{
 
 		switch ($item["cat"]) {
 			case "New":
+
+				$discPrice = $item[$this->info["settings"]["set_price_field"]];
+
 				//calculated price from DDC / Novo
 				if ($item["sellingprice"]) {
 
@@ -67,33 +70,59 @@ class DealerWaverleyChrysler extends DealerFormula{
 					$item["price_5"] = $item["sellingprice"];
 
 
-					if ($item["msrp"] && $item["misc_price1"] && ($item["msrp"] > $item["misc_price1"])) {
+					if ($item["msrp"] && $discPrice && ($item["msrp"] > $discPrice)) {
 						//incentives
-						$item["price_1"] = $item["msrp"] - $item["misc_price1"];
+						$item["price_1"] = $item["msrp"] - $discPrice;
 					}
 
 					$item["price_4"]	= 899;
 					$item["price_2"] = $item["price_5"] - $item["price_1"];
 				}
+
+				if ($item["vin"] == "2C4RDGBGXLR154840") {
+				}
+				
 			break;
 
 			default:
 
 					$item["price_2"] = $item["sellingprice"];
+					$newprice = 0;
 
 					//if set use the value from RR
 					if ($item["msrp"] && ($item["msrp"] > $item["sellingprice"])) {
-						$item["price_5"] = $item["msrp"];
+						$newprice = $item["msrp"];
 					} else {					
 						//add a 20% on top of selling price
-						$item["price_5"] = $item["sellingprice"] * ( (100 + 20) / 100 );
+						$newprice = $item["sellingprice"] * ( (100 + 20) / 100 );
 					}
 
-					if ($item["price_2"] && ($item["price_2"] < $item["price_5"])) {
-						$item["price_6"] = $item["price_5"] - $item["price_2"];
+					if ($item["price_2"] && ($item["price_2"] < $newprice)) {
+						$item["price_6"] = $newprice - $item["price_2"];
+						$item["price_2"] = $newprice;
 					}
 			break;
 		}	
 	}	
 	
+	/**
+	* description
+	*
+	* @param
+	*
+	* @return
+	*
+	* @access
+	*/
+	function preUpdateProduct($product , $item , &$data) {
+		global $_LANG_ID; 
+
+		if ($item["comment_1"] == "DEMO") {
+			$data["reserved_1"] = "Yes";
+		} else {
+			$data["reserved_1"] = "No";
+		}
+
+	}
+
 }

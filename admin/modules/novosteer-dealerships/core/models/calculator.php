@@ -287,6 +287,8 @@ class Calculator extends Base{
 
 	
 	public function getRemoteCSV($url) {
+		global $site; 
+
 		if (!$url) {
 			return null;
 		}
@@ -295,12 +297,12 @@ class Calculator extends Base{
 
 		$res = $client->request('GET', $url);
 
-		\CFile::Save(
-			"upload/tmp/tmp_calc_" . $this->info["calculator_id"] . ".csv" , 
-			$res->getBody()->getContents()				
+		$site->storage->tmp->SaveStream(
+			"tmp_calc_" . $this->info["calculator_id"] . ".csv" , 
+			$res->getBody()->detach()
 		);
 
-		$data = \CFile::LoadArray("upload/tmp/tmp_calc_" . $this->info["calculator_id"] . ".csv" , true);
+		$data = $site->storage->tmp->LoadArray("tmp_calc_" . $this->info["calculator_id"] . ".csv" , true);
 
 		return $data;
 	}

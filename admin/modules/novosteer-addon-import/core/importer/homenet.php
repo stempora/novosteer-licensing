@@ -90,7 +90,7 @@ class Homenet extends Importer implements ImporterInterface{
 		$item["engine"] = strtoupper($item["engine_block_type"]) ."-". $item["enginecylinders"] . " " . str_replace(" " , "" , $item["enginedisplacement"]);		
 		$item["factory_codes"] = implode("," , explode(" " , $item["factory_codes"]));
 
-		$item["age"] = date("Y") - $item["year"];
+		$item["age"] = max(0 , date("Y") - $item["year"]);
 
 
 		switch ($item["cat"]) {
@@ -156,8 +156,6 @@ class Homenet extends Importer implements ImporterInterface{
 
 		$item["dateinstock"] = strtotime($item["dateinstock"]);
 		
-		$item["age"] = date("Y") - $item["year"];
-
 		return true;
 	}
 
