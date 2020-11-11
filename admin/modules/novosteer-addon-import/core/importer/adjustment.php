@@ -71,9 +71,11 @@ class Adjustment extends Importer implements ImporterInterface{
 			foreach ($items as $key => &$item) {
 				$data = [];
 				foreach ($map as $k => $v) {
-					$data[$v] = $item[$k];
+					if (trim($item[$k]) != "") {
+						$data[$v] = $item[$k];
+					}					
 				}
-
+4
 				$item = $data;				
 			}			
 		}
