@@ -44,6 +44,11 @@
 
 	<items>50</items>
 
+	<vars>
+		<vehicle_year type="eval" import="$_GET['vehicle_year'];"></vehicle_year>
+		<trim_id type="eval" import="$_GET['trim_id'];"></trim_id>
+		<model_id type="eval" import="$_GET['model_id'];"></model_id>
+	</vars>
 
 	<sql>
 		<vars>

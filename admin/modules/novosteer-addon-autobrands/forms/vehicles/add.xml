@@ -42,7 +42,7 @@
 
 		<box title="Brief" width="6">
 			<fields>
-				<vehicle_year type="droplist" width="100%" title="Year" required="true" validate="A:2:200" empty="true">
+				<vehicle_year type="droplist" width="100%" title="Year" required="true" validate="A:2:200" empty="true" default="eval:$_GET['vehicle_year'];">
 					<options>
 						<option name="2019">2019</option>
 						<option name="2020">2020</option>
@@ -53,7 +53,7 @@
 					</options>
 				</vehicle_year>
 
-				<model_id type="droplist" title="Brand - Model" required="true" empty="true" validate="A:1:20">
+				<model_id type="droplist" title="Brand - Model" required="true" empty="true" validate="A:1:20" default="eval:$_GET['model_id'];">
 					<relation id="model_id">
 						<text>
 							<f1 field="brand_name" />
@@ -82,7 +82,7 @@
 				</model_id>
 
 
-				<trim_id type="droplist" title="Brand - Trim" required="true" validate="A:1:20" empty="true">
+				<trim_id type="droplist" title="Brand - Trim" required="true" validate="A:1:20" empty="true" default="eval:$_GET['trim_id'];">
 					<relation id="trim_id">
 						<text>
 							<f1 field="brand_name" />
@@ -135,8 +135,9 @@
 	</fields>
 
 	<vars>
-		<model_id type="value" import="model_id" />
-		<trim_id type="value" import="trim_id" />
+		<model_id type="eval" import="$_GET['model_id'] ? $_GET['model_id'] : $values['values']['model_id'];"></model_id>
+		<trim_id type="eval" import="$_GET['trim_id'] ? $_GET['trim_id'] : $values['values']['trim_id'];"></trim_id>
+		<vehicle_year type="eval" import="$_GET['vehicle_year'] ? $_GET['vehicle_year'] : $values['values']['vehicle_year'];"></vehicle_year>
 	</vars>
 
 	<javascript>
