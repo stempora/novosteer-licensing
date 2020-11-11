@@ -39,7 +39,7 @@
 
 				<cat type="textbox" title="Category" />
 				<year type="textbox" title="Year / Age" referers="age"/>
-				<age type="textbox" preffix="/"></age>
+				<age type="textbox" preffix="/&nbsp; " referer="true"></age>
 				<brand_id type="relation" title="Make">
 					<relation table="plugin:novosteer_addon_autobrands_brands" id="brand_id" text="brand_name"></relation>
 				</brand_id>
