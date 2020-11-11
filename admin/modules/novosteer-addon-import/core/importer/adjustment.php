@@ -75,7 +75,7 @@ class Adjustment extends Importer implements ImporterInterface{
 						$data[$v] = $item[$k];
 					}					
 				}
-4
+
 				$item = $data;				
 			}			
 		}
