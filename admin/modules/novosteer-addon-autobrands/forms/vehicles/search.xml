@@ -43,7 +43,7 @@
 
 				<box title="Filter" width="6">
 					<fields>
-						<vehicle_year type="droplist" width="100%" title="Year" required="true" validate="A:2:200" empty="true">
+						<vehicle_year type="droplist" width="100%" title="Year" empty="true">
 							<options>
 								<option name="2019">2019</option>
 								<option name="2020">2020</option>
