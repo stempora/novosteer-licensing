@@ -4,7 +4,7 @@
 	<code>novosteer-addon-autobrands</code>
 	<parent>novosteer-dealership</parent>
 	<type>system</type>
-	<version>1.1</version>
+	<version>1.2</version>
 	<url></url>
 	<install>			
 
@@ -24,5 +24,12 @@
 				<file>update-1.1.sql</file>
 			</files>
 		</version>
+
+		<version name="1.2">
+			<files>
+				<file>update-1.2.sql</file>
+			</files>
+		</version>
+
 	</history>
 </module>

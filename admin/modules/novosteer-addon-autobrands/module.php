@@ -19,6 +19,10 @@ return [
 		"plugin:novosteer_addon_autobrands_trims"						=> "site_plugin_novosteer_addon_autobrands_trims",
 
 		"plugin:novosteer_addon_autobrands_types"						=> "site_plugin_novosteer_addon_autobrands_types",
+		"plugin:novosteer_addon_autobrands_colors"						=> "site_plugin_novosteer_addon_autobrands_colors",
+
+		"plugin:novosteer_addon_autobrands_vehicles"					=> "site_plugin_novosteer_addon_autobrands_vehicles",
+
 
 	]
 ];		

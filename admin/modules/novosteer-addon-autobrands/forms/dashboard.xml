@@ -55,7 +55,7 @@
 
 		<models
 			color="DarkBlue" 
-			icon="car" 
+			icon="list" 
 			acl="models.list"
 			subtitle="Add & Edit" 
 			title="Models" 
@@ -70,5 +70,25 @@
 			title="Trims" 
 			link="index.php?mod=novosteer-addon-autobrands&sub=trims"
 		/>
+
+		<colors
+			color="Green" 
+			icon="palette" 
+			acl="colors.list"
+			subtitle="Add & Edit" 
+			title="Colors" 
+			link="index.php?mod=novosteer-addon-autobrands&sub=colors"
+		/>
+
+		<vehicles
+			color="Gray" 
+			icon="car" 
+			acl="colors.list"
+			subtitle="Add & Edit" 
+			title="Vehicles" 
+			link="index.php?mod=novosteer-addon-autobrands&sub=vehicles"
+		/>
+
+
 </tabs>
 

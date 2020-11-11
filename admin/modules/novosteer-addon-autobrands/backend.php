@@ -239,6 +239,58 @@ class CNovosteerAddonAutoBrandsBackend extends CPlugin {
 		return $id;
 		
 	}
+
+
+/**
+	* description
+	*
+	* @param
+	*
+	* @return
+	*
+	* @access
+	*/
+	function getColorIdByName($brand , $name , $create = false , $generic = null, $code = null, $hexa= null) {
+		global $base , $_USER , $_SESS; 
+		$this->__init();
+
+		$name = trim($name);
+
+		if (!$name) {
+			return null;
+		}		
+
+		$color = $this->db->QFetchArray(
+			"SELECT * FROM %s WHERE color_name LIKE '%s'",
+			[
+				$this->tables['plugin:novosteer_addon_autobrands_colors'],
+				$name
+			]
+		);
+
+		if (is_array($color)) {
+			return $color["color_id"];
+		}
+		
+		if (!$create) {
+			return null;
+		}
+
+		$id =  $this->db->QueryInsert(
+			$this->tables['plugin:novosteer_addon_autobrands_colors'],
+			[
+				"color_name"			=> $name,
+				"color_name_generic"	=> $generic,
+				"color_code"			=> $code,
+				"color_hex"				=> $hexa ? "#" . $hexa : "",
+				"alert_color"			=> "1",
+			]
+		);	
+		
+
+		return $id;
+		
+	}
 	
 
 	/**
@@ -604,6 +656,27 @@ class CNovosteerAddonAutoBrandsBackend extends CPlugin {
 			[
 				$this->tables["plugin:novosteer_addon_autobrands_trims"],
 				is_array($ids) ? implode("," , $ids) : $ids
+			]
+		);
+	}
+
+	/**
+	* description
+	*
+	* @param
+	*
+	* @return
+	*
+	* @access
+	*/
+	function getTrimsbyBrand($brand) {
+		global $base , $_USER , $_SESS; 
+
+		return $this->db->QFetchRowArray(
+			"SELECT * FROM %s WHERE brand_id = %d ORDER BY trim_name ASC",
+			[
+				$this->tables["plugin:novosteer_addon_autobrands_trims"],
+				$brand
 			]
 		);
 	}

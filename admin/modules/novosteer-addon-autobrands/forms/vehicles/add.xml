@@ -1,0 +1,163 @@
+<form lang="true">
+	<title>{SELF.TITLE} Vehicle</title>
+	<action>{SELF.URI.STORE}</action>
+	<name>edit</name>
+	<width>100%</width>
+	<alternance>true</alternance>
+	<encoding>multipart/form-data</encoding>
+
+	<skin>Gray</skin>
+
+
+	<formtag>true</formtag>
+	<border>true</border>
+	
+	<buttons>		
+		<set>
+			<header>true</header>
+		</set>
+
+		<button_savecontinue button="saveall" title="Save & Continue">
+			<location>javascript:SaveAndContinue();</location>
+		</button_savecontinue>
+
+		<button_back onclick="" button="return">
+			<location>{TRAIL.PREVIOUS.LINK}</location>
+		</button_back>
+
+		<button_edit onclick="" button="edit">
+			<location>{SELF.URI.EDIT}</location>
+		</button_edit>
+
+		<button_save button="saveall">
+			<location>javascript:$('form').first().trigger('submit');</location>
+		</button_save>
+
+	</buttons>
+
+	<redirect>{PHP}?sub=accounts</redirect>
+
+	<fields>
+		<vehicle_id type="hidden"/>		
+
+		<box title="Brief" width="6">
+			<fields>
+				<vehicle_year type="droplist" width="100%" title="Year" required="true" validate="A:2:200" empty="true">
+					<options>
+						<option name="2019">2019</option>
+						<option name="2020">2020</option>
+						<option name="2021">2021</option>
+						<option name="2022">2022</option>
+						<option name="2023">2023</option>
+						<option name="2024">2024</option>
+					</options>
+				</vehicle_year>
+
+				<model_id type="droplist" title="Brand - Model" required="true" empty="true" validate="A:1:20">
+					<relation id="model_id">
+						<text>
+							<f1 field="brand_name" />
+							<f2 field="model_name" preffix=" - "/>
+						</text>
+
+						<sql>
+							<vars>
+								<table_brands type="table" import="plugin:novosteer_addon_autobrands_brands"/>
+								<table_models type="table" import="plugin:novosteer_addon_autobrands_models"/>
+							</vars>
+
+							<query><![CDATA[
+								SELECT 
+									* 
+								FROM 
+									{TABLE_MODELS} as models, 
+									{TABLE_BRANDS} as  brands
+								WHERE
+									models.brand_id = brands.brand_id
+								ORDER BY 
+									brand_name ASC,model_name ASC
+							]]></query>
+						</sql>
+					</relation>
+				</model_id>
+
+
+				<trim_id type="droplist" title="Brand - Trim" required="true" validate="A:1:20" empty="true">
+					<relation id="trim_id">
+						<text>
+							<f1 field="brand_name" />
+							<f2 field="trim_name" preffix=" - "/>
+						</text>
+
+						<sql>
+							<vars>
+								<table_brands type="table" import="plugin:novosteer_addon_autobrands_brands"/>
+								<table_trims type="table" import="plugin:novosteer_addon_autobrands_trims"/>
+							</vars>
+ 
+							<query><![CDATA[
+								SELECT 
+									* 
+								FROM 
+									{TABLE_TRIMS} as trims, 
+									{TABLE_BRANDS} as  brands
+								WHERE
+									trims.brand_id = brands.brand_id
+								ORDER BY 
+									brand_name ASC,trim_name ASC
+							]]></query>
+						</sql>
+					</relation>
+				</trim_id>
+
+
+				<color_id type="droplist" width="100%" title="Color" required="true" validate="A:1:200" empty="true">
+					<relation table="plugin:novosteer_addon_autobrands_colors" id="color_id" text="color_name" order="color_name"></relation>
+				</color_id>
+			</fields>
+
+		</box>
+
+		<box title="Settings" width="6">
+			<fields>
+				<vehicle_default type="checkbox" checked="1" label="yes|no" title="Default" default="1" description="Check to apply for all vehicles without a trim."/>
+
+				<vehicle_image valign="top" adminwidth="100" type="image" path="./vehicles/stock/" title="Image">
+					<file default="" field="vehicle_id" ext=".png" />			
+						<title></title>
+					<error>No available image.</error>						
+				</vehicle_image>
+
+
+			</fields>
+		</box>
+
+	</fields>
+
+	<vars>
+		<model_id type="value" import="model_id" />
+		<trim_id type="value" import="trim_id" />
+	</vars>
+
+	<javascript>
+		<after><![CDATA[
+
+			$("#model_id").change(function() {
+				formUpdateSelectOptionsJson( 
+					$("#trim_id") , 
+					"index.php?mod=novosteer-addon-autobrands&sub=trims.autocomplete&model_id=" + $("#model_id").val(), 
+					"{TRIM_ID}"
+				)
+			});
+
+			formUpdateSelectOptionsJson( 
+					$("#trim_id") , 
+					"index.php?mod=novosteer-addon-autobrands&sub=trims.autocomplete&model_id={MODEL_ID}", 
+					"{TRIM_ID}"
+			);
+
+
+		]]></after>
+	</javascript>
+
+</form>

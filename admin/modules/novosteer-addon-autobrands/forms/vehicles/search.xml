@@ -1,0 +1,137 @@
+<form>
+	<title></title>
+	<action>{SELF.FILE}</action>
+	<name>search</name>
+	<width>100%</width>
+	<method>get</method>
+
+	<formtag>true</formtag>
+	<border>true</border>
+	<alternance>true</alternance>
+
+	<skin>Gray</skin>
+	
+	
+	<buttons>		
+		<set>
+			<header>true</header>
+		</set>
+
+		<button_reset location="index.php?mod={GLOBAL.GET.MOD}&sub={GLOBAL.GET.SUB}&module_id={GLOBAL.GET.MODULE_ID}" icon="undo" title="Reset"/>
+		<button_search type="submit" location="javascript:$('form').first().trigger('submit');" icon="search" title="Search"/>
+	</buttons>
+
+	<redirect>index.php?sub=units</redirect>
+
+
+	<fields>
+
+		<mod type="hidden" default="$_GET['mod']" action="eval"/>
+		<sub type="hidden" default="$_GET['sub']" action="eval"/>
+		<module_id type="hidden" default="$_GET['module_id']" action="eval"/>
+		<advanced type="hidden" default="0" />
+	</fields>
+
+	<search>
+			<fields>
+
+				<box title="Search" width="6">
+					<fields>
+						<keywords type="textbox" width="100%" title="Keywords" />
+					</fields>
+				</box>
+
+				<box title="Filter" width="6">
+					<fields>
+						<vehicle_year type="droplist" width="100%" title="Year" required="true" validate="A:2:200" empty="true">
+							<options>
+								<option name="2019">2019</option>
+								<option name="2020">2020</option>
+								<option name="2021">2021</option>
+								<option name="2022">2022</option>
+								<option name="2023">2023</option>
+								<option name="2024">2024</option>
+							</options>
+						</vehicle_year>
+
+						<brand_id type="droplist" title="Brand / Model" empty="true" referers="model_id">
+							<relation table="plugin:novosteer_addon_autobrands_brands" text="brand_name" id="brand_id" order="brand_name" />
+						</brand_id>
+
+						<model_id type="droplist" title="Brand - Model" empty="true" referer="true">
+							<relation id="model_id">
+								<text>
+									<f1 field="brand_name" />
+									<f2 field="model_name" preffix=" - "/>
+								</text>
+
+								<sql>
+									<vars>
+										<table_brands type="table" import="plugin:novosteer_addon_autobrands_brands"/>
+										<table_models type="table" import="plugin:novosteer_addon_autobrands_models"/>
+									</vars>
+
+									<query><![CDATA[
+										SELECT 
+											* 
+										FROM 
+											{TABLE_MODELS} as models, 
+											{TABLE_BRANDS} as  brands
+										WHERE
+											models.brand_id = brands.brand_id
+										ORDER BY 
+											brand_name ASC,model_name ASC
+									]]></query>
+								</sql>
+							</relation>
+						</model_id>
+
+
+						<trim_id type="droplist" title="Trim / Color" empty="true" referers="color_id">
+							<relation id="trim_id">
+								<text>
+									<f1 field="brand_name" />
+									<f2 field="trim_name" preffix=" - "/>
+								</text>
+
+								<sql>
+									<vars>
+										<table_brands type="table" import="plugin:novosteer_addon_autobrands_brands"/>
+										<table_trims type="table" import="plugin:novosteer_addon_autobrands_trims"/>
+									</vars>
+		 
+									<query><![CDATA[
+										SELECT 
+											* 
+										FROM 
+											{TABLE_TRIMS} as trims, 
+											{TABLE_BRANDS} as  brands
+										WHERE
+											trims.brand_id = brands.brand_id
+										ORDER BY 
+											brand_name ASC,trim_name ASC
+									]]></query>
+								</sql>
+							</relation>
+						</trim_id>
+
+
+						<color_id type="droplist" title="Color" empty="true" referer="true">
+							<relation table="plugin:novosteer_addon_autobrands_colors" id="color_id" text="color_name" order="color_name"></relation>
+						</color_id>
+					</fields>
+				</box>
+			</fields>
+
+			<sql_fields>
+				<field name="type_id">=</field>			
+				<field name="brand_id" field="brands.brand_id" type="="></field>
+				<field name="model_id" field="models.model_id" type="="></field>
+				<field name="trim_id" field="trims.trim_id" type="="></field>
+				<field name="color_id" field="colors.color_id" type="="></field>
+				<field name="vehicle_year" field="vehicle_year" type="="></field>
+				<field name="keywords" type="keyword" search="full" fields="brand_name,model_name,trim_name,vehicle_year,color_name">keyword</field>			
+			</sql_fields>
+
+	</search>
+</form>

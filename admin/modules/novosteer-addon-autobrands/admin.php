@@ -31,6 +31,8 @@ class CNovosteerAddonAutoBrands extends CNovosteerAddonAutoBrandsBackend{
 				case "types":
 				case "info":
 				case "menu":
+				case "colors":
+				case "vehicles":
 				case "info.trims":
 					$_REQUEST["module_id"] = $this->tpl_module["module_id"];
 
@@ -69,6 +71,10 @@ class CNovosteerAddonAutoBrands extends CNovosteerAddonAutoBrandsBackend{
 				break;
 
 				case "autocomplete.trims":
+					return $this->AutoCompleteTrims();
+				break;
+
+				case "trims.autocomplete":
 					return $this->AutoCompleteTrims();
 				break;
 
@@ -970,95 +976,6 @@ class CNovosteerAddonAutoBrands extends CNovosteerAddonAutoBrandsBackend{
 	*
 	* @access
 	*/
-	function AutoCompleteTrims() {
-		global $base , $_USER , $_SESS; 
-
-		if ($_GET["keywords"]) {
-			$keyword = $_GET["keywords"];
-		}		
-
-		if ($_GET["ids"]) {
-			$tmp = explode("," , $_GET["ids"]);
-			$ids = array();
-
-			foreach ($tmp as $k => $v) {
-				if (trim($v)) {
-					$ids[] = $v;
-				}				
-			}
-
-			if (count($ids)) {
-				$cond[] = " trim_id IN (" . implode("," , $ids) . ") ";
-			}					
-		} else {		
-			$cond[] = $this->db->Statement(" brand_id = %d " , [$_GET[$this->_field_brand]]);
-		}
-
-		if ($keyword) {
-			$tmp = explode(" " , $keyword);
-
-			if (count($tmp)) {
-				foreach ($tmp as $key => $val) {
-					$cond[] = $this->db->Statement(
-						" ( trim_name LIKE '%%%s%%') " , 
-						[	$val ]
-					);
-				}				
-			}			
-		}
-
-
-		$sql = $this->db->Statement(
-			"FROM 
-				%s 
-				:cond ",
-			[
-				$this->tables['plugin:products_addon_autobrands_trims'],
-			],
-			[
-				":cond"	=> is_array($cond) ? " WHERE " . implode(" AND " , $cond) : ""
-			]
-		);
-
-		$items = $this->db->QFetchRowArray(
-			"SELECT * {$sql} ORDER BY  trim_name LIMIT 100"
-		);	
-
-
-
-		if (is_array($items)) {
-			foreach ($items as $key => $trim) {
-				$_data[] = array(
-					"id"		=> $trim["trim_id"],
-					"name"		=> $trim["trim_name"],
-				);
-			}
-		
-			$return = array(
-				"status"	=> "ok" , 
-				"results"	=> $_data,
-				"total"		=> count($trims)
-			);
-
-			return $this->json($return);
-			
-		}
-
-		return $this->json(array(
-				"status"	=> "empty" , 
-				"message"	=> "No results available"
-		));
-	}
-
-	/**
-	* description
-	*
-	* @param
-	*
-	* @return
-	*
-	* @access
-	*/
 	function DuplicateInfoPageTrim($id) {
 		global $base , $_USER , $_SESS; 
 
@@ -1272,6 +1189,37 @@ class CNovosteerAddonAutoBrands extends CNovosteerAddonAutoBrandsBackend{
 				"name"	=> $module["module_name"] . " - Fuck Knows"
 			]
 		];
+	}
+
+	
+
+	/**
+	* description
+	*
+	* @param
+	*
+	* @return
+	*
+	* @access
+	*/
+	function autoCompleteTrims() {
+		global $base , $_USER , $_SESS , $_CONF , $_LANG_ID; 
+
+		$model = $this->getModelByID($_GET["model_id"]);
+		$trims = $this->getTrimsbyBrand($model["brand_id"]);
+
+		$data = [];
+
+		if (is_array($trims)) {
+			foreach ($trims as $key => $val) {
+				$data[] = [
+					"value"	=> $val["trim_id"],
+					"name"	=> $val["trim_name"]
+				];
+			}		
+		}
+		return $this->json($data);
+	
 	}
 	
 }

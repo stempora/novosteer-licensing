@@ -1,0 +1,68 @@
+<form lang="true">
+	<title>{SELF.TITLE} Color</title>
+	<action>{SELF.URI.STORE}</action>
+	<name>edit</name>
+	<width>100%</width>
+	<alternance>true</alternance>
+	<encoding>multipart/form-data</encoding>
+
+	<skin>Green</skin>
+
+
+	<formtag>true</formtag>
+	<border>true</border>
+	
+	<buttons>		
+		<set>
+			<header>true</header>
+		</set>
+
+		<button_savecontinue button="saveall" title="Save & Continue">
+			<location>javascript:SaveAndContinue();</location>
+		</button_savecontinue>
+
+		<button_back onclick="" button="return">
+			<location>{TRAIL.PREVIOUS.LINK}</location>
+		</button_back>
+
+		<button_edit onclick="" button="edit">
+			<location>{SELF.URI.EDIT}</location>
+		</button_edit>
+
+		<button_save button="saveall">
+			<location>javascript:$('form').first().trigger('submit');</location>
+		</button_save>
+
+	</buttons>
+
+	<redirect>{PHP}?sub=accounts</redirect>
+
+	<fields>
+		<color_id type="hidden"/>		
+
+		<box title="Brief" width="6">
+			<fields>
+				<color_name type="textbox" width="100%" title="Name" required="true" validate="A:2:200"/>
+				<color_name_generic type="textbox" width="100%" title="Generic Name" required="true" validate="A:2:200"/>
+				<color_code type="textbox" width="100%" title="Code" />
+				<color_hex type="colorpicker" width="100%" title="Color"/>
+			</fields>
+		</box>
+
+		<box title="Settings" width="6">
+			<fields>
+				<color_status type="checkbox" checked="1" label="published|unpublished" title="Status" default="1"/>
+				<alert_color type="checkbox" checked="1" label="error|ok" title="Alert"/>
+
+			</fields>
+		</box>
+
+	</fields>
+
+	<javascript>
+		<after><![CDATA[
+
+		]]></after>
+	</javascript>
+
+</form>
