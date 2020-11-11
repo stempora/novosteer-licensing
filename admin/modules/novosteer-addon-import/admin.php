@@ -111,6 +111,10 @@ class CNovosteerAddonImport extends CNovosteerAddonImportBackend{
 					return $this->unlockProducts();
 				break;
 
+				case "feed.status":
+					return $this->feedStatus();
+				break;
+
 			}
 		}
 	}
@@ -561,6 +565,37 @@ class CNovosteerAddonImport extends CNovosteerAddonImportBackend{
 
 		} 
 
+	}
+
+	/**
+	* description
+	*
+	* @param
+	*
+	* @return
+	*
+	* @access
+	*/
+	function feedStatus() {
+		global $_LANG_ID; 
+
+		if (is_array($_POST["feed_id"])) {
+			$this->db->QueryUpdate(
+				$this->tables["plugin:novosteer_addon_importer_feeds"],
+				[
+					"feed_status"	=> $_GET['type'] == "disabled" ? 0 : 1,
+				],
+				$this->db->Statement(
+					"feed_id in (%s)",
+					[ implode("," , $_POST["feed_id"])]
+				)
+			);
+		}
+
+		die("1");
+		
+
+		debug($_POST,1);
 	}
 	
 	

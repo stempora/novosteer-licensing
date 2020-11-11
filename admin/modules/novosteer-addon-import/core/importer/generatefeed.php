@@ -172,11 +172,15 @@ class GenerateFeed extends Importer {
 		if ($hash != $this->info["feed_reserved"]) {
 			$this->log("Pinging dealer website to request the new inventory");
 			$this->pingDealer();
+
+			$this->log("Done");
+
 		} else {
 			$this->log("No changes to the inventory.");
+
+			$this->cronJob->removeLog();
 		}		
 
-		$this->log("Done");
 		
 		return null;
 	}

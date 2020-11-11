@@ -21,6 +21,8 @@
 
 		<_count header="No." width="20" align="right" suffix="."/>
 
+		<ids type="multiple" field="feed_id" value="feed_id" align="center" width="30" acl="menu.edit"/>
+
 		<feed_name header="Admin Note" />
 
 		<dealership_id header="Dealeship" type="relation">
@@ -55,6 +57,15 @@
 	<header>
 		<titles>true</titles>
 		<buttons>
+			<action_enable icon="check" title="Enable" acl="actions.status">
+				<location>javascript:ChangeStatus('enabled');</location>
+			</action_enable>
+
+			<action_disable icon="delete" title="Disable" acl="actions.status">
+				<location>javascript:ChangeStatus('disabled');</location>
+			</action_disable>
+
+
 			<add button="addnew" acl="importers.add">
 				<location>{SELF.URI.ADD}</location>
 			</add>
@@ -81,6 +92,28 @@
 		<count table="{TABLE} " condition="{CONDITION}" />
 
 	</sql> 
+
+	<javascript>
+		<after><![CDATA[
+			function ChangeStatus(type){				
+				
+				DeleteConfirmCallback(
+					"Do you want to change the status of selected services to " + ( type == "enable" ? "enabled" : "disabled" ) + "?",			
+					function() {
+						$.ajax({
+							url:"index.php?mod=novosteer-addon-import&sub=feed.status&type=" + type,
+							type: "post",
+							data:$('form[name="search"]').serialize(),
+							success: function(msg){ 
+								window.location.reload();
+							}
+						});
+					}
+				);
+			}
+		
+		]]></after>
+	</javascript>
 
 
 </form>

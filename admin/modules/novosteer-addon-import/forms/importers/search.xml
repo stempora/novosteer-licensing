@@ -47,6 +47,8 @@
 							</relation>
 						</dealership_id> 
 
+						<feed_extension type="fileslist" empty="true" title="Extension" path="locals/admin/modules/novosteer-addon-import/core/importer" extension=".php" hideextension="true">
+						</feed_extension>
 					</fields>
 				</box>
 					
@@ -55,6 +57,7 @@
 			<sql_fields>
 				<field name="keywords" type="keyword" search="full" fields="feed_name">keyword</field>			
 				<field name="dealership_id">=</field>			
+				<field name="feed_extension">=</field>			
 			</sql_fields>
 
 	</search>
