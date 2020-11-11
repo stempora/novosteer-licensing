@@ -7,6 +7,16 @@
 	<alternance>true</alternance>
 	<valternance>true</valternance>
 
+	<order>
+		<restricted>eval:!$_GET['brand_id'];</restricted>
+		<drag>true</drag>
+		<field>trim_order</field>
+		<mode>ASC</mode>
+		<button></button>
+		<acl>trims.edit</acl>
+	</order>
+
+
 	<fields>
 		<_count header="No." width="20" align="right" suffix="."/>
 
@@ -24,6 +34,18 @@
 			</options>
 		</trim_status>
 
+		<vehicles header="Vehicles" align="center" type="sql" width="80">
+			<sql>
+				<vars>					
+					<table type="table" import="plugin:novosteer_addon_autobrands_vehicles" />
+					<cond type="field" import="trim_id" />
+				</vars>
+				<query>SELECT count(distinct vehicle_id) as cnt FROM {TABLE} WHERE trim_id='{COND}'</query>
+				<field>cnt</field>
+			</sql>
+			<link>index.php?mod=novosteer-addon-autobrands&sub=vehicles&trim_id={TRIM_ID}</link>
+		</vehicles>
+
 		<import header="Import" align="center" type="sql" width="80">
 			<sql>
 				<vars>					
@@ -33,6 +55,7 @@
 				<query>SELECT count(distinct product_id) as cnt FROM {TABLE} WHERE trim_id='{COND}'</query>
 				<field>cnt</field>
 			</sql>
+			<link>index.php?mod=novosteer-addon-vehicles&sub=import&trim_id={TRIM_ID}</link>
 		</import>
 
 		<export header="Export" align="center" type="sql" width="80">
@@ -44,6 +67,7 @@
 				<query>SELECT count(distinct product_id) as cnt FROM {TABLE} WHERE trim_id='{COND}'</query>
 				<field>cnt</field>
 			</sql>
+			<link>index.php?mod=novosteer-addon-vehicles&sub=export&trim_id={TRIM_ID}</link>
 		</export>
 
 		<button_delete type="button" width="44" align="center" onclick="" button="/small/delete" acl="trims.delete">

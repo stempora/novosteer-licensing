@@ -50,7 +50,7 @@
 		<box title="Settings" width="6">
 			<fields>
 				<brand_id type="droplist" title="Brand" empty="true" required="true" validate="A:1:20" default="eval:$_GET['brand_id'];">
-					<relation table="plugin:products_addon_autobrands_brands" text="brand_name" id="brand_id" order="brand_name" />
+					<relation table="plugin:novosteer_addon_autobrands_brands" text="brand_name" id="brand_id" order="brand_name" />
 				</brand_id>
 
 				<trim_status type="checkbox" checked="1" label="published|unpublished" title="Status" default="1"/>

@@ -150,6 +150,10 @@
 							</relation>
 						</trim_id>
 
+						<color_id type="droplist" title="Color" empty="true" referer="true">
+							<relation table="plugin:novosteer_addon_autobrands_colors" id="color_id" text="color_name" order="color_name"></relation>
+						</color_id> 
+
 						<keywords type="textbox" title="Keywords"/>
 
 					</fields>
@@ -208,6 +212,7 @@
 				<field name="cat" field="cat" type="="></field>			
 				<field name="alert_price" field="alert_price" type="="></field>			
 				<field name="year" field="year" type="="></field>			
+				<field name="color_id" field="color_id" type="="></field>			
 				<field name="dealership_id" field="dealership.dealership_id" type="="></field>			
 			</sql_fields>
 

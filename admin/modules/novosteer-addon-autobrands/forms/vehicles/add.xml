@@ -120,7 +120,7 @@
 
 		<box title="Settings" width="6">
 			<fields>
-				<vehicle_default type="checkbox" checked="1" label="yes|no" title="Default" default="1" description="Check to apply for all vehicles without a trim."/>
+				<vehicle_default type="checkbox" checked="1" label="yes|no" title="Default" description="Check to apply for all vehicles without a trim."/>
 
 				<vehicle_image valign="top" adminwidth="100" type="image" path="./vehicles/stock/" title="Image">
 					<file default="" field="vehicle_id" ext=".png" />			

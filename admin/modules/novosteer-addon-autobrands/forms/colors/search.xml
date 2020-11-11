@@ -37,7 +37,7 @@
 
 				<box title="Search" width="6">
 					<fields>
-						<model_name type="textbox" width="100%" title="Keywords" />
+						<color_name type="textbox" width="100%" title="Keywords" />
 					</fields>
 				</box>
 

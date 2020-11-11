@@ -40,7 +40,7 @@
 
 
 	<URIlinks>
-		<add>{SELF.LINK.ADD}&_tb={TRAIL.HERE}</add>
+		<add>{SELF.LINK.ADD}&model_id={MODEL_ID}&vehicle_year={VEHICLE_YEAR}&trim_id={TRIM_ID}&_tb={TRAIL.HERE}</add>
 		<edit>{SELF.LINKUID.EDIT}&_tb={TRAIL.HERE}</edit>
 		<details>{SELF.LINKUID.DETAILS}&_tb={TRAIL.HERE}</details>
 		<delete>javascript:DeleteConfirm('Are you sure you want to delete this record?' , '{SELF.LINKUID.DELETE}&_tb={TRAIL.HERE}');</delete>
