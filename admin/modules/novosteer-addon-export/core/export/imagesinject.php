@@ -213,6 +213,7 @@ class ImagesInject extends Export implements ExportInterface{
 		global $_LANG_ID;
 		
 		$this->db->QueryUpdate(
+			$this->module->tables["plugin:novosteer_vehicles_export_images"],
 			["image_deleted" => "1"],
 			$this->db->Statement("image_overlay=%d" , $this->feed["feed_id"])
 		);
