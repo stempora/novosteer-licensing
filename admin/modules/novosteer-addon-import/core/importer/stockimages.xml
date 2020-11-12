@@ -1,0 +1,48 @@
+<importer>
+	<fields>
+		<box title="Settings" width="7">
+			<fields>		
+
+				<set_image_width type="textbox" suffix="px" title="Output Width / Height" required="true" validate="A:1:4" referers="set_image_height"></set_image_width>
+				<set_image_height type="textbox" preffix=" x " suffix="px" title="Output height / Height" required="true" validate="A:1:4" referer="true"></set_image_height>
+				<set_image_quality type="textbox"  title="Output Quality" required="true" validate="A:1:2"></set_image_quality>
+
+				<set_condition type="textarea" script="true" title="Conditions">
+					<description><![CDATA[
+						<p>Eg: [database_table_field]|[condition: &gt;, &lt;, =, in,]|[value1,value2,value3]</p>
+					]]></description>
+				</set_condition>
+			</fields>
+		</box>
+	</fields>
+
+	<javascript>
+		<after>
+			CM("set_condition");
+		</after>
+	</javascript>
+
+	<remove_fields>
+		<subtitle_feed_location></subtitle_feed_location>
+		<feed_data_type></feed_data_type>
+		<subtitle_feed_manual></subtitle_feed_manual>
+		<comment_manual></comment_manual>
+		<feed_data_file></feed_data_file>
+		<subtitle_feed_ftp></subtitle_feed_ftp>
+		<feed_data_server></feed_data_server>
+		<feed_data_port></feed_data_port>
+		<feed_data_enc></feed_data_enc>
+		<feed_data_passive></feed_data_passive>
+		<feed_data_user></feed_data_user>
+		<feed_data_pass></feed_data_pass>
+		<feed_data_path></feed_data_path>
+		<subtitle_feed_web></subtitle_feed_web>
+		<feed_data_link></feed_data_link>
+		<cache_control></cache_control>
+		<button_all></button_all>
+		<button_info></button_info>
+		<button_list></button_list>
+		<button_details></button_details>
+	</remove_fields>
+</importer>
+
