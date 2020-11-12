@@ -68,6 +68,7 @@ class ModelsFeed extends Importer {
 			WHERE
 				brands.brand_id IN (%s)								
 			ORDER BY 
+				vehicle_default DESC,
 				brand_order ASC,
 				model_order ASC,
 				trim_order ASC
@@ -88,17 +89,21 @@ class ModelsFeed extends Importer {
 		$menu = [];
 		foreach ($items as $key => $val) {
 
-			$menu[] = [
-				"year"	=> $val["vehicle_year"],
-				"brand"	=> $val["brand_name"],
-				"model"	=> $val["model_name"],
-				"trim"	=> $val["trim_name"],
-				"image"	=> $this->module->storage->public->getUrl("vehicles/stock/" . $val["vehicle_id"] . "." . $val["vehicle_image_type"] , $val["vehicle_image_date"])
-			];
+			$hash = $val["vehicle_year"] . "-" . $val["brand_name"] . "-" . $val["model_name"] . "-" . $val["trim_name"];
+
+			if (!is_array($menu[$hash])) {
+				$menu[$hash] = [
+					"year"	=> $val["vehicle_year"],
+					"brand"	=> $val["brand_name"],
+					"model"	=> $val["model_name"],
+					"trim"	=> $val["trim_name"],
+					"image"	=> $this->module->storage->public->getUrl("vehicles/stock/" . $val["vehicle_id"] . "." . $val["vehicle_image_type"] , $val["vehicle_image_date"])
+				];
+			}			
 		}
 
 		$data = json_encode([
-			"models"	=> $models
+			"models"	=> $menu
 		]);
 
 
@@ -192,11 +197,9 @@ class ModelsFeed extends Importer {
 			return $site->plugins["redirects"]->ErrorPage("404" , true);
 		}
 
-
 		Cheaders::newInstance()
 			->ContentTypeByExt("novosteer.json")
 			->FileName("novosteer" , "inline");
-
 
 		if ($this->module->storage->private->fileExists("novosteer/inventory/" . $this->info["feed_id"] . ".json")) {
 			$this->module->storage->private->readChunked("novosteer/inventory/" . $this->info["feed_id"] . ".json");

@@ -41,6 +41,13 @@
 				<set_feed_url title="URL" type="textbox" preffix="{SELF.CONF.URL}__novosteer_import/{CODE}/" restricted="eval:$_GET['action'] != 'details';"/>
 
 
+				<subtitle_settings type="subtitle" title="Authorisation" skin="Gray"/>
+
+				<set_request_key type="textbox" title="Request Key" default="eval:hash('sha256', time());">
+					<description>This key must be set in the dealer Novosteer Client, else the system wont provide the feed.</description>
+				</set_request_key>
+
+
 				<subtitle_ping type="subtitle" title="Ping Dealer" skin="Gray"/>
 				<set_dealer type="checkbox" title="Status" checked="1" label="enabled|disabled" />
 				<set_dealer_client type="textbox" title="Connect Link" preffix="https://" suffix="/__novosteer/*"/>
