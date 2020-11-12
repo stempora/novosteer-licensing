@@ -108,20 +108,34 @@ class Map extends Base{
 				"from"	=> [],
 				"to"	=> [],
 			];
+
+			$found = false;
+
 			foreach ($original as $k => $v) {
-				$_tmp = explode("|" , trim($v));
-				$data["from"][$_tmp[0]] = $_tmp[1];
+
+				if (trim($v) != "" ) {
+					$_tmp = explode("|" , trim($v));
+					$data["from"][$_tmp[0]] = $_tmp[1];
+					$found = true;
+				}
+				
 			}
 
 			foreach ($final as $k => $v) {
-				$_tmp = explode("|" , trim($v));
-				$data["to"][$_tmp[0]] = $_tmp[1];
+				if (trim($v) != "" ) {
+					$_tmp = explode("|" , trim($v));
+					$data["to"][$_tmp[0]] = $_tmp[1];
+					$found = true;
+				}
+				
 			}
 
-			$this->table[] = $data;			
-		}
+			if ($found) {
+				$this->table[] = $data;			
+			}
 			
-		
+		}
+				
 		return $this;
 	}
 
@@ -138,13 +152,20 @@ class Map extends Base{
 	function process(&$item) {
 		global $base , $_USER , $_SESS; 
 
+		if (!is_array($item)) {
+			return $this;
+		}
+
 		if (!(is_array($this->table) && count($this->table))) {
 			return $this;
 		}
 
 		foreach ($this->table as $map) {
 
-			if (!count(array_diff($map["from"] , array_intersect($item , $map["from"]))) ) {
+			$int = array_intersect($item , $map["from"]);
+			$diff = array_diff($map["from"] , $int);
+
+			if (!count($diff) ) {
 				
 				if (is_array($map["to"])) {
 					$item = array_merge(

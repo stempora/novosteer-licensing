@@ -55,6 +55,8 @@ class CNovosteerAddonImport extends CNovosteerAddonImportBackend{
 
 					$data->functions = [
 							"onstore" => [&$this , "ImporterStore" ],
+							"ondelete" => [&$this , "ImporterDelete" ],
+
 					];					
 					return $data->DoEvents();
 				break;
@@ -469,7 +471,7 @@ class CNovosteerAddonImport extends CNovosteerAddonImportBackend{
 	*
 	* @access
 	*/
-	function ImporterStore($record , $form) {
+	function ImporterStore($record , $form , $_old) {
 
 		if ($record["feed_id"]) {
 
@@ -494,7 +496,33 @@ class CNovosteerAddonImport extends CNovosteerAddonImportBackend{
 					)
 				);
 			}
+
+
+			$client = $this->getImporterObject($record["feed_id"]);
+
+			if ($_old["feed_settings"]) {
+				$_old["settings"] = json_decode($_old["feed_settings"],true);
+			}
+			
+			$client->runOnUpdate($_old);
+
 		}		
+	}
+
+	/**
+	* description
+	*
+	* @param
+	*
+	* @return
+	*
+	* @access
+	*/
+	function ImporterDelete($record) {
+		global $_LANG_ID; 
+
+		$client = $this->getImporterObject($record);
+		$client->runOnDelete();
 	}
 
 

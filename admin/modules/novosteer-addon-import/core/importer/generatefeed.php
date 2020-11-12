@@ -388,7 +388,7 @@ class GenerateFeed extends Importer {
 	* @access
 	*/
 	function pingDealer() {
-		global $_LANG_ID; 
+		global $_LANG_ID , $_CONF; 
 
 		if (!$this->info["settings"]["set_dealer"]) {
 			return null;
@@ -402,7 +402,8 @@ class GenerateFeed extends Importer {
 			'https://' . $this->info["settings"]["set_dealer_client"] . "/__novosteer/action", 
 			[
 				"form_params"	=> [
-					"action"	=> "cron-inventory"
+					"action"	=> "cron-inventory",
+					"link"		=> $_CONF["url"] . "__novosteer_import/" . $this->info["feed_code"] . "/",
 				],
 				"headers"	=> [
 					"Novosteer-Authorization"	=> $this->info["settings"]["set_dealer_key"]
