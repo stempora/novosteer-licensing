@@ -620,10 +620,7 @@ class CNovosteerAddonImport extends CNovosteerAddonImportBackend{
 			);
 		}
 
-		die("1");
-		
-
-		debug($_POST,1);
+		die("1");		
 	}
 	
 	
