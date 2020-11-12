@@ -1,0 +1,83 @@
+<importer>
+	<fields>
+		<box title="Settings" width="7">			
+			<fields>		
+
+				<set_brands type="droplist" title="Brand(s)" multi="true">
+					<relation id="brand_id">
+						<text>
+							<f1 field="brand_name" />
+						</text>
+
+						<sql>
+							<vars>
+								<table_brands type="table" import="plugin:novosteer_addon_autobrands_brands"/>
+								<table_models type="table" import="plugin:novosteer_addon_autobrands_models"/>
+								<table_vehicles type="table" import="plugin:novosteer_addon_autobrands_vehicles"/>
+							</vars>
+
+							<query><![CDATA[
+								SELECT 
+									* 
+								FROM 
+									{TABLE_BRANDS} as  brands
+								WHERE
+									brands.brand_id in ( 
+										SELECT brand_id 
+										FROM 
+											{TABLE_VEHICLES} as vehicles 
+											INNER JOIN {TABLE_MODELS} as models
+											ON 
+												vehicles.model_id = models.model_id 
+									) 
+								ORDER BY 
+									brand_name ASC
+							]]></query>
+						</sql>
+					</relation>
+				</set_brands>
+
+				<subtitle_ftp type="subtitle" title="Link" restricted="eval:$_GET['action'] != 'details';" skin="Gray"></subtitle_ftp>
+				<set_feed_url title="URL" type="textbox" preffix="{SELF.CONF.URL}__novosteer_import/{CODE}/" restricted="eval:$_GET['action'] != 'details';"/>
+
+
+				<subtitle_ping type="subtitle" title="Ping Dealer" skin="Gray"/>
+				<set_dealer type="checkbox" title="Status" checked="1" label="enabled|disabled" />
+				<set_dealer_client type="textbox" title="Connect Link" preffix="https://" suffix="/__novosteer/*"/>
+				<set_dealer_key type="textbox" title="Authorisation Key">
+					<description>Dealer key to send the notification for new products.</description>
+				</set_dealer_key>
+			</fields>
+		</box>
+	</fields>
+
+	<javascript>
+		<after>
+			CM("set_condition");
+		</after>
+	</javascript>
+
+	<remove_fields>
+		<subtitle_feed_location></subtitle_feed_location>
+		<feed_data_type></feed_data_type>
+		<subtitle_feed_manual></subtitle_feed_manual>
+		<comment_manual></comment_manual>
+		<feed_data_file></feed_data_file>
+		<subtitle_feed_ftp></subtitle_feed_ftp>
+		<feed_data_server></feed_data_server>
+		<feed_data_port></feed_data_port>
+		<feed_data_enc></feed_data_enc>
+		<feed_data_passive></feed_data_passive>
+		<feed_data_user></feed_data_user>
+		<feed_data_pass></feed_data_pass>
+		<feed_data_path></feed_data_path>
+		<subtitle_feed_web></subtitle_feed_web>
+		<feed_data_link></feed_data_link>
+		<cache_control></cache_control>
+		<button_all></button_all>
+		<button_info></button_info>
+		<button_list></button_list>
+		<button_details></button_details>
+	</remove_fields>
+</importer>
+
