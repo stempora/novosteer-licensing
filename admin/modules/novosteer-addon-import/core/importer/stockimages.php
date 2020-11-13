@@ -177,7 +177,7 @@ class StockImages extends Importer implements ImporterInterface{
 			WHERE				
 				dealership_id = %d AND
 				products.product_id NOT IN (
-					SELECT product_id FROM %s
+					SELECT product_id FROM %s WHERE image_deleted = 0
 				)
 
 				:cond				
