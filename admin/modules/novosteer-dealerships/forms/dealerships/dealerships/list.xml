@@ -22,6 +22,32 @@
 			</options>
 		</dealership_status>
 
+
+		<import header="Import" align="center" type="sql" width="80">
+			<sql>
+				<vars>					
+					<table type="table" import="plugin:novosteer_vehicles_import" />
+					<cond type="field" import="dealership_id" />
+				</vars>
+				<query>SELECT count(distinct product_id) as cnt FROM {TABLE} WHERE dealership_id='{COND}'</query>
+				<field>cnt</field>
+			</sql>
+			<link>index.php?mod=novosteer-addon-vehicles&sub=import&dealership_id={DEALERSHIP_ID}</link>
+		</import>
+
+		<export header="Export" align="center" type="sql" width="80">
+			<sql>
+				<vars>					
+					<table type="table" import="plugin:novosteer_vehicles_export" />
+					<cond type="field" import="dealership_id" />
+				</vars>
+				<query>SELECT count(distinct product_id) as cnt FROM {TABLE} WHERE dealership_id='{COND}'</query>
+				<field>cnt</field>
+			</sql>
+			<link>index.php?mod=novosteer-addon-vehicles&sub=export&dealership_id={DEALERSHIP_ID}</link>
+		</export>
+
+
 		<button_delete type="button" width="44" align="center" onclick="" button="/small/delete" acl="msg.delete">
 			<location>{SELF.URI.DELETE}</location>
 		</button_delete>
