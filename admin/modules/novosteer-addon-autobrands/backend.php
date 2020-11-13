@@ -772,6 +772,104 @@ class CNovosteerAddonAutoBrandsBackend extends CPlugin {
 		);
 	}
 
+
+	/**
+	* description
+	*
+	* @param
+	*
+	* @return
+	*
+	* @access
+	*/
+	function getVehicleByYearModelTrimColor($year , $model , $trim, $color , $exact = true) {
+		global $_LANG_ID; 
+
+		$vehicle = $this->db->QFetchArray(
+			"SELECT * FROM %s WHERE
+				vehicle_year = %d AND
+				model_id = %d AND 
+				trim_id = %d AND 
+				color_id = %d 
+			",
+			[
+				$this->tables["plugin:novosteer_addon_autobrands_vehicles"],
+				$year , 
+				$model , 
+				$trim , 
+				$color
+			]
+		);
+
+		if (is_array($vehicle)) {
+			return $this->processVehicle($vehicle);
+		}
+
+		if ($exact) {
+			return null;
+		}
+
+		//try without color
+		$vehicle = $this->db->QFetchArray(
+			"SELECT * FROM %s WHERE
+				vehicle_year = %d AND
+				model_id = %d AND 
+				trim_id = %d 
+			",
+			[
+				$this->tables["plugin:novosteer_addon_autobrands_vehicles"],
+				$year , 
+				$model , 
+				$trim , 
+			]
+		);
+
+		if (is_array($vehicle)) {
+			return $this->processVehicle($vehicle);
+		}
+
+		if ($exact) {
+			return null;
+		}
+
+		//try without trim
+		$vehicle = $this->db->QFetchArray(
+			"SELECT * FROM %s WHERE
+				vehicle_year = %d AND
+				model_id = %d 
+			",
+			[
+				$this->tables["plugin:novosteer_addon_autobrands_vehicles"],
+				$year , 
+				$model , 
+			]
+		);
+
+		return $this->processVehicle($vehicle);			
+	}
+	
+
+	/**
+	* description
+	*
+	* @param
+	*
+	* @return
+	*
+	* @access
+	*/
+	function processVehicle($vehicle) {
+		global $_LANG_ID; 
+
+		if (!is_array($vehicle)) {
+			return null;
+		}
+		
+		$vehicle["image"] = $this->storage->public->getUrl("vehicles/stock/" . $vehicle["vehicle_id"] . "." . $vehicle["vehicle_image_type"] , $vehicle["vehicle_image_date"]);
+
+		return $vehicle;
+	}
+	
 	
 	
 }
