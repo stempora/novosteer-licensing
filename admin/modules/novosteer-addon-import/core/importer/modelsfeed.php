@@ -65,19 +65,25 @@ class ModelsFeed extends Importer {
 				%s as trims
 				ON 
 					trims.trim_id = vehicles.trim_id 
+			INNER JOIN 
+				%s as types
+				ON
+					models.type_id = types.type_id
 			WHERE
 				brands.brand_id IN (%s)								
 			ORDER BY 
 				vehicle_default DESC,
 				brand_order ASC,
 				model_order ASC,
-				trim_order ASC
+				trim_order ASC,
+				vehicle_id DESC
 			",
 			[
 				$this->module->tables["plugin:novosteer_addon_autobrands_vehicles"],
 				$this->module->tables["plugin:novosteer_addon_autobrands_models"],
 				$this->module->tables["plugin:novosteer_addon_autobrands_brands"],
 				$this->module->tables["plugin:novosteer_addon_autobrands_trims"],
+				$this->module->tables["plugin:novosteer_addon_autobrands_types"],
 				$this->info["settings"]["set_brands"]
 			]
 		);
@@ -97,6 +103,7 @@ class ModelsFeed extends Importer {
 					"brand"	=> $val["brand_name"],
 					"model"	=> $val["model_name"],
 					"trim"	=> $val["trim_name"],
+					"type"	=> $val["type_name"],
 					"image"	=> $this->module->storage->public->getUrl("vehicles/stock/" . $val["vehicle_id"] . "." . $val["vehicle_image_type"] , $val["vehicle_image_date"])
 				];
 			}			
@@ -114,8 +121,6 @@ class ModelsFeed extends Importer {
 		);
 
 		$hash = md5($data);
-
-		$hash = time();
 
 		$this->db->QueryUpdateByID(
 			$this->module->tables["plugin:novosteer_addon_importer_feeds"],
