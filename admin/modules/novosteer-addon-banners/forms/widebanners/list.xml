@@ -1,0 +1,96 @@
+<form>
+	<title>Wide Banners</title>
+	<border>true</border>
+
+	<skin>DarkOrange</skin>
+
+	<order>
+		<restricted></restricted>
+		<drag>true</drag>
+		<field>banner_order</field>
+		<mode>ASC</mode>
+		<button></button>
+		<acl>banner.edit</acl>
+	</order>
+
+	<fields>
+		<_count header="No." width="20" align="right" suffix="."/>
+
+		<banner_image type="image" path="./novosteer/banners/" header="Image" width="200">
+			<file default="" field="banner_id" ext=".jpg" />			
+		</banner_image>
+
+		<banner_years type="text" header="Years(s)" multi="true" protected="eval:$field['original_banner_url_type'] == '2';">
+		</banner_years>
+
+		<banner_brands type="relation" header="Brand(s)" multi="true" protected="eval:$field['original_banner_url_type'] == '2';">
+			<relation table="plugin:novosteer_addon_autobrands_brands" text="brand_name" id="brand_id" order="brand_name" />
+		</banner_brands>
+
+		<banner_models type="relation" header="Model(s)" multi="true" protected="eval:$field['original_banner_url_type'] == '2';">
+			<relation table="plugin:novosteer_addon_autobrands_models" text="model_name" id="model_id" order="model_name" />
+		</banner_models>
+
+		<banner_trims type="relation" header="Trim(s)" multi="true" protected="eval:$field['original_banner_url_type'] == '2';">
+			<relation table="plugin:novosteer_addon_autobrands_trims" text="trim_name" id="trim_id" order="trim_name" />
+		</banner_trims>
+
+		<banner_status type="relation" align="center" width="100" header="Status">
+			<options>
+				<option name="1" color="green" value="enabled" />
+				<option name="0" color="red" value="disabled" />
+			</options>
+		</banner_status>
+
+		<button_delete type="button" width="44" align="center" onclick="" button="/small/delete" acl="models.delete">
+			<location>{SELF.URI.DELETE}</location>
+		</button_delete>
+
+		<button_details type="button" width="44" align="center" onclick="" button="/small/edit" acl="models.edit">
+			<location>{SELF.URI.EDIT}</location>
+		</button_details>
+
+	</fields>
+
+	<header>
+		<titles>true</titles>
+		<buttons>
+
+			<add button="addnew" acl="models.add">
+				<location>{SELF.URI.ADD}</location>
+			</add>
+		</buttons>
+	</header>
+
+	<items>50</items>
+
+	<sql>
+		<vars>
+
+			<table type="table"/>
+			<table_brands type="table" import="plugin:novosteer_addon_autobrands_brands"/>
+			<table_models type="table" import="plugin:novosteer_addon_autobrands_models"/>
+			<table_trims type="table" import="plugin:novosteer_addon_autobrands_trims"/>
+
+			<page type="page"/>
+			<items type="form" var="items"/>
+
+			<condition type="var" import="WHERE banner_type = 2" />
+
+			<from type="var">
+				<import>
+					{TABLE} as banners
+				</import>
+			</from>
+
+			<order type="var" import="banner_note" />
+			<order_mode type="var" import="ASC" />
+
+		</vars>
+		<query>select * from {FROM} {CONDITION} ORDER BY {ORDER} {ORDER_MODE} LIMIT {PAGE} , {ITEMS} </query>
+		<count table="{FROM} " condition="{CONDITION}" />
+
+	</sql> 
+
+
+</form>

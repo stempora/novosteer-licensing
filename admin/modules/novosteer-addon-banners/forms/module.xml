@@ -1,0 +1,52 @@
+<form>
+
+	<fields>
+
+		<box width="12" title="Listing">
+			<fields>						
+				<set_list_type type="droplist" title="Listing Module">
+					<options>
+						<option name="2">instance module</option>
+						<option name="3">global module</option>
+					</options>
+				</set_list_type>
+
+				<set_list type="droplist" empty="true">
+					<title>Global Module</title>
+					<relation table="core:modules" table_lang="core:modules_lang" id="module_id" text="module_type_name" condition="module_code = 'products' or module_parent_code = 'products' " order="module_type_name ASC"/>
+				</set_list>
+
+				<set_list_instance type="droplist" empty="true">
+					<title>Instance Module</title>
+					<tree parent="mod_parent" separator="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" s1eparator="   " />
+					<relation table_lang="core:user_modules_lang" table="core:user_modules" id="mod_id" text="mod_name" order="mod_parent,mod_order ASC" condition="mod_module_code NOT IN ( 'manuallink' , 'globalmodule' , 'multidropdown')"/>
+				</set_list_instance>
+			</fields>
+		</box>
+
+	</fields>
+
+
+
+	<javascript>
+		<after><![CDATA[
+
+			formSelectShowHide(
+				$("#set_list_type"),
+				{
+					3: {
+						"set_list"				: 1,
+						"set_list_instance"		: 0,
+					},
+					2 : {
+						"set_list"				: 0,
+						"set_list_instance"		: 1,
+					}
+				}
+			);
+
+
+		]]></after>
+	</javascript>
+
+</form>

@@ -1,0 +1,143 @@
+<form lang="true">
+	<title>{SELF.TITLE} Small Banner</title>
+	<action>{SELF.URI.STORE}</action>
+	<name>edit</name>
+	<width>100%</width>
+	<alternance>true</alternance>
+	<encoding>multipart/form-data</encoding>
+
+	<skin>Orange</skin>
+
+
+	<formtag>true</formtag>
+	<border>true</border>
+	
+	<buttons>		
+		<set>
+			<header>true</header>
+		</set>
+
+		<button_savecontinue button="saveall" title="Save & Continue">
+			<location>javascript:SaveAndContinue();</location>
+		</button_savecontinue>
+
+		<button_back onclick="" button="return">
+			<location>{TRAIL.PREVIOUS.LINK}</location>
+		</button_back>
+
+		<button_edit onclick="" button="edit">
+			<location>{SELF.URI.EDIT}</location>
+		</button_edit>
+
+		<button_save button="saveall">
+			<location>javascript:$('form').first().trigger('submit');</location>
+		</button_save>
+
+	</buttons>
+
+	<redirect>{PHP}?sub=accounts</redirect>
+
+	<fields>
+		<banner_id type="hidden"/>		
+		<banner_last_update type="hidden" forcevalue="eval:time();" />
+		<banner_type type="hidden" forcevalue="1"></banner_type>
+		<banner_code type="hidden" default="eval:md5(uniqid());"></banner_code>
+
+		<box title="Details" width="6">
+			<fields>
+				<banner_years type="droplist" title="Years(s)" multi="true">
+					<dynamic from="2018" to="2025" />
+				</banner_years>
+
+				<banner_brands type="droplist" title="Brand(s)" multi="true">
+					<relation table="plugin:novosteer_addon_autobrands_brands" text="brand_name" id="brand_id" order="brand_name" />
+				</banner_brands>
+
+						
+				<banner_models type="droplist" title="Brand - Model(s)" multi="true">
+					<relation id="model_id">
+						<text>
+							<f1 field="brand_name" />
+							<f2 field="model_name" preffix=" - "/>
+						</text>
+
+						<sql>
+							<vars>
+								<table_brands type="table" import="plugin:novosteer_addon_autobrands_brands"/>
+								<table_models type="table" import="plugin:novosteer_addon_autobrands_models"/>
+							</vars>
+
+							<query><![CDATA[
+								SELECT 
+									* 
+								FROM 
+									{TABLE_MODELS} as models, 
+									{TABLE_BRANDS} as  brands
+								WHERE
+									models.brand_id = brands.brand_id
+								ORDER BY 
+									brand_name ASC,model_name ASC
+							]]></query>
+						</sql>
+					</relation>
+				</banner_models>
+
+
+				<banner_trims type="droplist" title="Brand - Trim(s)" multi="true">
+					<relation id="trim_id">
+						<text>
+							<f1 field="brand_name" />
+							<f2 field="trim_name" preffix=" - "/>
+						</text>
+
+						<sql>
+							<vars>
+								<table_brands type="table" import="plugin:novosteer_addon_autobrands_brands"/>
+								<table_trims type="table" import="plugin:novosteer_addon_autobrands_trims"/>
+							</vars>
+ 
+							<query><![CDATA[
+								SELECT 
+									* 
+								FROM 
+									{TABLE_TRIMS} as trims, 
+									{TABLE_BRANDS} as  brands
+								WHERE
+									trims.brand_id = brands.brand_id
+								ORDER BY 
+									brand_name ASC,trim_name ASC
+							]]></query>
+						</sql>
+					</relation>
+				</banner_trims>
+
+			</fields>
+		</box>
+
+		<box title="Settings" width="6">
+			<fields>
+
+				<banner_status type="checkbox" checked="1" label="published|unpublished" title="Status" default="1"/>
+				
+				<banner_image valign="top" adminwidth="100" type="image" path="./novosteer/banners/" absolute="false" editable="true" title="Image">
+					<file default="" field="banner_id" ext=".jpg" />									
+					<error>No available image.</error>						
+
+					<thumbnails>
+					</thumbnails>
+
+				</banner_image>
+
+				<subtitle_note type="subtitle" title="Admin Note" />
+				<banner_note type="textarea" size="1:3" extend="true" />
+			</fields>
+		</box>
+
+	</fields>
+
+	<javascript>
+		<after><![CDATA[
+		]]></after>
+	</javascript>
+
+</form>

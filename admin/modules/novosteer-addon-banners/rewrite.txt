@@ -1,0 +1,1 @@
+RewriteRule ^__products-addon-auto-banners_module__/([^/]+)$				stembase.php?_PAGE=shared&mod=products-addon-auto-banners&sub=banner&banner_code=$1

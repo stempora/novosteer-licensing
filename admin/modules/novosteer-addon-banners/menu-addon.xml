@@ -1,0 +1,8 @@
+<menu>
+				<link 
+				active="isMod('products-addon-auto-banners');" 
+				link="index.php?mod=products-addon-auto-banners&sub=landing" 
+				icon="cta" 
+				title="Auto Banners" 				
+				subtitle="Manage banners and view statistics." />
+</menu>

@@ -1,0 +1,39 @@
+<tabs>
+		<t 
+			icon="settings"
+			title="Add-on" 
+			link="" 
+			color="Blue"
+		>
+
+
+			<link 
+				active="isModSub('modules','default');" 
+				link="index.php?mod=novosteer-addon-banners&sub=settings.general" 
+				icon="edit" 
+				title="General Settings" 
+				acl="settings.general"
+				subtitle="Status, URL, display rules & permissions." />
+
+		</t>
+
+
+		<smallbanenrs
+			color="Orange" 
+			icon="cta" 
+			acl="colors.list"
+			subtitle="Add & Edit" 
+			title="Small Banners" 
+			link="index.php?mod=novosteer-addon-banners&sub=banners"
+		/>
+
+		<widebanners
+			color="DarkOrange" 
+			icon="cta" 
+			acl="colors.list"
+			subtitle="Add & Edit" 
+			title="Wide Banners" 
+			link="index.php?mod=novosteer-addon-banners&sub=widebanners"
+		/>
+</tabs>
+

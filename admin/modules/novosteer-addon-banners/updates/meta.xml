@@ -1,0 +1,21 @@
+<module>
+	<id>407</id>
+	<name>Banners</name>
+	<code>novosteer-addon-banners</code>
+	<parent>novosteer-dealerships</parent>
+	<url></url>
+	<type>system</type>
+	<version>1.0</version>
+	<noperm>1</noperm>
+
+	<install>			
+		<version>1.0</version>
+		<files>
+			<file>install.sql</file>
+		</files>
+	</install>
+
+	<history>
+
+	</history>
+</module>
