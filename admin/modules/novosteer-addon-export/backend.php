@@ -518,8 +518,19 @@ class CNovosteerAddonExportBackend extends CPlugin{
 		if ($product["trim"] == "0") {
 			$product["trim"] = "";
 		}
-		
 
+
+		$product["title"] = preg_replace("~(?:\[/?)[^/\]]+/?\]~s", '', $product["title"]);
+
+		$product["trim_full"] = preg_replace('/^' . $product["year"] . " /", '', $product["title"]);
+		$product["trim_full"] = preg_replace('/^' . $product["brand_name"] . " /", '', $product["trim_full"]);
+		$product["trim_full"] = preg_replace('/^' . $product["model_name"] . " /", '', $product["trim_full"]);
+
+		foreach ($product as $k => &$v) {
+			if (is_string($v)) {
+				$v = trim($v);
+			}			
+		}		
 	}
 	
 	
