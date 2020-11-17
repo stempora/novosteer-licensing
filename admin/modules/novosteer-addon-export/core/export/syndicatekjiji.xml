@@ -11,6 +11,13 @@
 				
 				<subtitle_ftp type="subtitle" title="Dealer Details" ></subtitle_ftp>
 				<set_dealer_id type="textbox" title="Dealer ID#"></set_dealer_id>
+
+				<set_trim type="droplist" title="Trim Field">
+					<options>
+						<option name="trim">Real Trim</option>
+						<option name="trim_full">Trim detected from title</option>
+					</options>
+				</set_trim>
 			</fields>
 		</box>
 	</fields>

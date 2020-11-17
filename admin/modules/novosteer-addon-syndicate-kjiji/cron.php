@@ -184,7 +184,7 @@ class CNovosteerAddonSyndicateKjiji extends CNovosteerAddonSyndicateKjijiBackend
 			$product["model_name"],
 			$product["engine"],
 			$product["body_style"],
-			$product["trim"],
+			$product[$feed["settings"]["set_trim"]],
 			$product["transmission"],
 			$product["mileage"],
 			$product["exterior_color_detailed"],
