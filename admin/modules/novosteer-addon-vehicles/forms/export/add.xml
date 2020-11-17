@@ -43,7 +43,7 @@
 				<brand_id type="relation" title="Make">
 					<relation table="plugin:novosteer_addon_autobrands_brands" id="brand_id" text="brand_name"></relation>
 				</brand_id>
-				<model_id type="textbox" title="Model">
+				<model_id type="relation" title="Model">
 					<relation table="plugin:novosteer_addon_autobrands_models" id="model_id" text="model_name"></relation>
 				</model_id>
 				<trim type="textbox" title="Trim" />

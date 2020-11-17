@@ -7,7 +7,7 @@
 
 		<_count header="No." width="20" align="right" suffix="."/>
 		<dealership_name header="Dealership"></dealership_name>
-		<cat header="Status"></cat>
+		<cat header="Cat"></cat>
 		<type header="Type"></type>
 		<vin header="Vin"></vin>
 		<stock_id header="Stock"></stock_id>

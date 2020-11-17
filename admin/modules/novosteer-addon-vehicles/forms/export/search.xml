@@ -50,13 +50,13 @@
 							</relation>
 						</dealership_id>
 
-						<type type="radiolist" title="Type" newline="false" empty="true" empty_text="All">
+						<cat type="radiolist" title="Category" newline="false" empty="true" empty_text="All">
 							<options>
 								<option name="New">New</option>
 								<option name="Used">Used</option>
 								<option name="Certified">Certified</option>
 							</options>
-						</type>
+						</cat>
 
 						<keywords type="textbox" title="Keywords"/>
 
@@ -176,7 +176,7 @@
 				<field name="model_id" field="models.model_id" type="="></field>			
 				<field name="trim_id" field="trims.trim_id" type="="></field>			
 				<field name="type_id" field="types.type_id" type="="></field>			
-				<field name="type" field="type" type="="></field>			
+				<field name="cat" field="cat" type="="></field>			
 				<field name="dealership_id" field="dealership.dealership_id" type="="></field>			
 			</sql_fields>
 
