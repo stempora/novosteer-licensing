@@ -115,6 +115,7 @@ class CNovosteerAddonSyndicateAutotrader extends CNovosteerAddonSyndicateAutotra
 
 		$content = $this->export->recordHistory($feed , "export.csv" , $temp);
 
+
 		$this->export->uploadFileToFTP(
 			[
 
@@ -130,8 +131,6 @@ class CNovosteerAddonSyndicateAutotrader extends CNovosteerAddonSyndicateAutotra
 			true,
 			$job
 		);
-
-
 
 		$job->log("Done\n");
 	}
@@ -156,11 +155,12 @@ class CNovosteerAddonSyndicateAutotrader extends CNovosteerAddonSyndicateAutotra
 
 		if (is_array($product["gallery"])) {
 			$image= $product["gallery"][0]["overlay"] ? $product["gallery"][0]["overlay"] : $product["gallery"][0]["original"];
+			$image_date = $product["gallery"][0]["image_last_update"];
 
-			$last = 0;
+			$images_date = 0;
 			foreach ($product["gallery"] as $k => $v) {
 
-				$last = max($last , $v["date"]);
+				$images_date = max($images_date , $v["date"]);
 
 				if ($k > 0 ) {
 					$images[] = $v["overlay"] ? $v["overlay"] : $v["original"];
@@ -177,7 +177,7 @@ class CNovosteerAddonSyndicateAutotrader extends CNovosteerAddonSyndicateAutotra
 			$product["year"],
 			$product["brand_name"],
 			$product["model_name"],
-			$product["trim"],
+			$product["trim_full"],
 			$product["price_sale"],
 			$product["mileage"],
 			$product["color"],
@@ -192,9 +192,11 @@ class CNovosteerAddonSyndicateAutotrader extends CNovosteerAddonSyndicateAutotra
 			$product["engine_cylinders"],
 			$product["body_style"],
 			implode(',' , $product["options"]),
+			$product["description"],
 			$image,
+			$image_date ? CDate::toStr("%Y.%m.%d %r" , $image_date) : null,
 			implode("|" , $images),
-			$last ? CDate::toStr("%Y.%m.%d %r" , $last) : null,
+			$images_date ? CDate::toStr("%Y.%m.%d %r" , $images_date) : null,
 			CDate::toStr("%Y.%m.%d %r" , $product["product_last_update"]),
 		];
 	}
@@ -233,8 +235,10 @@ class CNovosteerAddonSyndicateAutotrader extends CNovosteerAddonSyndicateAutotra
 			"Cylinder"					,
 			"Body"						,
 			"Options"					,
+			"Description"				,
 			"MainPhoto"					,
-			"OtherPhoto"				,
+			"MainPhotoLastModifiedDate" ,
+			"ExtraPhotos"				,
 			"ExtraPhotoLastModifiedDate",
 			"AdLastModifiedDate"		,
 
