@@ -1,0 +1,30 @@
+<form>
+
+	<fields>
+
+		<box width="6" title="Google Authorisation">
+			<fields>
+				<set_keyfile type="textarea" script="true" title="KeyFile"></set_keyfile>	
+			</fields>
+		</box>
+
+
+		<box width="6" title="Financial Terms">
+			<fields>				
+
+			</fields>
+		</box>
+		
+	</fields>
+
+
+
+	<javascript>
+		<after><![CDATA[
+
+			CM("set_keyfile");
+
+		]]></after>
+	</javascript>
+
+</form>
