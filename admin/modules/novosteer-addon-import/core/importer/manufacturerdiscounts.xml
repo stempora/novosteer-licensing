@@ -14,7 +14,17 @@
 					]]></description>
 				</set_condition>
 
-				<subtitle_fields type="subtitle" title="Fields Relation"></subtitle_fields>
+				<subtitle_ep type="subtitle" title="EP+ Program" skin="Red"></subtitle_ep>
+				<comment_x type="comment" html="true">
+					<description><![CDATA[
+						<p>All vehicles falling under an EP rule and dont have an EP price set will automaticaly be pushed to the following document.</p>
+					]]></description>
+				</comment_x>
+				<set_ep_sheet_id title="Google Sheet ID#" type="textbox"></set_ep_sheet_id>
+				<set_ep_worksheet title="Google Worksheet Name" type="textbox"></set_ep_worksheet>
+
+
+				<subtitle_fields type="subtitle" title="Fields Relation" skin="Gray"></subtitle_fields>
 			
 				<set_msrp_field type="droplist" required="true" validate="A:1:2000" title="MSRP Field" empty="true">
 					<function module="novosteer-addon-import" function="getTableFields" />
@@ -33,6 +43,15 @@
 						</text>
 					</relation>
 				</set_price_field>
+
+				<set_eprice_field type="droplist" required="true" validate="A:1:2000" title="EP+ Price" empty="true">
+					<function module="novosteer-addon-import" function="getTableFields" />
+					<relation id="Field">							
+						<text>
+							<f1 field="Field" />
+						</text>
+					</relation>
+				</set_eprice_field>
 
 			</fields>
 		</box>

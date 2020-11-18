@@ -25,6 +25,15 @@ class Calculator extends Base{
 	* @access type
 	*/
 	var $msrpField = "msrp";
+
+	/**
+	* description
+	*
+	* @var type
+	*
+	* @access type
+	*/
+	var $epField = "ep_price";	
 	
 
 	/**
@@ -339,6 +348,20 @@ class Calculator extends Base{
 
 		$this->msrpField = $field;
 	}
+	public /**
+	* description
+	*
+	* @param
+	*
+	* @return
+	*
+	* @access
+	*/
+	function setEPField($field) {
+		global $base , $_USER , $_SESS , $_CONF , $_LANG_ID; 
+
+		$this->epField = $field;
+	}
 
 	
 
@@ -381,7 +404,10 @@ class Calculator extends Base{
 		$disc = [];
 		if (is_array($rule["discounts"])) {
 			foreach ($rule["discounts"] as $discount) {
-				if (stristr($discount , "%")) {
+
+				if ($discount == "EP") {
+					$disc[] = "EP";
+				} elseif (stristr($discount , "%")) {
 					$disc[] = $discount;
 				} else {
 					$disc[] = number_format($discount , 0);

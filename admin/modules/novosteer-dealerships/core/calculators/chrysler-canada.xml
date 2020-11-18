@@ -2,7 +2,8 @@
 	<fields>
 		<box title="Settings" width="7">
 			<fields>			
-				<set_discounts_doc type="textbox" title="Discounts CSV" />
+				<set_google_sheet_id type="textbox" title="Google Sheet ID#"></set_google_sheet_id>
+				<set_google_worksheet type="textbox" title="Worksheet Name"></set_google_worksheet>
 			</fields>
 		</box>
 	</fields>

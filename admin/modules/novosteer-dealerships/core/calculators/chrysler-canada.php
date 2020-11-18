@@ -19,6 +19,7 @@ use \Stembase\Modules\Novosteer_Dealerships\Core\Models\Calculator;
 use \Stembase\Modules\Novosteer_Dealerships\Core\Models\Discounts;
 use \CTemplateStatic;
 use \CFile;
+use \Stembase\Lib\File\GoogleSheets;
 
 class Chrysler_Canada extends Calculator {
 
@@ -54,7 +55,17 @@ class Chrysler_Canada extends Calculator {
 		global $base , $_USER , $_SESS , $_CONF , $_LANG_ID; 
 
 		if (!$this->discounts) {
-			$discounts = $this->getRemoteCSV($this->info["settings"]["set_discounts_doc"]);
+
+			$client = \Stembase\Lib\File\GoogleSheets::create()
+				->setCredentialsString($this->module->_s("set_keyfile"))
+				->setSheetId($this->info["settings"]["set_google_sheet_id"])
+				->setWorksheet($this->info["settings"]["set_google_worksheet"]);
+
+			$discounts = $client->getAllValues();
+
+			if ($discounts === null|| !(is_array($discounts) && count($discounts))) {
+				trigger_error("Cant read discounts from Google Sheet: " . $client->getErrors() , E_USER_ERROR);
+			}
 
 			$this->discounts = new Discounts();
 
@@ -69,7 +80,13 @@ class Chrysler_Canada extends Calculator {
 						$v = trim($v);
 
 						if (stristr($k , "d:")) {
-							$rules["discounts"][str_replace("d:" , "" , $k)] = strstr($v, "%" ) ? $v : str_replace("," ,'' , $v);
+
+							if (strtoupper($v) == "EP") {
+								$rules["discounts"][str_replace("d:" , "" , $k)] = "EP";
+							} else {
+								$rules["discounts"][str_replace("d:" , "" , $k)] = strstr($v, "%" ) ? $v : str_replace("," ,'' , $v);
+							}							
+							
 						} elseif (!in_array($k , ["y1" , "y2" , "y3" , "y4" , "y5" , "y6" , "y7" , "y8"])) {						
 							if (stristr($v , "|not")) {
 								$rule["type"] = "2";
@@ -108,6 +125,7 @@ class Chrysler_Canada extends Calculator {
 		global $base , $_USER , $_SESS , $_CONF , $_LANG_ID; 
 
 		$this->loadDiscounts();
+		$this->epError = false;
 
 		$this->current_rule = $this->discounts
 			->setVehicle($this->vehicle)
@@ -132,9 +150,14 @@ class Chrysler_Canada extends Calculator {
 
 					} elseif ( $discount == "EP") {
 						//belit pula, dealersocket
+						if (!$this->vehicle[$this->epField]) {
+							return "EP_ERROR";
+						}						
+
+						$price = $this->vehicle[$this->epField];
+
 					} else {
 						//flat discount
-
 						$price -= abs($discount);
 					}
 									

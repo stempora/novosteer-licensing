@@ -30,6 +30,15 @@ class ManufacturerDiscounts extends Importer implements ImporterInterface{
 	*
 	* @access type
 	*/
+	var $epErrors = [];
+	
+	/**
+	* description
+	*
+	* @var type
+	*
+	* @access type
+	*/
 	var $calculator = null;
 
 	/**
@@ -116,43 +125,64 @@ class ManufacturerDiscounts extends Importer implements ImporterInterface{
 		$this->log("Calculating price for %s with msrp %d" , [$item["vin"] , $item[$this->info["settings"]["set_msrp_field"]] ]);
 
 		$vehicle = $this->getVehicleByID($item["product_id"]);
-		$this->calculator->setVehicle($vehicle);
+		$this->calculator->setVehicle($vehicle);		
 		$price = $this->calculator->calculatePrice();
 
+		$rule = $this->calculator->serializeRule();
 
-		if ($price === false) {
-			$this->log("No rule matched for %s" , [$item["vin"]]);
-			$this->errors[$item["vin"]] = $item["stock"] . " " . $vehicle["year"] . " " . $vehicle["brand_name"] . " " . $vehicle["model_name"] . " ";
+		switch ($price) {
+			case "EP_ERROR":
+				$this->log("No EP price set for this vehicle");
+				$item["calculator_discounts"] = $rule["disc"];
 
-			$this->db->QueryUpdateBYId(
-				$this->module->tables["plugin:novosteer_vehicles_import"],
-				[
-					"alert_price" => "1"
-				],
-				$vehicle["product_id"]
-			);
+				if ($vehicle["alert_price"] == "1") {
+					$this->db->QueryUpdateBYId(
+						$this->module->tables["plugin:novosteer_vehicles_import"],
+						[
+							"alert_price" => "0",
+						],
+						$vehicle["product_id"]
+					);
+				}
 
-		} else {
-			$this->log("Calculated discount price of %d" , [$price]);
+				$this->epErrors[$vehicle["stock"]] = [$vehicle["stock"]];
+			break;
 
-			if ($vehicle["alert_price"] == "1") {
+			case false:
+				$this->log("No rule matched for %s" , [$item["vin"]]);
+				$this->errors[$item["vin"]] = $item["stock"] . " " . $vehicle["year"] . " " . $vehicle["brand_name"] . " " . $vehicle["model_name"] . " ";
+
 				$this->db->QueryUpdateBYId(
 					$this->module->tables["plugin:novosteer_vehicles_import"],
 					[
-						"alert_price" => "0",
+						"alert_price" => "1"
 					],
 					$vehicle["product_id"]
 				);
-			}
-			
+			break;
+
+			default: 
+				$this->log("Calculated discount price of %d" , [$price]);
+
+				if ($vehicle["alert_price"] == "1") {
+					$this->db->QueryUpdateBYId(
+						$this->module->tables["plugin:novosteer_vehicles_import"],
+						[
+							"alert_price" => "0",
+						],
+						$vehicle["product_id"]
+					);
+				}
+
+				$item["calculator_discounts"] = $rule["disc"];
+				$item[$this->info["settings"]["set_price_field"]] = $price !== false ? $price : 0;
+
+			break;
 		}
-
-		$rule = $this->calculator->serializeRule();
-		
+				
 		$item["calculator_rule"] = $rule["rules"];
-		$item["calculator_discounts"] = $rule["disc"];
 
-		$item[$this->info["settings"]["set_price_field"]] = $price !== false ? $price : 0;
+
 	}
 	
 	/**
@@ -206,6 +236,7 @@ class ManufacturerDiscounts extends Importer implements ImporterInterface{
 		$this->calculator = $this->module->plugins["novosteer-dealerships"]->getCalculatorObject($this->info["settings"]["set_calculator"]);
 		$this->calculator->setJob($this->cronJob);
 		$this->calculator->setMSRPField($this->info["settings"]["set_msrp_field"]);
+		$this->calculator->setEPField($this->info["settings"]["set_eprice_field"]);
 	}
 
 
@@ -231,5 +262,45 @@ class ManufacturerDiscounts extends Importer implements ImporterInterface{
 		return true;
 		return $this->event->productWasUpdated($scope , $hash);
 	}
+
+	/**
+	* description
+	*
+	* @param
+	*
+	* @return
+	*
+	* @access
+	*/
+	function runPostProcess() {
+		global $_LANG_ID; 
+
+		if (is_array($this->epErrors) && $this->info["settings"]["set_ep_sheet_id"]) {
+			$this->module->plugins["novosteer-dealerships"]->__init();
+
+			$client = \Stembase\Lib\File\GoogleSheets::create()
+				->setCredentialsString($this->module->plugins["novosteer-dealerships"]->_s("set_keyfile"))
+				->setSheetId($this->info["settings"]["set_ep_sheet_id"])
+				->setWorksheet($this->info["settings"]["set_ep_worksheet"]);
+
+			$existing = $client->getAllvalues();
+
+			if (is_array($existing)) {
+				foreach ($existing as $key => $val) {
+					if ($this->epErrors[$val["Stock"]]) {
+						unset($this->epErrors[$val["Stock"]]);
+					}					
+				}				
+			}
+			
+
+			if (count($this->epErrors)) {
+				$this->Log("Injecting errors in Google Sheets Document");
+				$client->appendValues(array_values($this->epErrors));
+			}
+			
+		}	
+	}
+	
 	
 }

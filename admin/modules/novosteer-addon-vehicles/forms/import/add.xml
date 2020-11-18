@@ -117,6 +117,7 @@
 				<misc_price1 type="textbox" title="Misc Price1" />
 				<misc_price2 type="textbox" title="Misc Price2" />
 				<misc_price3 type="textbox" title="Misc Price3" />
+				<ep_price type="textbox" title="EP Price" />
 
 				<subtitle_mfg type="subtitle" title="MFG Discount" restricted="eval:$field['cat'] != 'New';"></subtitle_mfg>
 

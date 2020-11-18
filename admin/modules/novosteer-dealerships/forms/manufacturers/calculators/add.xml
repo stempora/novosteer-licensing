@@ -43,7 +43,7 @@
 
 		<box title="Details" width="5">
 			<fields>
-				<calculator_extension type="fileslist" required="true" validate="A:4:200" empty="true" title="Extension" path="../locals/admin/modules/novosteer-dealerships/core/calculators" extension=".php" hideextension="true">
+				<calculator_extension type="fileslist" required="true" validate="A:4:200" empty="true" title="Extension" path="locals/admin/modules/novosteer-dealerships/core/calculators" extension=".php" hideextension="true">
 				</calculator_extension>
 				<calculator_name type="textbox" width="100%" title="Name" required="true" validate="A:1:200" unique="true"/>
 
