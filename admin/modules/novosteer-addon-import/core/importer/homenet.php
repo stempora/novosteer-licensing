@@ -97,6 +97,7 @@ class Homenet extends Importer implements ImporterInterface{
 			case "New":
 				$item["brand_id"] = $this->module->plugins["novosteer-addon-autobrands"]->getBrandIdByName(
 					$item["make"], 
+					true, 
 					true
 				);
 
@@ -104,12 +105,14 @@ class Homenet extends Importer implements ImporterInterface{
 					$item["brand_id"] , 
 					$item["model"], 
 					true,
-					$item["model_type"]
+					$item["model_type"],
+					true
 				);
 
 				$item["trim_id"] = $this->module->plugins["novosteer-addon-autobrands"]->getTrimIdByName(
 					$item["brand_id"] , 
 					$item["trim"], 
+					true,
 					true
 				);
 
@@ -119,20 +122,35 @@ class Homenet extends Importer implements ImporterInterface{
 					true,
 					$item["ext_color_generic"],
 					$item["ext_color_code"],
-					$item["extcolorhexcode"]
+					$item["extcolorhexcode"],
+					true
 				);
 
 				unset($item["trim"]);
 			break;
 
 			default:
-				$item["brand_id"] = $this->module->plugins["novosteer-addon-autobrands"]->getBrandIdByName($item["make"], true);
+				$item["brand_id"] = $this->module->plugins["novosteer-addon-autobrands"]->getBrandIdByName(
+					$item["make"], 
+					true , 
+					false
+				);
+
 				$item["model_id"] = $this->module->plugins["novosteer-addon-autobrands"]->getModelIdByName(
 					$item["brand_id"] , 
 					$item["model"], 
 					true, 
-					$item["model_type"]
+					$item["model_type"],
+					false
 				);				
+
+				$item["color_id"] = $this->module->plugins["novosteer-addon-autobrands"]->getColorIdByName(
+					$item["brand_id"] , 
+					$item["exteriorcolor"], 
+					false
+				);
+
+
 			break;
 		}
 

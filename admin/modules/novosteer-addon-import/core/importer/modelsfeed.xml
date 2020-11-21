@@ -1,8 +1,7 @@
 <importer>
 	<fields>
 		<box title="Settings" width="7">			
-			<fields>		
-
+			<fields>
 				<set_brands type="droplist" title="Brand(s)" multi="true">
 					<relation id="brand_id">
 						<text>

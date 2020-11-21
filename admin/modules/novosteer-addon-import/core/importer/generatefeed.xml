@@ -1,15 +1,36 @@
 <importer>
 	<fields>
-		<box title="Publishing" width="7" skin="Red">			
+		<box title="Stop On" width="7" skin="Red">			
 			<fields>		
-				<set_publish type="checklist" title="Stop On">
+				<set_publish_new type="droplist" multi="true" title="New Alert">
 					<options>
-						<option name="alert_make">Make Alert</option>
+						<option name="alert_brand">Make Alert</option>
 						<option name="alert_model">Model Alert</option>
 						<option name="alert_trim">Trim Alert</option>
 						<option name="alert_price">Price Alert</option>
+						<option name="alert_color">Color Alert</option>
 					</options>
-				</set_publish>
+				</set_publish_new>
+
+				<set_publish_used type="droplist" multi="true" title="Used Alert">
+					<options>
+						<option name="alert_brand">Make Alert</option>
+						<option name="alert_model">Model Alert</option>
+						<option name="alert_trim">Trim Alert</option>
+						<option name="alert_price">Price Alert</option>
+						<option name="alert_color">Color Alert</option>
+					</options>
+				</set_publish_used>
+
+				<set_publish_certified type="droplist" multi="true" title="Certified Alert">
+					<options>
+						<option name="alert_brand">Make Alert</option>
+						<option name="alert_model">Model Alert</option>
+						<option name="alert_trim">Trim Alert</option>
+						<option name="alert_price">Price Alert</option>
+						<option name="alert_color">Color Alert</option>
+					</options>
+				</set_publish_certified>
 
 				<subtitle_settings type="subtitle" title="Settings" skin="Gray"/>
 
@@ -25,7 +46,6 @@
 
 				<subtitle_ftp type="subtitle" title="Link" restricted="eval:$_GET['action'] != 'details';" skin="Gray"></subtitle_ftp>
 				<set_feed_url title="URL" type="textbox" preffix="{SELF.CONF.URL}__novosteer_import/{CODE}/" restricted="eval:$_GET['action'] != 'details';"/>
-
 
 				<subtitle_ping type="subtitle" title="Ping Dealer" skin="Gray"/>
 				<set_dealer type="checkbox" title="Status" checked="1" label="enabled|disabled" />

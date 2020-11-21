@@ -91,14 +91,19 @@ class GenerateFeed extends Importer {
 			]
 		);
 
+		$alertsSet = [			
+			"New"		=> explode("," , $this->info["settings"]["set_publish_new"]),
+			"Used"		=> explode("," , $this->info["settings"]["set_publish_used"]),
+			"Certified" => explode("," , $this->info["settings"]["set_publish_certified"]),
+		];
+
+
 		$alerts = explode("," , $this->info["settings"]["set_publish"]);
 
 		if (is_array($items)) {
 			foreach ($items as $k => $v) {
-
-				if (is_array($alerts) && count($alerts)) {
-					foreach ($alerts as $_k => $_v) {
-
+				if (is_array($alerts[$v["cat"]]) && count($alerts[$v["cat"]])) {
+					foreach ($alerts[$v["cat"]] as $_k => $_v) {
 						if ($v[$_v] == "1") {
 							return $this->alert();
 						}						
@@ -377,6 +382,8 @@ class GenerateFeed extends Importer {
 		global $_LANG_ID; 
 
 		$this->log("Stoping feed generator because of errors.!");
+
+		return null;
 	}
 
 	/**

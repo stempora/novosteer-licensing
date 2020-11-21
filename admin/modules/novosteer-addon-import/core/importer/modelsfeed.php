@@ -70,7 +70,8 @@ class ModelsFeed extends Importer {
 				ON
 					models.type_id = types.type_id
 			WHERE
-				brands.brand_id IN (%s)								
+				brands.brand_id IN (%s) AND 
+				vehicles.vehicle_status = 1
 			ORDER BY 
 				vehicle_default DESC,
 				brand_order ASC,

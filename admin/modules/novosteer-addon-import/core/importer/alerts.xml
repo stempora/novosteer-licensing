@@ -2,15 +2,37 @@
 	<fields>
 		<box title="Publishing" width="7" skin="Red">			
 			<fields>		
-				<set_publish type="checklist" title="Send Alert On">
+				<set_publish_new type="droplist" multi="true" title="New Alert">
 					<options>
 						<option name="alert_brand">Make Alert</option>
 						<option name="alert_model">Model Alert</option>
 						<option name="alert_trim">Trim Alert</option>
 						<option name="alert_price">Price Alert</option>
+						<option name="alert_color">Color Alert</option>
 					</options>
-				</set_publish>
+				</set_publish_new>
 
+				<set_publish_used type="droplist" multi="true" title="Used Alert">
+					<options>
+						<option name="alert_brand">Make Alert</option>
+						<option name="alert_model">Model Alert</option>
+						<option name="alert_trim">Trim Alert</option>
+						<option name="alert_price">Price Alert</option>
+						<option name="alert_color">Color Alert</option>
+					</options>
+				</set_publish_used>
+
+				<set_publish_certified type="droplist" multi="true" title="Certified Alert">
+					<options>
+						<option name="alert_brand">Make Alert</option>
+						<option name="alert_model">Model Alert</option>
+						<option name="alert_trim">Trim Alert</option>
+						<option name="alert_price">Price Alert</option>
+						<option name="alert_color">Color Alert</option>
+					</options>
+				</set_publish_certified>
+
+				<subtitles_notifications type="subtitle" title="Notifications"></subtitles_notifications>
 				<set_alert_email type="droplist" title="Mail Alert" empty="true">
 					<relation table="plugin:mail_emails" id="email_code" text="email_code" order="email_code"/>
 					<description>Select the mail alert to be sent when the feed wont be pushed to the dealer.</description>
