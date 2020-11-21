@@ -55,7 +55,7 @@ class Alerts extends Importer {
 
 		$errors = [];
 
-		foreach ($alertsSet as $key => $alert) {
+		foreach ($alertsSet as $key => $alerts) {
 			if (in_array("alert_brand" , $alerts)) {
 				$brands = $this->db->Linear(
 					$this->db->QFetchRowArray(
@@ -85,8 +85,8 @@ class Alerts extends Importer {
 				);
 
 				if (is_array($brands)) {
-					$this->log("Brands with errors: %s" , implode(", " , $brands));
-					$errors[] = "Brands :" . implode(", " , $brands);
+					$this->log("{$key} Vehicles Brands with errors: %s" , implode(", " , $brands));
+					$errors[] = "{$key} Vehicles Brands :" . implode(", " , $brands);
 				}			
 			}
 
@@ -120,8 +120,8 @@ class Alerts extends Importer {
 				);
 
 				if (is_array($models)) {
-					$this->log("Models with errors: %s" , implode(", " , $models));
-					$errors[] = "Models :" . implode(", " , $models);
+					$this->log("{$key} Vehicles Models with errors: %s" , implode(", " , $models));
+					$errors[] = "{$key} Vehicles Models :" . implode(", " , $models);
 				}			
 			}
 
@@ -160,8 +160,8 @@ class Alerts extends Importer {
 				);
 
 				if (is_array($trims)) {
-					$this->log("Trims with errors: %s" , implode(", " , $trims));
-					$errors[] = "Trims :" . implode(", " , $trims);
+					$this->log("{$key} Vehicles Trims with errors: %s" , implode(", " , $trims));
+					$errors[] = "{$key} Vehicles Trims :" . implode(", " , $trims);
 				}			
 			}
 
@@ -187,10 +187,46 @@ class Alerts extends Importer {
 				);
 
 				if (is_array($products)) {
-					$this->log("Products with errors: %s" , implode(", " , $products));
-					$errors[] = "Vehicles :" . implode(", " , $products);
+					$this->log("{$key} Vehicles with price errors: %s" , implode(", " , $products));
+					$errors[] = "{$key} Vehicles with price errors:" . implode(", " , $products);
 				}			
 			}
+
+			if (in_array("alert_color" , $alerts)) {
+				$colors = $this->db->Linear(
+					$this->db->QFetchRowArray(
+						"SELECT 
+							color_name as name
+						FROM 
+							%s as colors 
+						WHERE 
+							color_id IN (
+								SELECT 
+									color_id
+								FROM 
+									%s as products
+								WHERE 
+									dealership_id = %d AND 
+									cat = '%s'									
+							) AND 
+							alert_color = 1
+						",
+						[
+							$this->module->tables["plugin:novosteer_addon_autobrands_colors"],
+							$this->module->tables["plugin:novosteer_vehicles_import"],
+							$this->info["dealership_id"],
+							$key
+						]
+					)
+				);
+
+				if (is_array($colors)) {
+					$this->log("{$key} Vehicles Colors with errors: %s" , implode(", " , $colors));
+					$errors[] = "{$key} Vehicles Colors :" . implode(", " , $colors);
+				}			
+			}
+
+
 		}
 
 
@@ -202,7 +238,7 @@ class Alerts extends Importer {
 					array_merge(
 						$this->info,
 				 		[ 
-							"errors"	=> implode(", " , $errors)
+							"errors"	=> implode("<br> " , $errors)
 						]
 				 	)
 				)
@@ -217,7 +253,7 @@ class Alerts extends Importer {
 					array_merge(
 						$this->info,
 				 		[ 
-							"errors"	=> implode(", " , $errors)
+							"errors"	=> implode("\n " , $errors)
 						]
 				 	)
 				)

@@ -91,14 +91,12 @@ class GenerateFeed extends Importer {
 			]
 		);
 
-		$alertsSet = [			
+		$alerts = [			
 			"New"		=> explode("," , $this->info["settings"]["set_publish_new"]),
 			"Used"		=> explode("," , $this->info["settings"]["set_publish_used"]),
 			"Certified" => explode("," , $this->info["settings"]["set_publish_certified"]),
 		];
 
-
-		$alerts = explode("," , $this->info["settings"]["set_publish"]);
 
 		if (is_array($items)) {
 			foreach ($items as $k => $v) {
@@ -159,7 +157,6 @@ class GenerateFeed extends Importer {
 		$data = json_encode([
 			"products"	=> $items
 		]);
-
 
 		$this->log("Saving inventory");
 		$this->module->storage->private->save(
@@ -381,7 +378,7 @@ class GenerateFeed extends Importer {
 	function alert() {
 		global $_LANG_ID; 
 
-		$this->log("Stoping feed generator because of errors.!");
+		$this->log("Stoping publishing feed because of errors.!");
 
 		return null;
 	}
