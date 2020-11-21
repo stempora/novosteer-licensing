@@ -199,7 +199,12 @@ class Alerts extends Importer {
 			 $this->module->plugins["mail"]->SendMail(
 				$this->module->plugins["mail"]->GetMail(
 					$this->info["settings"]["set_alert_email"],				
-					$this->info
+					array_merge(
+						$this->info,
+				 		[ 
+							"errors"	=> implode(", " , $errors)
+						]
+				 	)
 				)
 			);
 		}
@@ -209,7 +214,12 @@ class Alerts extends Importer {
 			$this->plugins["sms"]->SendSMS(
 				$this->plugins["sms"]->getTpl(
 					$this->info["settings"]["set_alert_sms"],
-					$this->info
+					array_merge(
+						$this->info,
+				 		[ 
+							"errors"	=> implode(", " , $errors)
+						]
+				 	)
 				)
 			);
 		}
