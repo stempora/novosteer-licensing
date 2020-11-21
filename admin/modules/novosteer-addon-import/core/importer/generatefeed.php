@@ -71,7 +71,8 @@ class GenerateFeed extends Importer {
 					products.trim_id = trims.trim_id
 
 			WHERE	
-				dealership_id = %d 
+				dealership_id = %d AND
+				product_status = 1
 				:cond		
 			ORDER BY 
 				products.product_id ASC

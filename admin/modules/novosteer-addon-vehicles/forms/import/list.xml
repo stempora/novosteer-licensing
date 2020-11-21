@@ -6,6 +6,9 @@
 	<fields>
 
 		<_count header="No." width="20" align="right" suffix="."/>
+
+		<ids type="multiple" field="product_id" value="product_id" align="center" width="30"/>
+
 		<dealership_name header="Dealership"></dealership_name>
 		<cat header="Cat"></cat>
 		<year header="Year"></year>
@@ -18,6 +21,14 @@
 		<msrp header="MSRP"  type="price" align="right"/>
 		<calc_price header="Calc Price" type="price" align="right"/>
 		<misc_price1 header="Misc Price" type="price" align="right"/>
+
+		<product_status header="Status" width="100" align="center" type="relation">
+			<options>
+				<option name="1" color="green" value="enabled" />
+				<option name="0" color="red" value="disabled" />
+			</options>
+		</product_status>
+
 
 		<images header="Images" width="80" align="center">
 		</images>
@@ -46,9 +57,20 @@
 	<header>
 		<titles>true</titles>
 		<buttons>
+
+			<action_enable icon="check" title="Enable" acl="actions.status">
+				<location>javascript:ChangeStatus('enabled');</location>
+			</action_enable>
+
+			<action_disable icon="delete" title="Disable" acl="actions.status">
+				<location>javascript:ChangeStatus('disabled');</location>
+			</action_disable>
+
+<!--
 			<add button="addnew" acl="badges.add">
 				<location>{SELF.URI.ADD}</location>
 			</add>
+-->
 		</buttons>
 	</header>
 
@@ -108,5 +130,28 @@
 		<count table="{FROM}" condition="{CONDITION}" />
 	</sql> 
 
+
+
+	<javascript>
+		<after><![CDATA[
+			function ChangeStatus(type){				
+				
+				DeleteConfirmCallback(
+					"Do you want to change the status of selected vehicles to <b>" + ( type == "enable" ? "enabled" : "disabled" ) + "</b>?",			
+					function() {
+						$.ajax({
+							url:"index.php?mod=novosteer-addon-vehicles&sub=import.status&type=" + type,
+							type: "post",
+							data:$('form[name="search"]').serialize(),
+							success: function(msg){ 
+								window.location.reload();
+							}
+						});
+					}
+				);
+			}
+		
+		]]></after>
+	</javascript>
 
 </form>

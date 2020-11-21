@@ -29,6 +29,14 @@
 	<fields>		
 		<box title="Details" width="4">
 			<fields>
+				<product_status title="Status" width="100" type="radiolist" newline="false">
+					<options>
+						<option name="">all</option>
+						<option name="1">enabled</option>
+						<option name="0">disabled</option>
+					</options>
+				</product_status>
+
 				<dealership_id type="relation" title="Dealership">
 					<relation table="plugin:novosteer_dealerships" id="dealership_id" text="dealership_name"></relation>
 				</dealership_id>

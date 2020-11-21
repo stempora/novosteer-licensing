@@ -49,6 +49,10 @@ class CNovosteerAddonVehicles extends CNovosteerAddonVehiclesBackend{
 
 					return $data->DoEvents();
 				break;
+
+				case "import.status":
+					return $this->importStatus();
+				break;
 			}
 		}
 	}
@@ -133,6 +137,35 @@ class CNovosteerAddonVehicles extends CNovosteerAddonVehiclesBackend{
 			"items"	=>$images,
 			"count"	=>$count,
 		];
+	}
+
+	
+	/**
+	* description
+	*
+	* @param
+	*
+	* @return
+	*
+	* @access
+	*/
+	function importStatus() {
+		global $_LANG_ID; 
+
+		if (is_array($_POST["product_id"])) {
+			$this->db->QueryUpdate(
+				$this->tables["plugin:novosteer_vehicles_import"],
+				[
+					"product_status"	=> $_GET['type'] == "disabled" ? 0 : 1,
+				],
+				$this->db->Statement(
+					"product_id in (%s)",
+					[ implode("," , $_POST["product_id"])]
+				)
+			);
+		}
+
+		die("1");		
 	}
 	
 }

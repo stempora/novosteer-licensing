@@ -179,7 +179,6 @@
 						</cat>
 
 <!--
-
 						<type_id type="droplist" title="Type" empty="true">
 							<relation id="type_id" table="plugin:novosteer_addon_autobrands_types">
 								<text>
@@ -195,6 +194,14 @@
 								<option name="1">error</option>
 							</options>
 						</alert_price>
+
+						<product_status title="Status" width="100" type="radiolist" newline="false">
+							<options>
+								<option name="">all</option>
+								<option name="1">enabled</option>
+								<option name="0">disabled</option>
+							</options>
+						</product_status>
 
 					</fields>
 				</box>
@@ -212,6 +219,7 @@
 				<field name="cat" field="cat" type="="></field>			
 				<field name="alert_price" field="alert_price" type="="></field>			
 				<field name="year" field="year" type="="></field>			
+				<field name="product_status" field="product_status" type="="></field>			
 				<field name="color_id" field="color_id" type="="></field>			
 				<field name="dealership_id" field="dealership.dealership_id" type="="></field>			
 			</sql_fields>

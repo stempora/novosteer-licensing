@@ -11,9 +11,29 @@
 					</relation>
 				</set_price_field>
 
+				<subtitle_missing type="subtitle" title="Missing"></subtitle_missing>
+
+				<set_missing title="Missing Vehicles" type="droplist">
+					<options>
+						<option name="1">Ignore</option>
+						<option name="2">Disable from feed</option>
+					</options>
+				</set_missing>
+
+				<set_condition type="textarea" script="true" title="Conditions">
+					<description><![CDATA[
+						<p>Eg: [database_table_field]|[condition: &gt;, &lt;, =, in,]|[value1,value2,value3]</p>
+					]]></description>
+				</set_condition> 
 			</fields>
 		</box>
 	</fields>
+
+	<javascript>
+		<after>
+			CM("set_condition");
+		</after>
+	</javascript> 
 
 
 	<remove_fields>
