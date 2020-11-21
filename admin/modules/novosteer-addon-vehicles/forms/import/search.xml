@@ -187,13 +187,38 @@
 							</relation>
 						</type_id>
 -->
-						<alert_price type="radiolist" title="Price Alert" newline="false">
+						<alert_brand type="droplist" title="Brand / Model Alert" newline="false" referers="alert_model">
+							<options>
+								<option name="">all</option>
+								<option name="0">ok</option>
+								<option name="1">error</option>
+							</options>
+						</alert_brand>
+
+						<alert_model type="droplist" title="Model Alert" newline="false" referer="true">
+							<options>
+								<option name="">all</option>
+								<option name="0">ok</option>
+								<option name="1">error</option>
+							</options>
+						</alert_model>
+
+						<alert_trim type="droplist" title="Trim / Price Alert" newline="false" referers="alert_price">
+							<options>
+								<option name="">all</option>
+								<option name="0">ok</option>
+								<option name="1">error</option>
+							</options>
+						</alert_trim>
+
+						<alert_price type="droplist" title="Price Alert" newline="false" referer="true">
 							<options>
 								<option name="">all</option>
 								<option name="0">ok</option>
 								<option name="1">error</option>
 							</options>
 						</alert_price>
+
 
 						<product_status title="Status" width="100" type="radiolist" newline="false">
 							<options>
@@ -217,6 +242,9 @@
 				<field name="trim_id" field="trims.trim_id" type="="></field>			
 				<field name="type_id" field="types.type_id" type="="></field>			
 				<field name="cat" field="cat" type="="></field>			
+				<field name="alert_brand" field="alert_brand" type="="></field>			
+				<field name="alert_model" field="alert_model" type="="></field>			
+				<field name="alert_trim" field="alert_trim" type="="></field>			
 				<field name="alert_price" field="alert_price" type="="></field>			
 				<field name="year" field="year" type="="></field>			
 				<field name="product_status" field="product_status" type="="></field>			

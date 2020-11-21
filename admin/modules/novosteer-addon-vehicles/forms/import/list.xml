@@ -15,10 +15,33 @@
 <!--		<vin header="Vin"></vin>-->
 		<stock header="Stock"></stock>
 		<brand_name header="Brand"></brand_name>
+
+		<alert_brand type="relation" align="center" width="60" header="A.">
+			<options>
+				<option name="1" color="red" value="error" />
+				<option name="0" color="green" value="ok" />
+			</options>
+		</alert_brand>
+
 		<model_name header="Model"></model_name>
+
+		<alert_model type="relation" align="center" width="60" header="A.">
+			<options>
+				<option name="1" color="red" value="error" />
+				<option name="0" color="green" value="ok" />
+			</options>
+		</alert_model>
+
 		<trim_name header="Trim"></trim_name>
+
+		<alert_trim type="relation" align="center" width="60" header="A.">
+			<options>
+				<option name="1" color="red" value="error" />
+				<option name="0" color="green" value="ok" />
+			</options>
+		</alert_trim>
+
 		<type_name header="Type"></type_name>
-		<msrp header="MSRP"  type="price" align="right"/>
 		<calc_price header="Calc Price" type="price" align="right"/>
 		<misc_price1 header="Misc Price" type="price" align="right"/>
 
@@ -28,10 +51,6 @@
 				<option name="0" color="red" value="disabled" />
 			</options>
 		</product_status>
-
-
-		<images header="Images" width="80" align="center">
-		</images>
 
 		<alert_price type="relation" align="center" width="100" header="Disc">
 			<options>
