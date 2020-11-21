@@ -51,19 +51,19 @@
 							<relation table="plugin:novosteer_addon_autobrands_types" text="type_name" id="type_id" order="type_name" />
 						</type_id>
 
-						<model_status type="radiolist" title="Status" newline="false">
+						<alert_model type="radiolist" title="Alert" newline="false">
 							<options>
 								<option name="">all</option>
-								<option name="1">published</option>
-								<option name="0">unpublished</option>
+								<option name="0">ok</option>
+								<option name="1">error</option>
 							</options>
-						</model_status>
+						</alert_model>
 					</fields>
 				</box>
 			</fields>
 
 			<sql_fields>
-				<field name="model_status">=</field>			
+				<field name="alert_model">=</field>			
 				<field name="brand_id">=</field>			
 				<field name="type_id">=</field>			
 				<field name="model_name" type="keyword" search="full" fields="model_name">keyword</field>			

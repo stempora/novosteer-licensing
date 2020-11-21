@@ -46,19 +46,20 @@
 						<brand_id type="droplist" title="Brand" empty="true">
 							<relation table="plugin:novosteer_addon_autobrands_brands" text="brand_name" id="brand_id" order="brand_name" />
 						</brand_id>
-						<trim_status type="radiolist" title="Status" newline="false">
+						<alert_trim type="radiolist" title="Alert" newline="false">
 							<options>
 								<option name="">all</option>
-								<option name="1">published</option>
-								<option name="0">unpublished</option>
+								<option name="0">ok</option>
+								<option name="1">error</option>
 							</options>
-						</trim_status>
+						</alert_trim>
+
 					</fields>
 				</box>
 			</fields>
 
 			<sql_fields>
-				<field name="trim_status">=</field>			
+				<field name="alert_trim">=</field>			
 				<field name="brand_id">=</field>			
 				<field name="trim_name" type="keyword" search="full" fields="trim_name">keyword</field>			
 			</sql_fields>

@@ -7,6 +7,8 @@
 	<fields>
 		<_count header="No." width="20" align="right" suffix="."/>
 
+		<ids type="multiple" field="vehicle_id" value="vehicle_id" align="center" width="30" acl="menu.edit"/>
+
 		<vehicle_image type="image" path="./vehicles/stock/" header="Image" width="100">
 			<file default="" field="vehicle_id" ext=".png" />			
 		</vehicle_image>
@@ -17,11 +19,12 @@
 		<trim_name header="Trim"></trim_name>
 		<color_name header="Color"></color_name>
 
-		<vehicle_default type="relation" align="center" width="100" header="Default">
+		<vehicle_status type="relation" align="center" width="100" header="Status">
 			<options>
-				<option name="1" color="green" value="yes" />
+				<option name="1" color="green" value="enabled" />
+				<option name="0" color="red" value="disabled" />
 			</options>
-		</vehicle_default>
+		</vehicle_status>
 
 		<button_delete type="button" width="44" align="center" onclick="" button="/small/delete" acl="models.delete">
 			<location>{SELF.URI.DELETE}</location>
@@ -36,6 +39,14 @@
 	<header>
 		<titles>true</titles>
 		<buttons>
+			<action_enable icon="check" title="Enable" acl="actions.status">
+				<location>javascript:ChangeStatus('enabled');</location>
+			</action_enable>
+
+			<action_disable icon="delete" title="Disable" acl="actions.status">
+				<location>javascript:ChangeStatus('disabled');</location>
+			</action_disable>
+
 			<add button="addnew" acl="models.add">
 				<location>{SELF.URI.ADD}</location>
 			</add>
@@ -95,6 +106,28 @@
 		<count table="{FROM} " condition="{CONDITION}" />
 
 	</sql> 
+
+	<javascript>
+		<after><![CDATA[
+			function ChangeStatus(type){				
+				
+				DeleteConfirmCallback(
+					"Do you want to change the alert status of selected items to " + ( type == "enabled" ? "enabled" : "disabled" ) + "?",			
+					function() {
+						$.ajax({
+							url:"index.php?mod=novosteer-addon-autobrands&sub=alert.vehicles&type=" + type,
+							type: "post",
+							data:$('form[name="search"]').serialize(),
+							success: function(msg){ 
+								window.location.reload();
+							}
+						});
+					}
+				);
+			}
+		
+		]]></after>
+	</javascript>
 
 
 </form>

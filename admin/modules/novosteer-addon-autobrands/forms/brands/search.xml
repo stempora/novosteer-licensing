@@ -43,19 +43,19 @@
 
 				<box title="Filter" width="6">
 					<fields>
-						<brand_status type="radiolist" title="Status" newline="false">
+						<alert_brand type="radiolist" title="Alert" newline="false">
 							<options>
 								<option name="">all</option>
-								<option name="1">published</option>
-								<option name="0">unpublished</option>
+								<option name="0">ok</option>
+								<option name="1">error</option>
 							</options>
-						</brand_status>
+						</alert_brand>
 					</fields>
 				</box>
 			</fields>
 
 			<sql_fields>
-				<field name="brand_status">=</field>			
+				<field name="alert_brand">=</field>			
 				<field name="brand_name" type="keyword" search="full" fields="brand_name">keyword</field>			
 			</sql_fields>
 

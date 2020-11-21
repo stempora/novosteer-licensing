@@ -119,12 +119,23 @@
 						<color_id type="droplist" title="Color" empty="true" referer="true">
 							<relation table="plugin:novosteer_addon_autobrands_colors" id="color_id" text="color_name" order="color_name"></relation>
 						</color_id>
+
+
+						<vehicle_status type="radiolist" title="Status" newline="false">
+							<options>
+								<option name="">all</option>
+								<option name="1">published</option>
+								<option name="0">unpublished</option>
+							</options>
+						</vehicle_status>
+
 					</fields>
 				</box>
 			</fields>
 
 			<sql_fields>
 				<field name="type_id">=</field>			
+				<field name="vehicle_status">=</field>			
 				<field name="brand_id" field="brands.brand_id" type="="></field>
 				<field name="model_id" field="models.model_id" type="="></field>
 				<field name="trim_id" field="trims.trim_id" type="="></field>

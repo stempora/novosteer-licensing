@@ -43,13 +43,12 @@
 		<box title="Brief" width="6">
 			<fields>
 				<model_name type="textbox" width="100%" title="Name" required="true" validate="A:2:200"/>
-				<model_url type="textbox" width="100%" title="URL" required="true" validate="A:2:200" preffix="/" suffix="/"/>
 			</fields>
 		</box>
 
 		<box title="Settings" width="6">
 			<fields>
-				<model_status type="checkbox" checked="1" label="published|unpublished" title="Status" default="1"/>
+				<alert_model type="checkbox" checked="1" label="error|ok" title="Alert" default="1"/>
 
 				<brand_id type="droplist" title="Brand" empty="true" required="true" validate="A:1:20">
 					<relation table="plugin:novosteer_addon_autobrands_brands" text="brand_name" id="brand_id" order="brand_name" />
@@ -59,51 +58,9 @@
 					<relation table="plugin:novosteer_addon_autobrands_types" text="type_name" id="type_id" order="type_name" />
 				</type_id>
 
-				
-
-				<subtitle_seo title="SEO Settings" type="subtitle" />
-				<seo_title type="textarea" size="1:2" width="100%" title="Meta Title" lang="true" description="Use 55-65 chars although you can test for slightly longer titles."/>
-				<seo_desc type="textarea" size="1:3" width="100%" title="Meta Desc" lang="true" description="Use ~150 chars although longer descriptions show for longer queries."/>
-
-				<seo_meta type="checklist" lang="true" newline="false" default="index,follow">
-					<options>
-						<option name="index">index</option>
-						<option name="follow">follow</option>
-						<option name="noindex">noindex</option>
-						<option name="nofollow">nofollow</option>
-					</options>
-					<title>Robots &lt;META&gt;</title>
-				</seo_meta>
-
-
-				<sem_title type="subtitle" title="Append HTML Snippets" collapsed="true"/>
-				<seo_conv_head type="textarea" width="100%" size="2:4" lang="true" extend="true" script="true">
-					<title>&lt;head&gt;&lt;/head&gt;</title>
-				</seo_conv_head>
-
-				<seo_conv_body type="textarea" width="100%" size="2:4" lang="true" extend="true" script="true">
-					<title>&lt;body&gt;&lt;/body&gt;</title>
-				</seo_conv_body>
-
 			</fields>
 		</box>
 
 	</fields>
-
-	<javascript>
-		<after><![CDATA[
-			formPageUrl(
-				$("#model_name"),
-				$("#model_url")
-			);
-
-
-			formFieldAutoFill(
-				$("#model_name"),
-				$("#seo_title")
-			);
-
-		]]></after>
-	</javascript>
 
 </form>

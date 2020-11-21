@@ -7,17 +7,12 @@
 	<fields>
 		<_count header="No." width="20" align="right" suffix="."/>
 
+		<ids type="multiple" field="color_id" value="color_id" align="center" width="30" acl="menu.edit"/>
+
 		<color_name header="Name"/>
 		<color_name_generic header="Generic"/>
 		<color_code header="MFG Code"/>
 		<color_hex header="Hexa" type="color" align="center" width="100"/>
-
-		<color_status type="relation" align="center" width="100" header="Status">
-			<options>
-				<option name="1" color="green" value="published" />
-				<option name="0" color="red" value="unpublished" />
-			</options>
-		</color_status>
 
 
 		<alert_color type="relation" align="center" width="100" header="Alert">
@@ -51,6 +46,15 @@
 	<header>
 		<titles>true</titles>
 		<buttons>
+			<action_enable icon="check" title="Enable" acl="actions.status">
+				<location>javascript:ChangeStatus('enabled');</location>
+			</action_enable>
+
+			<action_disable icon="delete" title="Disable" acl="actions.status">
+				<location>javascript:ChangeStatus('disabled');</location>
+			</action_disable>
+
+
 			<add button="addnew" acl="models.add">
 				<location>{SELF.URI.ADD}</location>
 			</add>
@@ -80,6 +84,29 @@
 		<count table="{TABLE} " condition="{CONDITION}" />
 
 	</sql> 
+
+
+	<javascript>
+		<after><![CDATA[
+			function ChangeStatus(type){				
+				
+				DeleteConfirmCallback(
+					"Do you want to change the alert status of selected items to " + ( type == "enabled" ? "enabled" : "disabled" ) + "?",			
+					function() {
+						$.ajax({
+							url:"index.php?mod=novosteer-addon-autobrands&sub=alert.colors&type=" + type,
+							type: "post",
+							data:$('form[name="search"]').serialize(),
+							success: function(msg){ 
+								window.location.reload();
+							}
+						});
+					}
+				);
+			}
+		
+		]]></after>
+	</javascript>
 
 
 </form>

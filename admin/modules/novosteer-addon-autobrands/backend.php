@@ -131,7 +131,7 @@ class CNovosteerAddonAutoBrandsBackend extends CPlugin {
 	*
 	* @access
 	*/
-	function getBrandIdByName($name , $create = false) {
+	function getBrandIdByName($name , $create = false , $alert = true) {
 		global $base , $_USER , $_SESS; 
 
 		$this->__init();
@@ -162,6 +162,7 @@ class CNovosteerAddonAutoBrandsBackend extends CPlugin {
 			$this->tables['plugin:novosteer_addon_autobrands_brands'],
 			[
 				"brand_name"	=> $name,
+				"alert_brand"	=> $alert
 			]
 		);	
 		
@@ -179,7 +180,7 @@ class CNovosteerAddonAutoBrandsBackend extends CPlugin {
 	*
 	* @access
 	*/
-	function getModelIdByName($brand , $name , $create = false , $model_type = null) {
+	function getModelIdByName($brand , $name , $create = false , $model_type = null , $alert = true) {
 		global $base , $_USER , $_SESS; 
 		$this->__init();
 
@@ -228,6 +229,7 @@ class CNovosteerAddonAutoBrandsBackend extends CPlugin {
 			[
 				"brand_id"		=> $brand,
 				"model_name"	=> $name,
+				"alert_model"	=> $alert,
 				"type_id"		=> $model_type !== null 
 					? $this->getTypeIDByName($model_type , false)
 					: 0
@@ -302,7 +304,7 @@ class CNovosteerAddonAutoBrandsBackend extends CPlugin {
 	*
 	* @access
 	*/
-	function getTrimIdByName($brand , $name , $create = false) {
+	function getTrimIdByName($brand , $name , $create = false , $alert = true) {
 		global $base , $_USER , $_SESS; 
 		$this->__init();
 
@@ -336,6 +338,7 @@ class CNovosteerAddonAutoBrandsBackend extends CPlugin {
 			[
 				"brand_id"		=> $brand,
 				"trim_name"		=> $name,
+				"alert_trim"	=> $alert
 			]
 		);		
 	}

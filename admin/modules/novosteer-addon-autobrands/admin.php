@@ -98,6 +98,46 @@ class CNovosteerAddonAutoBrands extends CNovosteerAddonAutoBrandsBackend{
 					return $this->MenuStatus();
 				break;
 
+				case "alert.brands":
+					return $this->alertStatus(
+						$this->tables["plugin:novosteer_addon_autobrands_brands"],
+						"brand_id",
+						"alert_brand"
+					);
+				break;
+
+				case "alert.models":
+					return $this->alertStatus(
+						$this->tables["plugin:novosteer_addon_autobrands_models"],
+						"model_id",
+						"alert_model"
+					);
+				break;
+
+				case "alert.trims":
+					return $this->alertStatus(
+						$this->tables["plugin:novosteer_addon_autobrands_trims"],
+						"trim_id",
+						"alert_trim"
+					);
+				break;
+
+				case "alert.colors":
+					return $this->alertStatus(
+						$this->tables["plugin:novosteer_addon_autobrands_colors"],
+						"color_id",
+						"alert_color"
+					);
+				break;
+
+				case "alert.vehicles":
+					return $this->alertStatus(
+						$this->tables["plugin:novosteer_addon_autobrands_vehicles"],
+						"vehicle_id",
+						"vehicle_status"
+					);
+				break;
+
 			}
 		}
 	}
@@ -1220,6 +1260,34 @@ class CNovosteerAddonAutoBrands extends CNovosteerAddonAutoBrandsBackend{
 		}
 		return $this->json($data);
 	
+	}
+
+	/**
+	* description
+	*
+	* @param
+	*
+	* @return
+	*
+	* @access
+	*/
+	function alertStatus($table , $fid , $aid) {
+		global $_LANG_ID; 
+
+		if (is_array($_POST[$fid])) {
+			$this->db->QueryUpdate(
+				$table,
+				[
+					$aid	=> $_GET['type'] == "disabled" ? 0 : 1,
+				],
+				$this->db->Statement(
+					"%s in (%s)",
+					[ $fid , implode("," , $_POST[$fid])]
+				)
+			);
+		}
+
+		die("1");		
 	}
 	
 }

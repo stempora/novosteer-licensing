@@ -20,6 +20,8 @@
 	<fields>
 		<_count header="No." width="20" align="right" suffix="."/>
 
+		<ids type="multiple" field="trim_id" value="trim_id" align="center" width="30" acl="menu.edit"/>
+
 		<brand_id type="relation" header="Brand" empty="true">
 			<relation table="plugin:novosteer_addon_autobrands_brands" text="brand_name" id="brand_id" order="brand_name" />
 		</brand_id>
@@ -27,12 +29,12 @@
 
 		<trim_name header="Name"/>
 
-		<trim_status type="relation" align="center" width="100" header="Status">
+		<alert_trim type="relation" align="center" width="100" header="Alert">
 			<options>
-				<option name="1" color="green" value="published" />
-				<option name="0" color="red" value="unpublished" />
+				<option name="1" color="red" value="error" />
+				<option name="0" color="green" value="ok" />
 			</options>
-		</trim_status>
+		</alert_trim>
 
 		<vehicles header="Vehicles" align="center" type="sql" width="80">
 			<sql>
@@ -83,6 +85,14 @@
 	<header>
 		<titles>true</titles>
 		<buttons>
+			<action_enable icon="check" title="Enable" acl="actions.status">
+				<location>javascript:ChangeStatus('enabled');</location>
+			</action_enable>
+
+			<action_disable icon="delete" title="Disable" acl="actions.status">
+				<location>javascript:ChangeStatus('disabled');</location>
+			</action_disable>
+
 			<add button="addnew" acl="trims.add">
 				<location>{SELF.URI.ADD}</location>
 			</add>
@@ -114,5 +124,26 @@
 
 	</sql> 
 
+	<javascript>
+		<after><![CDATA[
+			function ChangeStatus(type){				
+				
+				DeleteConfirmCallback(
+					"Do you want to change the alert status of selected items to " + ( type == "enabled" ? "enabled" : "disabled" ) + "?",			
+					function() {
+						$.ajax({
+							url:"index.php?mod=novosteer-addon-autobrands&sub=alert.trims&type=" + type,
+							type: "post",
+							data:$('form[name="search"]').serialize(),
+							success: function(msg){ 
+								window.location.reload();
+							}
+						});
+					}
+				);
+			}
+		
+		]]></after>
+	</javascript>
 
 </form>

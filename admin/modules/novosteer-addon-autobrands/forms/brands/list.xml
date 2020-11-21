@@ -18,22 +18,16 @@
 	<fields>
 		<_count header="No." width="20" align="right" suffix="."/>
 
-		<brand_logo type="image" path="./products/autobrands/logos/" header="Logo" width="100">
-			<file default="" field="brand_id" ext=".png" />			
-		</brand_logo>
-
-		<brand_logo_text type="image" path="./products/autobrands/logos/" header="Text" width="100">
-			<file default="text_" field="brand_id" ext=".png" />			
-		</brand_logo_text>
+		<ids type="multiple" field="brand_id" value="brand_id" align="center" width="30" acl="menu.edit"/>
 
 		<brand_name header="Name"/>
 
-		<brand_status type="relation" align="center" width="100" header="Status">
+		<alert_brand type="relation" align="center" width="100" header="Alert">
 			<options>
-				<option name="1" color="green" value="published" />
-				<option name="0" color="red" value="unpublished" />
+				<option name="1" color="red" value="error" />
+				<option name="0" color="green" value="ok" />
 			</options>
-		</brand_status>
+		</alert_brand>
 
 		<vehicles header="Vehicles" align="center" type="sql" width="80">
 			<sql>
@@ -92,6 +86,16 @@
 	<header>
 		<titles>true</titles>
 		<buttons>
+
+			<action_enable icon="check" title="Enable" acl="actions.status">
+				<location>javascript:ChangeStatus('enabled');</location>
+			</action_enable>
+
+			<action_disable icon="delete" title="Disable" acl="actions.status">
+				<location>javascript:ChangeStatus('disabled');</location>
+			</action_disable>
+
+
 			<add button="addnew" acl="brands.add">
 				<location>{SELF.URI.ADD}</location>
 			</add>
@@ -123,5 +127,27 @@
 
 	</sql> 
 
+
+	<javascript>
+		<after><![CDATA[
+			function ChangeStatus(type){				
+				
+				DeleteConfirmCallback(
+					"Do you want to change the alert status of selected items to " + ( type == "enabled" ? "enabled" : "disabled" ) + "?",			
+					function() {
+						$.ajax({
+							url:"index.php?mod=novosteer-addon-autobrands&sub=alert.brands&type=" + type,
+							type: "post",
+							data:$('form[name="search"]').serialize(),
+							success: function(msg){ 
+								window.location.reload();
+							}
+						});
+					}
+				);
+			}
+		
+		]]></after>
+	</javascript>
 
 </form>

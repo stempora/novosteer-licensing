@@ -43,113 +43,13 @@
 		<box title="Brief" width="6">
 			<fields>
 				<brand_name type="textbox" width="100%" title="Name" required="true" validate="A:2:200"/>
-				<brand_url type="textbox" width="90%" title="URL" required="true" validate="A:2:200" u_nique="true" preffix="/" suffix="/"/>
-
-				<subtitle title="Logo" type="subtitle" />
-
-				<brand_logo valign="top" adminwidth="100" type="image" path="./products/autobrands/logos/" absolute="false" editable="true" _extend="true" title="Image">
-					<file default="" field="brand_id" ext=".png" />			
-						<title></title>
-					<error>No available image.</error>						
-				</brand_logo>
-
-				<brand_logo_text valign="top" adminwidth="100" type="image" path="./products/autobrands/logos/" absolute="false" editable="true" _extend="true" title="Text">
-					<file default="text_" field="brand_id" ext=".png" />			
-						<title></title>
-					<error>No available image.</error>						
-				</brand_logo_text>
-
-				<subtitle_desc title="Details" type="subtitle" />
-
-				<brand_desc type="textarea" html="true" width="100%" height="300px" extend="true" />
-
 			</fields>
 		</box>
 
 		<box title="Settings" width="6">
 			<fields>
 
-				<brand_status type="checkbox" checked="1" label="published|unpublished" title="Status" default="1"/>
-
-				<subtitle_calculator_new type="subtitle" title="Financial Terms" collapsed="true"/>
-				<comment_financial type="comment" html="true">
-					<description><![CDATA[
-						<p>If no options are set in the calculators above, the rules from global module will be inherited.</p>
-					]]></description>
-				</comment_financial>
-
-
-				<minititle_calculator_new type="minititle" title="New Cars" />
-				
-				<brand_calculator_new_downpayment type="textbox" width="60%" title="Downpayment" referers="brand_calculator_new_downpayment_type" />
-				<brand_calculator_new_downpayment_type type="droplist" title="Show" referer="true" width="40%">
-					<options>
-						<option name="1">Flat</option>
-						<option name="2">%</option>
-					</options>
-				</brand_calculator_new_downpayment_type>
-
-				<brand_calculator_new_period type="textbox" title="Period" width="150px" suffix="year(s)"  validate="A:1:20"/>
-				<brand_calculator_new_interest title="Interest" type="textbox" width="150px" suffix="%"  validate="A:1:20"/>
-				<brand_calculator_new_rate_type type="checklist" title="Show" newline="false" >
-					<options>
-						<option name="1">Monthly</option>
-						<option name="2">Weekly</option>
-						<option name="3">Semi-Monthly</option>
-						<option name="4">Bi-Weekly</option>
-					</options>
-				</brand_calculator_new_rate_type>
-
-				<brand_calculator_new_note type="textbox" width="100%" title="User Note" lang="true"/>
-
-				<minititle_calculator_used type="minititle" title="Used Cars" />
-				
-				<brand_calculator_used_downpayment type="textbox" width="60%" title="Downpayment" referers="brand_calculator_used_downpayment_type" />
-				<brand_calculator_used_downpayment_type type="droplist" title="Show" referer="true" width="40%">
-					<options>
-						<option name="1">Flat</option>
-						<option name="2">%</option>
-					</options>
-				</brand_calculator_used_downpayment_type>
-
-				<brand_calculator_used_period type="textbox" title="Period" width="150px" suffix="year(s)"  validate="A:1:20"/>
-				<brand_calculator_used_interest title="Interest" type="textbox" width="150px" suffix="%"  validate="A:1:20"/>
-				<brand_calculator_used_rate_type type="checklist" title="Show" newline="false" >
-					<options>
-						<option name="1">Monthly</option>
-						<option name="2">Weekly</option>
-						<option name="3">Semi-Monthly</option>
-						<option name="4">Bi-Weekly</option>
-					</options>
-				</brand_calculator_used_rate_type>
-
-
-				<brand_calculator_used_note type="textbox" width="100%" title="User Note" lang="true"/>
-				
-
-				<subtitle_seo title="SEO Settings" type="subtitle" />
-				<seo_title type="textarea" size="1:2" width="100%" title="Meta Title" lang="true" description="Use 55-65 chars although you can test for slightly longer titles."/>
-				<seo_desc type="textarea" size="1:3" width="100%" title="Meta Desc" lang="true" description="Use ~150 chars although longer descriptions show for longer queries."/>
-
-				<seo_meta type="checklist" lang="true" newline="false" default="index,follow">
-					<options>
-						<option name="index">index</option>
-						<option name="follow">follow</option>
-						<option name="noindex">noindex</option>
-						<option name="nofollow">nofollow</option>
-					</options>
-					<title>Robots &lt;META&gt;</title>
-				</seo_meta>
-
-
-				<sem_title type="subtitle" title="Append HTML Snippets" collapsed="true"/>
-				<seo_conv_head type="textarea" width="100%" size="2:4" lang="true" extend="true" script="true">
-					<title>&lt;head&gt;&lt;/head&gt;</title>
-				</seo_conv_head>
-
-				<seo_conv_body type="textarea" width="100%" size="2:4" lang="true" extend="true" script="true">
-					<title>&lt;body&gt;&lt;/body&gt;</title>
-				</seo_conv_body>
+				<alert_brand type="checkbox" checked="1" label="error|ok" title="Alert" default="1"/>
 
 			</fields>
 		</box>

@@ -43,14 +43,6 @@
 
 				<box title="Filter" width="6">
 					<fields>
-						<color_status type="radiolist" title="Status" newline="false">
-							<options>
-								<option name="">all</option>
-								<option name="1">published</option>
-								<option name="0">unpublished</option>
-							</options>
-						</color_status>
-
 						<alert_color type="radiolist" title="Status" newline="false">
 							<options>
 								<option name="">all</option>
@@ -64,7 +56,6 @@
 			</fields>
 
 			<sql_fields>
-				<field name="color_status">=</field>			
 				<field name="alert_color">=</field>			
 				<field name="type_id">=</field>			
 				<field name="color_name" type="keyword" search="full" fields="color_name">keyword</field>			
