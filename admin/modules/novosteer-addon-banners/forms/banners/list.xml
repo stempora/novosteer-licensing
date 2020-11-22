@@ -35,6 +35,12 @@
 			<relation table="plugin:novosteer_addon_autobrands_trims" text="trim_name" id="trim_id" order="trim_name" />
 		</banner_trims>
 
+		<banner_dealerships type="relation" header="Dealership(s)" multi="true" height="200">
+			<relation table="plugin:novosteer_dealerships" text="dealership_name" id="dealership_id" order="dealership_name" />
+			<descirption>If empty applies to all dealerships</descirption>
+		</banner_dealerships>
+
+
 		<banner_status type="relation" align="center" width="100" header="Status">
 			<options>
 				<option name="1" color="green" value="enabled" />

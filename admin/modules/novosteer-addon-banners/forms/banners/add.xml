@@ -45,6 +45,12 @@
 
 		<box title="Details" width="6">
 			<fields>
+				<banner_dealerships type="droplist" title="Dealership(s)" sortable="true" multi="true" height="200">
+					<relation table="plugin:novosteer_dealerships" text="dealership_name" id="dealership_id" order="dealership_name" />
+					<descirption>If empty applies to all dealerships</descirption>
+				</banner_dealerships>
+
+
 				<banner_years type="droplist" title="Years(s)" multi="true">
 					<dynamic from="2018" to="2025" />
 				</banner_years>

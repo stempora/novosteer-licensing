@@ -47,87 +47,107 @@ class BannersFeed extends Importer {
 		global $_LANG_ID , $_CONF; 
 
 		$banners = $this->db->QFetchRowArray(
-			"SELECT * FROM %s WHERE banner_status = 1 ORDER BY banner_order ASC",
+			"SELECT 
+				* 
+			FROM 
+				%s 
+			WHERE 
+				banner_status = 1 AND 
+				find_in_set(%d , banner_dealerships )
+			ORDER BY banner_order ASC",
 			[
-				$this->module->tables["plugin:novosteer_addon_banners"]
+				$this->module->tables["plugin:novosteer_addon_banners"],
+				$this->info["dealership_id"]
 			]
 		);
 
+		//try the global banners
 		if (!is_array($banners)) {
-			return null;
+			$banners = $this->db->QFetchRowArray(
+				"SELECT 
+					* 
+				FROM 
+					%s 
+				WHERE 
+					banner_status = 1 AND 
+					banner_dealerships = ''
+				ORDER BY banner_order ASC",
+				[
+					$this->module->tables["plugin:novosteer_addon_banners"],
+					$this->info["dealership_id"]
+				]
+			);
 		}
-
+		
 		$data = [];
 
-		foreach ($banners as $key => $val) {
+		if (is_array($banners)) {
+			foreach ($banners as $key => $val) {
 
-			$banner = [
-				"code"	=> $val["banner_code"],
-				"type"	=> $val["banner_type"] == 1 ? "small" : "wide",
-				"image"	=> $this->module->storage->public->getUrl("novosteer/banners/" . $val["banner_id"] . "." . $val["banner_image_type"] , $val["banner_image_date"]),
-				"years"	=> explode("," , $val["banner_years"]),
-				"brands"	=> $val["banner_brands"] 
-					? $this->db->Linear(
-							$this->db->QfetchRowArray(
-								"SELECT brand_name FROM %s WHERE brand_id in (%s)",
-								[
-									$this->module->tables["plugin:novosteer_addon_autobrands_brands"],
-									$val["banner_brands"]
-								]
+				$banner = [
+					"code"	=> $val["banner_code"],
+					"type"	=> $val["banner_type"] == 1 ? "small" : "wide",
+					"image"	=> $this->module->storage->public->getUrl("novosteer/banners/" . $val["banner_id"] . "." . $val["banner_image_type"] , $val["banner_image_date"]),
+					"years"	=> explode("," , $val["banner_years"]),
+					"brands"	=> $val["banner_brands"] 
+						? $this->db->Linear(
+								$this->db->QfetchRowArray(
+									"SELECT brand_name FROM %s WHERE brand_id in (%s)",
+									[
+										$this->module->tables["plugin:novosteer_addon_autobrands_brands"],
+										$val["banner_brands"]
+									]
+								)
 							)
-						)
-					: null,
-				"models"	=> $val["banner_models"] 
-					? 	$this->db->Linear(
-							$this->db->QfetchRowArray(
-								"SELECT 
-									concat(brand_name , '|', model_name) 
-								FROM 
-									%s as models 
-								INNER JOIN 
-									%s as brands 
-								ON 
-									models.brand_id = brands.brand_id 
-								WHERE 
-									models.model_id in (%s)",
-								[
-									$this->module->tables["plugin:novosteer_addon_autobrands_models"],
-									$this->module->tables["plugin:novosteer_addon_autobrands_brands"],
-									$val["banner_models"]
-								]
+						: null,
+					"models"	=> $val["banner_models"] 
+						? 	$this->db->Linear(
+								$this->db->QfetchRowArray(
+									"SELECT 
+										concat(brand_name , '|', model_name) 
+									FROM 
+										%s as models 
+									INNER JOIN 
+										%s as brands 
+									ON 
+										models.brand_id = brands.brand_id 
+									WHERE 
+										models.model_id in (%s)",
+									[
+										$this->module->tables["plugin:novosteer_addon_autobrands_models"],
+										$this->module->tables["plugin:novosteer_addon_autobrands_brands"],
+										$val["banner_models"]
+									]
+								)
 							)
-						)
-					: null,
+						: null,
 
-				"trims"	=> $val["banner_trims"] 
-					? 	$this->db->Linear(
-							$this->db->QfetchRowArray(
-								"SELECT 
-									concat(brand_name , '|', trim_name) 
-								FROM 
-									%s as trims 
-								INNER JOIN 
-									%s as brands 
-								ON 
-									trims.brand_id = brands.brand_id 
-								WHERE 
-									trims.trim_id in (%s)",
-								[
-									$this->module->tables["plugin:novosteer_addon_autobrands_trims"],
-									$this->module->tables["plugin:novosteer_addon_autobrands_brands"],
-									$val["banner_trims"]
-								]
+					"trims"	=> $val["banner_trims"] 
+						? 	$this->db->Linear(
+								$this->db->QfetchRowArray(
+									"SELECT 
+										concat(brand_name , '|', trim_name) 
+									FROM 
+										%s as trims 
+									INNER JOIN 
+										%s as brands 
+									ON 
+										trims.brand_id = brands.brand_id 
+									WHERE 
+										trims.trim_id in (%s)",
+									[
+										$this->module->tables["plugin:novosteer_addon_autobrands_trims"],
+										$this->module->tables["plugin:novosteer_addon_autobrands_brands"],
+										$val["banner_trims"]
+									]
+								)
 							)
-						)
-					: null,
+						: null,
+				];
 
-
-			];
-
-			$data[] = $banner;
+				$data[] = $banner;
+			}
 		}
-		
-		
 
 		$data = json_encode([
 			"banners"	=> $data
