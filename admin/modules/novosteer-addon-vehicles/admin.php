@@ -43,6 +43,7 @@ class CNovosteerAddonVehicles extends CNovosteerAddonVehiclesBackend{
 					$_GET["sub"] = $sub = "export";
 				case "import":
 				case "export":
+				case "alerts":
 					$data = new CSQLAdmin($sub, $this->__parent_templates,$this->db,$this->tables,$extra);
 					$data->setAclMod($this->tpl_module);
 					$this->PrepareFields($data->forms["forms"]);

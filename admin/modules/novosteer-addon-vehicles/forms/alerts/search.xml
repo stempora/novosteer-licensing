@@ -1,0 +1,258 @@
+<form>
+	<title></title>
+	<action>{SELF.FILE}</action>
+	<name>search</name>
+	<width>100%</width>
+	<method>get</method>
+
+	<formtag>true</formtag>
+	<border>true</border>
+	<alternance>true</alternance>
+
+	<skin>Red</skin>
+	
+	
+	<buttons>		
+		<set>
+			<header>true</header>
+		</set>
+
+
+		<button_reset location="index.php?mod={GLOBAL.GET.MOD}&sub={GLOBAL.GET.SUB}&module_id={GLOBAL.GET.MODULE_ID}" icon="undo" title="Reset"/>
+		<button_search type="submit" location="javascript:$('form').first().trigger('submit');" icon="search" title="Search"/>
+
+	</buttons>
+
+
+	<redirect>index.php?sub=units</redirect>
+
+
+	<fields>
+
+		<mod type="hidden" default="$_GET['mod']" action="eval"/>
+		<sub type="hidden" default="$_GET['sub']" action="eval"/>
+		<module_id type="hidden" default="$_GET['module_id']" action="eval"/>
+		<advanced type="hidden" default="0" />
+	</fields>
+
+	<search>
+			<fields>
+
+
+				<box title="Search" width="6">
+					<fields>
+
+						<year type="droplist" title="Year / Brand" empty="true" referers="brand_id">
+							<relation id="year">
+								<text>
+									<f1 field="year" />
+								</text>
+
+								<sql>
+									<vars>
+										<table_vehicles type="table" import="plugin:novosteer_vehicles_import"/>
+									</vars>
+
+									<query><![CDATA[
+										SELECT distinct year from {TABLE_VEHICLES}
+										ORDER BY 
+											year DESC
+									]]></query>
+								</sql>
+							</relation>
+						</year>
+
+						<brand_id type="droplist" title="Brand" empty="true" referer="true">
+							<relation id="brand_id">
+								<text>
+									<f1 field="brand_name" />
+								</text>
+
+								<sql>
+									<vars>
+										<table_brands type="table" import="plugin:novosteer_addon_autobrands_brands"/>
+										<table_vehicles type="table" import="plugin:novosteer_vehicles_import"/>
+									</vars>
+
+									<query><![CDATA[
+										SELECT 
+											* 
+										FROM 
+											{TABLE_BRANDS} as  brands
+										WHERE
+											brands.brand_id in ( SELECT brand_id from {TABLE_VEHICLES} ) 
+										ORDER BY 
+											brand_name ASC
+									]]></query>
+								</sql>
+							</relation>
+						</brand_id>
+
+
+						<model_id type="droplist" title="Model / Trim" empty="true" referers="trim_id">
+							<relation id="model_id">
+								<text>
+									<f1 field="brand_name" />
+									<f2 field="model_name" preffix=" - "/>
+								</text>
+
+								<sql>
+									<vars>
+										<table_brands type="table" import="plugin:novosteer_addon_autobrands_brands"/>
+										<table_models type="table" import="plugin:novosteer_addon_autobrands_models"/>
+										<table_vehicles type="table" import="plugin:novosteer_vehicles_import"/>
+									</vars>
+
+									<query><![CDATA[
+										SELECT 
+											* 
+										FROM 
+											{TABLE_MODELS} as models, 
+											{TABLE_BRANDS} as  brands
+										WHERE
+											models.brand_id = brands.brand_id AND 
+											models.model_id in ( SELECT model_id from {TABLE_VEHICLES} ) 
+										ORDER BY 
+											brand_name ASC,model_name ASC
+									]]></query>
+								</sql>
+							</relation>
+						</model_id>
+
+						<trim_id type="droplist" title="Brand - Trim" empty="true" referer="true">
+							<relation id="trim_id">
+								<text>
+									<f1 field="brand_name" />
+									<f2 field="trim_name" preffix=" - "/>
+								</text>
+
+								<sql>
+									<vars>
+										<table_brands type="table" import="plugin:novosteer_addon_autobrands_brands"/>
+										<table_trims type="table" import="plugin:novosteer_addon_autobrands_trims"/>
+										<table_vehicles type="table" import="plugin:novosteer_vehicles_import"/>
+									</vars>
+
+									<query><![CDATA[
+										SELECT 
+											* 
+										FROM 
+											{TABLE_TRIMS} as trims, 
+											{TABLE_BRANDS} as  brands
+										WHERE
+											trims.brand_id = brands.brand_id AND 
+											trims.trim_id in ( SELECT trim_id from {TABLE_VEHICLES} ) 
+
+										ORDER BY 
+											brand_name ASC,trim_name ASC
+									]]></query>
+								</sql>
+							</relation>
+						</trim_id>
+
+						<color_id type="droplist" title="Color" empty="true">
+							<relation table="plugin:novosteer_addon_autobrands_colors" id="color_id" text="color_name" order="color_name"></relation>
+						</color_id> 
+
+						<keywords type="textbox" title="Keywords"/>
+
+					</fields>
+				</box>
+
+
+				<box title="Filter" width="6">
+					<fields>
+						<dealership_id type="droplist" title="Dealership" empty="true">
+							<relation id="dealership_id" table="plugin:novosteer_dealerships">
+								<text>
+									<f1 field="dealership_name" />
+								</text>
+							</relation>
+						</dealership_id>
+
+						<cat type="radiolist" title="Cat" newline="false" empty="true" empty_text="All">
+							<options>
+								<option name="New">New</option>
+								<option name="Used">Used</option>
+								<option name="Certified">Certified</option>
+							</options>
+						</cat>
+
+<!--
+						<type_id type="droplist" title="Type" empty="true">
+							<relation id="type_id" table="plugin:novosteer_addon_autobrands_types">
+								<text>
+									<f1 field="type_name" />
+								</text>
+							</relation>
+						</type_id>
+-->
+						<alert_brand type="droplist" title="Brand / Model Alert" newline="false" referers="alert_model">
+							<options>
+								<option name="">all</option>
+								<option name="0">ok</option>
+								<option name="1">error</option>
+							</options>
+						</alert_brand>
+
+						<alert_model type="droplist" title="Model Alert" newline="false" referer="true">
+							<options>
+								<option name="">all</option>
+								<option name="0">ok</option>
+								<option name="1">error</option>
+							</options>
+						</alert_model>
+
+						<alert_trim type="droplist" title="Trim / Price Alert" newline="false" referers="alert_price">
+							<options>
+								<option name="">all</option>
+								<option name="0">ok</option>
+								<option name="1">error</option>
+							</options>
+						</alert_trim>
+
+						<alert_price type="droplist" title="Price Alert" newline="false" referer="true">
+							<options>
+								<option name="">all</option>
+								<option name="0">ok</option>
+								<option name="1">error</option>
+							</options>
+						</alert_price>
+
+
+						<product_status title="Status" width="100" type="radiolist" newline="false">
+							<options>
+								<option name="">all</option>
+								<option name="1">enabled</option>
+								<option name="0">disabled</option>
+							</options>
+						</product_status>
+
+					</fields>
+				</box>
+
+
+			</fields>
+
+			<sql_fields>
+				<field name="keywords" type="keyword" search="full"  fields="vin,stock,brand_name,model_name,trim_name" />
+				<field name="dealership_status">=</field>			
+				<field name="brand_id" field="brands.brand_id" type="="></field>			
+				<field name="model_id" field="models.model_id" type="="></field>			
+				<field name="trim_id" field="trims.trim_id" type="="></field>			
+				<field name="type_id" field="types.type_id" type="="></field>			
+				<field name="cat" field="cat" type="="></field>			
+				<field name="alert_brand" field="alert_brand" type="="></field>			
+				<field name="alert_model" field="alert_model" type="="></field>			
+				<field name="alert_trim" field="alert_trim" type="="></field>			
+				<field name="alert_price" field="alert_price" type="="></field>			
+				<field name="year" field="year" type="="></field>			
+				<field name="product_status" field="product_status" type="="></field>			
+				<field name="color_id" field="color_id" type="="></field>			
+				<field name="dealership_id" field="dealership.dealership_id" type="="></field>			
+			</sql_fields>
+
+	</search>
+
+
+</form>

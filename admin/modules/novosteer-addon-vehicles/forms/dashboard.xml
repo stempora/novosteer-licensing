@@ -35,6 +35,15 @@
 			link="index.php?mod=novosteer-addon-vehicles&sub=import"
 			/>
 
+		<alerts 
+			color="Red" 
+			icon="cloud-download" 
+			subtitle="Search & View" 
+			acl="importers.list"
+			title="Alerts" 
+			link="index.php?mod=novosteer-addon-vehicles&sub=alerts"
+			/>
+
 		<t6 
 			color="Purple" 
 			icon="cloud-upload" 
