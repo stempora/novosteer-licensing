@@ -42,8 +42,6 @@
 		</alert_trim>
 
 		<type_name header="Type"></type_name>
-		<calc_price header="Calc Price" type="price" align="right"/>
-		<misc_price1 header="Misc Price" type="price" align="right"/>
 
 		<product_status header="Status" width="100" align="center" type="relation">
 			<options>
