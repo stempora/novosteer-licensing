@@ -1289,5 +1289,38 @@ class CNovosteerAddonAutoBrands extends CNovosteerAddonAutoBrandsBackend{
 
 		die("1");		
 	}
+
+
+
+	/**
+	* description
+	*
+	* @param
+	*
+	* @return
+	*
+	* @access
+	*/
+	function adminCronJob($module) {
+
+		$jobs = [
+			[
+				"module"			=> $module["module_id"],
+				"module_name"		=> $module["module_name"],					
+				"module_code"		=> $module["module_code"],
+
+				"type"				=> "1",
+				"action"			=> "CronUpdateVehicles",
+
+				"minute"			=> "0",
+				"hour"				=> "11",
+				"day"				=> "*",
+				"month"				=> "*",
+				"year"				=> "*",
+			],
+		];
+
+		return $jobs;
+	}
 	
 }

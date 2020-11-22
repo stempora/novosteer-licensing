@@ -122,6 +122,14 @@
 			<fields>
 				<vehicle_default type="checkbox" checked="1" label="yes|no" title="Default" description="Check to apply for all vehicles without a trim."/>
 
+				<vehicle_status type="droplist" title="Status" required="true" empty="true" validate="A:1:1">
+					<options>
+						<option name="1">enabled</option>
+						<option name="0">disabled</option>
+						<option name="-1">pending</option>
+					</options>					
+				</vehicle_status>
+
 				<vehicle_image valign="top" adminwidth="100" type="image" path="./vehicles/stock/" title="Image">
 					<file default="" field="vehicle_id" ext=".png" />			
 						<title></title>

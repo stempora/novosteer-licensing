@@ -124,8 +124,9 @@
 						<vehicle_status type="radiolist" title="Status" newline="false">
 							<options>
 								<option name="">all</option>
-								<option name="1">published</option>
-								<option name="0">unpublished</option>
+								<option name="1">enabled</option>
+								<option name="0">disabled</option>
+								<option name="-1">pending</option>
 							</options>
 						</vehicle_status>
 

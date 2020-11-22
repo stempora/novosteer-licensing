@@ -233,10 +233,8 @@ class CNovosteerAddonAutoBrandsBackend extends CPlugin {
 				"type_id"		=> $model_type !== null 
 					? $this->getTypeIDByName($model_type , false)
 					: 0
-
 			]
-		);	
-		
+		);		
 
 		return $id;
 		
