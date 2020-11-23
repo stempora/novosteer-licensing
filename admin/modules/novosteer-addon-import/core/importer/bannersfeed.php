@@ -177,8 +177,6 @@ class BannersFeed extends Importer {
 
 		} else {
 			$this->log("No changes to the inventory.");
-
-			$this->cronJob->removeLog();
 		}		
 
 		
