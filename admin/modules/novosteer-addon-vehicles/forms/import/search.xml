@@ -219,6 +219,14 @@
 							</options>
 						</alert_price>
 
+						<alert_vehicle type="droplist" title="Stock Vehicle Alert" newline="false">
+							<options>
+								<option name="">all</option>
+								<option name="0">ok</option>
+								<option name="1">error</option>
+							</options>
+						</alert_vehicle>
+
 
 						<product_status title="Status" width="100" type="radiolist" newline="false">
 							<options>
@@ -246,6 +254,7 @@
 				<field name="alert_model" field="alert_model" type="="></field>			
 				<field name="alert_trim" field="alert_trim" type="="></field>			
 				<field name="alert_price" field="alert_price" type="="></field>			
+				<field name="alert_vehicle" field="alert_vehicle" type="="></field>			
 				<field name="year" field="year" type="="></field>			
 				<field name="product_status" field="product_status" type="="></field>			
 				<field name="color_id" field="color_id" type="="></field>			

@@ -126,6 +126,17 @@ class Homenet extends Importer implements ImporterInterface{
 					true
 				);
 
+
+				$item["vehicle_id"] = $this->module->plugins["novosteer-addon-autobrands"]->getVehicleByYearModelTrimColor(
+					$item["year"],
+					$item["model_id"],
+					$item["trim_id"],
+					$item["color_id"],
+					true
+				);
+
+				$item["alert_vehicle"] = $item["vehicle_id"] ? 0 : 1;
+
 				unset($item["trim"]);
 			break;
 

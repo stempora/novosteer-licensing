@@ -57,6 +57,13 @@
 			</options>
 		</alert_price>
 
+		<alert_vehicle type="relation" align="center" width="100" header="Stock">
+			<options>
+				<option name="0" color="green" value="ok" />
+				<option name="1" color="red" value="err" />
+			</options>
+		</alert_vehicle>
+
 		<button_delete type="button" width="44" align="center" onclick="" button="/small/delete" acl="msg.delete">
 			<location>{SELF.URI.DELETE}</location>
 		</button_delete>
