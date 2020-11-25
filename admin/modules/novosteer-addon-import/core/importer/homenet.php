@@ -193,6 +193,12 @@ class Homenet extends Importer implements ImporterInterface{
 		$item["factory_codes"] = json_encode(explode("," , $item["factory_codes"]));
 
 		$item["dateinstock"] = strtotime($item["dateinstock"]);
+
+		//in transit code
+		if ($item["comment_1"] == "12") {
+			$item["is_transit"] = "1";
+		}
+		
 		
 		return true;
 	}

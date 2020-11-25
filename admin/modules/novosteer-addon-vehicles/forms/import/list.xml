@@ -16,7 +16,7 @@
 		<stock header="Stock"></stock>
 		<brand_name header="Brand"></brand_name>
 
-		<alert_brand type="relation" align="center" width="60" header="A.">
+		<alert_brand type="relation" align="center" width="60" header="A." restricted="eval:!$_GET['show_alerts'];">
 			<options>
 				<option name="1" color="red" value="error" />
 				<option name="0" color="green" value="ok" />
@@ -25,7 +25,7 @@
 
 		<model_name header="Model"></model_name>
 
-		<alert_model type="relation" align="center" width="60" header="A.">
+		<alert_model type="relation" align="center" width="60" header="A." restricted="eval:!$_GET['show_alerts'];">
 			<options>
 				<option name="1" color="red" value="error" />
 				<option name="0" color="green" value="ok" />
@@ -34,7 +34,7 @@
 
 		<trim_name header="Trim"></trim_name>
 
-		<alert_trim type="relation" align="center" width="60" header="A.">
+		<alert_trim type="relation" align="center" width="60" header="A." restricted="eval:!$_GET['show_alerts'];">
 			<options>
 				<option name="1" color="red" value="error" />
 				<option name="0" color="green" value="ok" />
@@ -50,14 +50,28 @@
 			</options>
 		</product_status>
 
-		<alert_price type="relation" align="center" width="100" header="Disc">
+		<is_transit header="Transit" align="center" type="relation">
+			<options>
+				<option name="1" value="yes" />
+				<option name="0" value="no" />
+			</options>
+		</is_transit>
+
+		<is_clearance header="Clearance" align="center" type="relation">
+			<options>
+				<option name="1" value="yes" />
+				<option name="0" value="no" />
+			</options>
+		</is_clearance>
+
+		<alert_price type="relation" align="center" width="100" header="Disc" restricted="eval:!$_GET['show_alerts'];">
 			<options>
 				<option name="0" color="green" value="ok" />
 				<option name="1" color="red" value="err" />
 			</options>
 		</alert_price>
 
-		<alert_vehicle type="relation" align="center" width="100" header="Stock">
+		<alert_vehicle type="relation" align="center" width="100" header="Stock" restricted="eval:!$_GET['show_alerts'];">
 			<options>
 				<option name="0" color="green" value="ok" />
 				<option name="1" color="red" value="err" />

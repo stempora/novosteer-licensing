@@ -187,6 +187,34 @@
 							</relation>
 						</type_id>
 -->
+
+						<product_status title="Status" width="100" type="radiolist" newline="false">
+							<options>
+								<option name="">all</option>
+								<option name="1">enabled</option>
+								<option name="0">disabled</option>
+							</options>
+						</product_status>
+
+						<is_transit title="Show" width="100" type="radiolist" newline="false">
+							<options>
+								<option name="">all</option>
+								<option name="1">in transit</option>
+								<option name="0">arrived</option>
+							</options>
+						</is_transit>
+
+						<is_clearance title="Show" width="100" type="radiolist" newline="false">
+							<options>
+								<option name="">all</option>
+								<option name="1">in clearance</option>
+								<option name="0">arrived</option>
+							</options>
+						</is_clearance>
+
+						<subtitle_alerts type="subtitle" title="Alerts Filter" collapsed="true"></subtitle_alerts>
+						<show_alerts type="checkbox" checked="1" title="Show Alerts" label="yes|no"></show_alerts>
+
 						<alert_brand type="droplist" title="Brand / Model Alert" newline="false" referers="alert_model">
 							<options>
 								<option name="">all</option>
@@ -228,14 +256,6 @@
 						</alert_vehicle>
 
 
-						<product_status title="Status" width="100" type="radiolist" newline="false">
-							<options>
-								<option name="">all</option>
-								<option name="1">enabled</option>
-								<option name="0">disabled</option>
-							</options>
-						</product_status>
-
 					</fields>
 				</box>
 
@@ -258,6 +278,8 @@
 				<field name="year" field="year" type="="></field>			
 				<field name="product_status" field="product_status" type="="></field>			
 				<field name="color_id" field="color_id" type="="></field>			
+				<field name="is_transit" field="is_transit" type="="></field>			
+				<field name="is_clearance" field="is_clearance" type="="></field>			
 				<field name="dealership_id" field="dealership.dealership_id" type="="></field>			
 			</sql_fields>
 

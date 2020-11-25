@@ -15,6 +15,11 @@
 			
 		</image_downloaded>
 
+		<image_overlay header="Overlay" width="200" html="true">
+			
+		</image_overlay>
+
+
 		<image_last_update header="Date" type="date" params="%Y-%m-%d" width="100" align="center"></image_last_update>
 
 		<image_error_download header="Dl Error"></image_error_download>

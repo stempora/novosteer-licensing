@@ -1,0 +1,149 @@
+<importer>
+	<fields>
+		<box title="Settings" width="7">
+			<fields>		
+
+				<set_image_width type="textbox" suffix="px" title="Output Width" required="true" validate="A:1:4"></set_image_width>
+				<set_image_quality type="textbox"  title="Output Quality" required="true" validate="A:1:2"></set_image_quality>
+
+				<set_condition type="textarea" script="true" title="Conditions">
+					<description><![CDATA[
+						<p>Eg: [database_table_field]|[condition: &gt;, &lt;, =, in,]|[value1,value2,value3]</p>
+					]]></description>
+				</set_condition>
+
+				<subtitle_w1 type="subtitle" title="Watermark #1">Watermark #1</subtitle_w1>
+
+				<set_w1 valign="top" adminwidth="200" type="image" path="novosteer/import/overlays/" absolute="false" editable="true" extend="false" title="List">
+					<file default="w1_" field="feed_id" ext=".png" />			
+					<error>No file available.</error>						
+				</set_w1>
+
+				<set_w1_position type="droplist" title="Position">
+					<options>
+						<option name="top-left">top-left</option>
+						<option name="top">top</option>
+						<option name="top-right">top-right</option>
+
+						<option name="left">left</option>
+						<option name="center">center</option>
+						<option name="right">right</option>
+
+						<option name="bottom-left">bottom-left</option>
+						<option name="bottom">bottom</option>
+						<option name="bottom-right">bottom-right</option>
+					</options>
+				</set_w1_position>
+
+				<set_w1_offset_x type="textbox" title="Offset X/Y" suffix="px" referers="set_w1_offset_y"></set_w1_offset_x>
+				<set_w1_offset_y type="textbox" title="Offset X/Y" suffix="px" referer="set_w1_offset_x"></set_w1_offset_y>
+
+				<subtitle_w2 type="subtitle" title="Watermark #2">Watermark #2</subtitle_w2>
+				<set_w2 valign="top" adminwidth="200" type="image" path="novosteer/import/overlays/" absolute="false" editable="true" extend="false" title="List">
+					<file default="w2_" field="feed_id" ext=".png" />			
+					<error>No file available.</error>						
+				</set_w2>
+
+				<set_w2_position type="droplist" title="Position">
+					<options>
+						<option name="top-left">top-left</option>
+						<option name="top">top</option>
+						<option name="top-right">top-right</option>
+
+						<option name="left">left</option>
+						<option name="center">center</option>
+						<option name="right">right</option>
+
+						<option name="bottom-left">bottom-left</option>
+						<option name="bottom">bottom</option>
+						<option name="bottom-right">bottom-right</option>
+					</options>
+				</set_w2_position>
+
+				<set_w2_offset_x type="textbox" title="Offset X/Y" suffix="px" referers="set_w2_offset_y"></set_w2_offset_x>
+				<set_w2_offset_y type="textbox" title="Offset X/Y" suffix="px" referer="set_w2_offset_x"></set_w2_offset_y>
+
+				<subtitle_w3 type="subtitle" title="Watermark #3">Watermark #3</subtitle_w3>
+				<set_w3 valign="top" adminwidth="300" type="image" path="novosteer/import/overlays/" absolute="false" editable="true" extend="false" title="List">
+					<file default="w3_" field="feed_id" ext=".png" />			
+					<error>No file available.</error>						
+				</set_w3>
+
+				<set_w3_position type="droplist" title="Position">
+					<options>
+						<option name="top-left">top-left</option>
+						<option name="top">top</option>
+						<option name="top-right">top-right</option>
+
+						<option name="left">left</option>
+						<option name="center">center</option>
+						<option name="right">right</option>
+
+						<option name="bottom-left">bottom-left</option>
+						<option name="bottom">bottom</option>
+						<option name="bottom-right">bottom-right</option>
+					</options>
+				</set_w3_position>
+
+				<set_w3_offset_x type="textbox" title="Offset X/Y" suffix="px" referers="set_w3_offset_y"></set_w3_offset_x>
+				<set_w3_offset_y type="textbox" title="Offset X/Y" suffix="px" referer="set_w3_offset_x"></set_w3_offset_y>
+
+				<subtitle_w4 type="subtitle" title="Watermark #4">Watermark #4</subtitle_w4>
+				<set_w4 valign="top" adminwidth="400" type="image" path="novosteer/import/overlays/" absolute="false" editable="true" extend="false" title="List">
+					<file default="w4_" field="feed_id" ext=".png" />			
+					<error>No file available.</error>						
+				</set_w4>
+
+				<set_w4_position type="droplist" title="Position">
+					<options>
+						<option name="top-left">top-left</option>
+						<option name="top">top</option>
+						<option name="top-right">top-right</option>
+
+						<option name="left">left</option>
+						<option name="center">center</option>
+						<option name="right">right</option>
+
+						<option name="bottom-left">bottom-left</option>
+						<option name="bottom">bottom</option>
+						<option name="bottom-right">bottom-right</option>
+					</options>
+				</set_w4_position>
+
+				<set_w4_offset_x type="textbox" title="Offset X/Y" suffix="px" referers="set_w4_offset_y"></set_w4_offset_x>
+				<set_w4_offset_y type="textbox" title="Offset X/Y" suffix="px" referer="set_w4_offset_x"></set_w4_offset_y>
+
+			</fields>
+		</box>
+	</fields>
+
+	<javascript>
+		<after>
+			CM("set_condition");
+		</after>
+	</javascript>
+
+	<remove_fields>
+		<subtitle_feed_location></subtitle_feed_location>
+		<feed_data_type></feed_data_type>
+		<subtitle_feed_manual></subtitle_feed_manual>
+		<comment_manual></comment_manual>
+		<feed_data_file></feed_data_file>
+		<subtitle_feed_ftp></subtitle_feed_ftp>
+		<feed_data_server></feed_data_server>
+		<feed_data_port></feed_data_port>
+		<feed_data_enc></feed_data_enc>
+		<feed_data_passive></feed_data_passive>
+		<feed_data_user></feed_data_user>
+		<feed_data_pass></feed_data_pass>
+		<feed_data_path></feed_data_path>
+		<subtitle_feed_web></subtitle_feed_web>
+		<feed_data_link></feed_data_link>
+		<cache_control></cache_control>
+		<button_all></button_all>
+		<button_info></button_info>
+		<button_list></button_list>
+		<button_details></button_details>
+	</remove_fields> 
+</importer>
+

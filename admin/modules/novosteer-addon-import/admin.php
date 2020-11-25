@@ -51,11 +51,13 @@ class CNovosteerAddonImport extends CNovosteerAddonImportBackend{
 					$data->setAclMod($this->tpl_module);
 					$this->PrepareFields($data->forms["forms"]);
 					$this->ImporterPrepareFields($data->forms);
-					$this->ImporterPrepareValues($data->forms["forms"]);
+//					$this->ImporterPrepareValues($data->forms["forms"]);
 
 					$data->functions = [
 							"onstore" => [&$this , "ImporterStore" ],
 							"ondelete" => [&$this , "ImporterDelete" ],
+							"ondetails"			=> array(&$this , "importerDecodeValues" ),
+							"onedit"			=> array(&$this , "importerDecodeValues" ),
 
 					];					
 					return $data->DoEvents();
@@ -431,33 +433,18 @@ class CNovosteerAddonImport extends CNovosteerAddonImportBackend{
 			
 	}
 
-	function ImporterPrepareValues(&$forms) {
+	function ImporterDecodeValues($data , &$forms) {
 
-		if ($_REQUEST["feed_id"]) {			
+		$settings = json_decode($data["feed_settings"],true);
 
-			$hook = $this->getImporterById($_REQUEST["feed_id"]);
-			$values = $hook["settings"];
+		$data = array_merge(
+			$data , 
+			(array)$settings
+		);
 
+		//debug($settings,1);
 
-			if (is_array($forms["edit"]["fields"])) {
-				foreach ($forms["edit"]["fields"] as $key => $val) {
-
-					if ($key == "box") {
-						foreach ($val as $k => $v) {
-							foreach ($v["fields"] as $_k => $_v) {
-								$forms["edit"]["fields"][$key][$k]["fields"][$_k]["default"] = $values[$_k];
-								$forms["details"]["fields"][$key][$k]["fields"][$_k]["default"] = $values[$_k];
-							}
-						}
-						
-					} else {				
-						$forms["edit"]["fields"][$key]["default"] = $values[$key];
-						$forms["details"]["fields"][$key]["default"] = $values[$key];
-					}
-				}
-			}
-		}
-
+		return $data;
 	}
 
 
@@ -471,16 +458,60 @@ class CNovosteerAddonImport extends CNovosteerAddonImportBackend{
 	*
 	* @access
 	*/
-	function ImporterStore($record , $form , $_old) {
+	function ImporterStore($record , $forms , $_old) {
 
 		if ($record["feed_id"]) {
 
 			//fields
 			$old = $this->getImporterById($record["feed_id"]);
-			
-			foreach ($_POST as $key => $val) {
+
+			//get all fields
+			$fields = CForm::AllFields($forms["forms"]["edit"]);
+
+			foreach ($fields as $key => $val) {
+
+				if (stristr($key , "set_") !== false) {					
+
+
+					switch ($val["type"]) {
+						case "image":
+							if (!$record[$key] && $old["settings"][$key] && !($record[$key . "_radio_type"] == "-1")) {
+								$record[$key] = $old["settings"][$key];
+							}					
+
+							if ($record[$key . "_temp"]) {
+								$record[$key . "_file"] = $record[$key . "_temp"];
+								unset($record[$key . "_temp"]);
+							} else {
+								$record[$key . "_file"] = $old["settings"][$key . "_file"];
+							}
+
+							if (!$record[$key . "_alt"]) {
+								$record[$key . "_alt"] = $old["settings"][$key . "_alt"];
+							}
+
+							if (!$record[$key . "_type"]) {
+								$record[$key . "_type"] = $old["settings"][$key . "_type"];
+							}
+
+							if (!$record[$key . "_date"]) {
+								$record[$key . "_date"] = $old["settings"][$key . "_date"];
+							}							
+						break;
+					}
+				}
+			}				
+
+
+			foreach ($record as $key => $val) {
 				if (stristr($key , "set_")) {
-					$data[$key] = $val;
+
+					if (!(stristr($key , "_temp") ||  
+							stristr($key , "_radio_type") || 
+							stristr($key , "_crop_oxbc")
+					)) {
+						$data[$key] = $val;
+					}
 				}			
 			}
 
@@ -500,11 +531,11 @@ class CNovosteerAddonImport extends CNovosteerAddonImportBackend{
 
 			$client = $this->getImporterObject($record["feed_id"]);
 
-			if ($_old["feed_settings"]) {
-				$_old["settings"] = json_decode($_old["feed_settings"],true);
+			if ($old["feed_settings"]) {
+				$old["settings"] = json_decode($old["feed_settings"],true);
 			}
 			
-			$client->runOnUpdate($_old);
+			$client->runOnUpdate($old);
 
 		}		
 	}
