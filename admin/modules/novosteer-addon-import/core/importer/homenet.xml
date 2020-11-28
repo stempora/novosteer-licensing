@@ -43,6 +43,20 @@
 				<set_import_stock type="textarea" size="1:4" extend="true" />
 
 
+				<subtitle_reynolds type="subtitle" title="Reynolds Codes"/>
+				<set_rr_comment type="droplist" title="Comment Field">
+					<options>
+						<option name="comment_1">Comment 1</option>
+						<option name="comment_2">Comment 2</option>
+						<option name="comment_3">Comment 3</option>
+						<option name="comment_4">Comment 4</option>
+						<option name="comment_5">Comment 5</option>
+					</options>
+				</set_rr_comment>
+				<set_rr_demo type="textbox" title="Demo"></set_rr_demo>
+				<set_rr_transit type="textbox" title="In Transit"></set_rr_transit>
+				<set_rr_transit type="textbox" title="Dont Import"></set_rr_transit>
+
 
 
 			</fields>

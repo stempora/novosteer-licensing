@@ -197,6 +197,8 @@ class Homenet extends Importer implements ImporterInterface{
 		//in transit code
 		if ($item["comment_1"] == "12") {
 			$item["is_transit"] = "1";
+		} else {
+			$item["is_transit"] = "0";
 		}
 		
 		
