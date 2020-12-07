@@ -24,6 +24,7 @@
 		</alert_brand>
 
 		<model_name header="Model"></model_name>
+		<modelnumber header="No"></modelnumber>
 
 		<alert_model type="relation" align="center" width="60" header="A." restricted="eval:!$_GET['show_alerts'];">
 			<options>

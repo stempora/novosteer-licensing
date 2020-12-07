@@ -17,7 +17,7 @@
 			<header>true</header>
 		</set>
 
-		<button_delete onclick="" icon="spinner11" title="Delete Cache">
+		<button_delete onclick="" icon="spinner11" title="Delete Cache" restricted="eval:$_GET['action'] != 'details';">
 			<location>javascript:deleteCache()</location>
 		</button_delete>
 
@@ -51,7 +51,11 @@
 					</options>
 				</product_status>
 
-				<product_locks type="droplist" required="true" validate="A:1:2000" title="Relation Field/Feed" empty="true" referers="set_feed_field">
+				<dealership_id type="relation" title="Dealership">
+					<relation table="plugin:novosteer_dealerships" id="dealership_id" text="dealership_name"></relation>
+				</dealership_id>
+
+				<product_locks type="droplist" multi="true" title="Locked Fields">
 					<function module="novosteer-addon-import" function="getTableFields" />
 					<relation id="Field">							
 						<text>
@@ -59,15 +63,17 @@
 						</text>
 					</relation>
 				</product_locks> 
-				<dealership_id type="relation" title="Dealership">
-					<relation table="plugin:novosteer_dealerships" id="dealership_id" text="dealership_name"></relation>
-				</dealership_id>
 
-				<product_date_create type="date" params="Y-m-d" title="Create Date"></product_date_create>
-				<product_date_last_update type="date" params="Y-m-d" title="Last Update Date" />
 				<subtitle_overview type="subtitle" title="Overview"></subtitle_overview>
 
-				<cat type="textbox" title="Category" />
+				<cat type="droplist" title="Category" empty="true" required="true" validate="A:1:20">
+					<options>
+						<option name="New">New</option>
+						<option name="Used">Used</option>
+						<option name="Certified">Certified</option>
+					</options>
+				</cat>
+
 				<year type="textbox" title="Year / Age" referers="age"/>
 				<age type="textbox" preffix="/&nbsp; " referer="true"></age>
 
@@ -138,9 +144,8 @@
 				<trim type="textbox" title="Trim Text" />
 				<style_description type="textbox" title="Style Description" />
 				<miles type="textbox" title="Mileage" />
-				<vin type="textbox" title="VIN" />
-				<stock type="textbox" title="Stock ID" />
-				<date_in_stock type="date" params="Y-m-d" title="Date In Stock" />
+				<vin type="textbox" title="VIN" unique="true" validate="A:1:200" required="true"/>
+				<stock type="textbox" title="Stock ID" unique="true" validate="A:1:200" required="true"/>
 
 
 				<subtitle_exterior type="subtitle" title="Exterior"/>
@@ -179,7 +184,6 @@
 				<drivetrain type="textbox" title="Drive Train" />
 
 				<subtitle_factory type="subtitle" title="Factory"/>
-				<factory_codes type="text" title="Factory Codes" with="100%" forcevalue="eval:implode(', ' , json_decode($values['values']['factory_codes'] , true));"/>
 				<modelnumber type="textbox" title="Model Number" />
 				<wheelbase_code type="textbox" title="Wheelbase Code" />
 
@@ -205,26 +209,6 @@
 				<misc_price3 type="textbox" title="Misc Price3" />
 				<ep_price type="textbox" title="EP Price" />
 
-				<subtitle_mfg type="subtitle" title="MFG Discount" restricted="eval:$field['cat'] != 'New';"></subtitle_mfg>
-
-				<alert_price type="droplist" align="center" width="100" title="Status" restricted="eval:$field['cat'] != 'New';">
-					<options>
-						<option name="0" color="green" title="success" />
-						<option name="1" color="red" title="error" />
-					</options>
-				</alert_price>
-				<calculator_rule type="text" title="Applied Rule" restricted="eval:$field['cat'] != 'New';"></calculator_rule>
-				<calculator_discounts type="text" title="Applied Discount" restricted="eval:$field['cat'] != 'New';"></calculator_discounts>
-				<calc_price type="textbox" title="Calculated Discount" restricted="eval:$field['cat'] != 'New';"/>
-
-				<subtitle_prices_local type="subtitle" title="Calculated Prices (Novosteer Side)"></subtitle_prices_local>
-
-				<price_1 type="text" title="Price 1" />
-				<price_2 type="text" title="Price 2" />
-				<price_3 type="text" title="Price 3" />
-				<price_4 type="text" title="Price 4" />
-				<price_5 type="text" title="Price 5" />
-				<price_6 type="text" title="Price 6" />
 
 				<subtitle_reserveds_local type="subtitle" title="Reserveds"></subtitle_reserveds_local>
 				<reserved_1 type="textbox" title="Reserved 1" />
@@ -233,22 +217,6 @@
 				<reserved_4 type="textbox" title="Reserved 4" />
 				<reserved_5 type="textbox" title="Reserved 5" />
 
-			</fields>
-		</box>
-
-		<box title="Options" width="6">
-			<fields>
-				<description extend="true" type="textbox" title="Description" />
-				<options extend="true" type="text" title="Options"  forcevalue="eval:implode(', ' , json_decode($values['values']['options'] , true));"/>
-				<options_exterior extend="true" type="text" title="Exterior" forcevalue="eval:implode(', ' , json_decode($values['values']['options_exterior'] , true));"/>
-			</fields>
-		</box>
-
-		<box title="Options" width="6">
-			<fields>
-				<options_interior extend="true" type="text" title="Interior"  forcevalue="eval:implode(', ' , json_decode($values['values']['options_interior'] , true));"/>
-				<options_mechanical extend="true" type="text" title="Mechanical"  forcevalue="eval:implode(', ' , json_decode($values['values']['options_mechanical'] , true));"/>
-				<options_safety extend="true" type="text" title="Safety" forcevalue="eval:implode(', ' , json_decode($values['values']['options_safety'] , true));" />
 			</fields>
 		</box>
 

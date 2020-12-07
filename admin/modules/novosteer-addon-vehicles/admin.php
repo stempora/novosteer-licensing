@@ -48,12 +48,28 @@ class CNovosteerAddonVehicles extends CNovosteerAddonVehiclesBackend{
 					$data->setAclMod($this->tpl_module);
 					$this->PrepareFields($data->forms["forms"]);
 
+					if ($sub == "import") {
+						$data->functions = [
+								"onstore" => [&$this , "VehicleImportStore" ],
+						];					
+					}
+					
+
 					return $data->DoEvents();
 				break;
 
 				case "import.status":
 					return $this->importStatus();
 				break;
+
+				case "images.delete":
+					return $this->imagesDelete();
+				break;
+
+				case "cache.delete":
+					return $this->cacheDelete();
+				break;
+
 			}
 		}
 	}
@@ -173,6 +189,90 @@ class CNovosteerAddonVehicles extends CNovosteerAddonVehiclesBackend{
 		}
 
 		die("1");		
+	}
+
+	/**
+	* description
+	*
+	* @param
+	*
+	* @return
+	*
+	* @access
+	*/
+	function imagesDelete() {
+		global $_LANG_ID; 
+
+		if (is_array($_POST["image_id"])) {
+			$this->db->QueryUpdate(
+				$this->tables["plugin:novosteer_vehicles_" . ($_GET["type"] == "import" ? "import" : "export") . "_images"],
+				[
+					"image_deleted"	=> 1,
+				],
+				$this->db->Statement(
+					"image_id in (%s)",
+					[ implode("," , $_POST["image_id"])]
+				)
+			);
+
+		}
+
+		die("1");		
+
+		debug($_POST,1);
+	}
+
+	/**
+	* description
+	*
+	* @param
+	*
+	* @return
+	*
+	* @access
+	*/
+	function cacheDelete() {
+		global $_LANG_ID; 
+
+		if (is_array($_POST["product_id"])) {
+			$this->db->Query(
+				"DELETE FROM %s WHERE product_id IN (%s)",
+				[
+					$this->tables["plugin:novosteer_addon_importer" . ($_GET["type"] == "import" ? "import" : "export") . "_items"],
+				],
+				$this->db->Statement(
+					"product_id in (%s)",
+					[ implode("," , $_POST["product_id"])]
+				)
+			);
+
+		}
+		die("1");		
+	}
+	
+
+	/**
+	* description
+	*
+	* @param
+	*
+	* @return
+	*
+	* @access
+	*/
+	function VehicleImportStore($record) {
+		global $_LANG_ID; 
+
+		$this->db->Query(
+			"DELETE FROM %s WHERE product_id IN (%s)",
+			[
+				$this->tables["plugin:novosteer_addon_importer" . ($_GET["type"] == "import" ? "import" : "export") . "_items"],			
+			],
+			$this->db->Statement(
+				"product_id = %d",
+				[  $record["product_id"] ]
+			)
+		);
 	}
 	
 }

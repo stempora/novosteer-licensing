@@ -55,7 +55,7 @@
 				</set_rr_comment>
 				<set_rr_demo type="textbox" title="Demo"></set_rr_demo>
 				<set_rr_transit type="textbox" title="In Transit"></set_rr_transit>
-				<set_rr_transit type="textbox" title="Dont Import"></set_rr_transit>
+				<set_rr_noimport type="textbox" title="Dont Import"></set_rr_noimport>
 
 
 

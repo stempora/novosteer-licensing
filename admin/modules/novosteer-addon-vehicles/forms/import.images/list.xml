@@ -7,6 +7,8 @@
 	<fields>
 		<_count header="No." width="20" align="right" suffix="."/>
 
+		<ids type="multiple" field="image_id" value="image_id" align="center" width="30" acl="menu.edit"/>
+
 		<image_source header="Source" width="200" html="true">
 			
 		</image_source>
@@ -19,6 +21,12 @@
 			
 		</image_overlay>
 
+		<image_deleted type="relation" width="100" header="Status" align="center">
+			<options>
+				<option name="1" color="red" value="deleted" />
+				<option name="0" color="green" value="published" />
+			</options>
+		</image_deleted>
 
 		<image_last_update header="Date" type="date" params="%Y-%m-%d" width="100" align="center"></image_last_update>
 
@@ -31,6 +39,9 @@
 		<titles>true</titles>
 		<nolinks>true</nolinks>
 		<buttons>
+			<action_enable icon="check" title="Delete" acl="actions.status">
+				<location>javascript:Delete();</location>
+			</action_enable>
 		</buttons>
 	</header>
 
@@ -52,7 +63,7 @@
 					{TABLE} 
 				]]></import>
 			</from>
-			<condition type="var" import="WHERE product_id = {PARENT} AND image_deleted=0" />
+			<condition type="var" import="WHERE product_id = {PARENT}" />
 
 			<order type="var" import="image_order" />
 			<order_mode type="var" import="ASC" />
@@ -63,5 +74,26 @@
 
 	</sql> 
 
+	<javascript>
+		<after><![CDATA[
+			function Delete(){				
+				
+				DeleteConfirmCallback(
+					"Do you want to mark the selected images for deletion?",			
+					function() {
+						$.ajax({
+							url:"index.php?mod=novosteer-addon-vehicles&sub=images.delete&type=import",
+							type: "post",
+							data:$('form[name="edit_cat"]').serialize(),
+							success: function(msg){ 
+								window.location.reload();
+							}
+						});
+					}
+				);
+			}
+		
+		]]></after>
+	</javascript>
 
 </form>

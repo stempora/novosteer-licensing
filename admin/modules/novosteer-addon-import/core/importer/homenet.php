@@ -46,6 +46,8 @@ class Homenet extends Importer implements ImporterInterface{
 
 		//$item = $this->lowerKeys($item);
 
+		$this->fixHomentMessUp($item);
+
 		$item["cat"] = $item["type"];
 		unset($item["type"]);
 
@@ -360,4 +362,30 @@ class Homenet extends Importer implements ImporterInterface{
 		}
 
 	}
+
+
+	/**
+	* description
+	*
+	* @param
+	*
+	* @return
+	*
+	* @access
+	*/
+	function fixHomentMessUp(&$item) {
+		global $_LANG_ID; 
+
+		if (strtoupper($item["make"]) == "RAM") {
+			
+			if ($item["model"] == "1500" && substr($item["modelnumber"] , 0 , 2) == "DS") {
+				$item["model"] = "1500 Classic";
+			}
+
+			if ($item["model"] == "1500 Classic" && substr($item["modelnumber"] , 0 , 2) == "DT") {
+				$item["model"] = "1500";
+			}			
+		}		
+	}
+	
 }

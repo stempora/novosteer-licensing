@@ -2,7 +2,7 @@
 
 	<forms>
 		<add>import/add.xml</add>
-		<edit>import/add.xml</edit>
+		<edit>import/edit.xml</edit>
 		<details>SHOW::add</details>
 		<list>import/list.xml</list>
 		<search>import/search.xml</search>
