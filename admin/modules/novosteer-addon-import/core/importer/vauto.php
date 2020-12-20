@@ -41,7 +41,8 @@ class Vauto extends Importer {
 			$this->db->QueryUpdateByID(
 				$this->module->tables["plugin:novosteer_vehicles_import"],
 				[
-					$this->info["settings"]["set_price_field"] => $price
+					$this->info["settings"]["set_price_field"] => $price,
+					"product_status"							=> "1",
 				],
 				$product["product_id"]
 			);

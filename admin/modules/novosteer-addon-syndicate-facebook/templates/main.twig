@@ -10,7 +10,7 @@
 		<stock_number>{{ product.stock_id }}</stock_number>
 		<availability>available</availability>
 		<date_first_on_lot>{{ product.product_date_add|cdate("%Y-%m-%d") }}</date_first_on_lot>
-		<title><![CDATA[{{ product.year }} {{ product.brand_name }} {{ product.model_name }}]]></title>
+		<title><![CDATA[{{ product.year }} {{ product.brand_name }} {{ product.model_name }} {{ product.trim }}]]></title>
 		<description><![CDATA[{{ product.description }}]]></description>
 		<url>{{ product.link }}</url>
 

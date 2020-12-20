@@ -276,6 +276,8 @@ class Importer extends Base{
 
 		$items = $this->loadFeedFile($file);
 
+
+
 		if (!is_array($items)) {
 			$this->log("No information in the feed");
 			return false;
@@ -285,6 +287,7 @@ class Importer extends Base{
 		$this->processFeed($items);
 
 		foreach ($items as $key => $item) {
+
 			$item = $this->lowerKeys($item);			
 
 			$this->processPreMapItem($item);

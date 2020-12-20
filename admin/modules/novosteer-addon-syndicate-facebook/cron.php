@@ -90,7 +90,7 @@ class CNovosteerAddonSyndicateFacebook extends CNovosteerAddonSyndicateFacebookB
 		$products = $this->export->getExportProducts($feed , $start , 1000000);
 		if (is_array($products)) {
 			foreach ($products as $key => $product) {
-				$products[$key] = $this->processProduct($product);
+				$products[$key] = $this->processProduct($product , $feed);
 			}				
 		}	
 
@@ -128,7 +128,7 @@ class CNovosteerAddonSyndicateFacebook extends CNovosteerAddonSyndicateFacebookB
 	*
 	* @access
 	*/
-	function processProduct($product) {
+	function processProduct($product , $feed) {
 		global $_LANG_ID; 
 
 		$this->export->MapRuleProcess($product);
@@ -148,6 +148,8 @@ class CNovosteerAddonSyndicateFacebook extends CNovosteerAddonSyndicateFacebookB
 		$product["drivetrain"] = $this->validateTag($product["drivetrain"] , ["4X2", "4X4", "AWD", "FWD", "RWD"] , "OTHER");
 		$product["transmission"] = $this->validateTag($product["transmission"] , ["AUTOMATIC", "MANUAL", "NONE"] , "OTHER");
 		$product["fuel"] = $this->validateTag($product["fuel"] , ["DIESEL", "ELECTRIC", "GASOLINE", "FLEX", "HYBRID", "PETROL", "PLUGIN_HYBRID", "NONE"] , "OTHER");
+
+		$product["trim"] = $product[$feed["settings"]["set_trim"]];
 
 		$product["images"] = $images;
 		

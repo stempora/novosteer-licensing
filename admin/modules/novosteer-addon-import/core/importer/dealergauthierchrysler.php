@@ -106,5 +106,21 @@ class DealerGauthierChrysler extends DealerFormula{
 			break;
 		}	
 	}	
+
 	
+	/**
+	* description
+	*
+	* @param
+	*
+	* @return
+	*
+	* @access
+	*/
+	public function wasUpdated($scope , $hash) {
+		global $_LANG_ID; 
+
+		return true;
+	}
+
 }
