@@ -266,6 +266,8 @@ class Importer extends Base{
 		$start = time();
 		$this->log("Starting feed importer %s (%s)\n" , [$this->info['feed_name'] , $this->info["feed_extension"]]);
 
+		$this->runBeforeStart();
+
 		$file = $this->getFile();
 
 		if (!$file) {
@@ -1174,6 +1176,19 @@ class Importer extends Base{
 	* @access
 	*/
 	function runOnDelete() {
+		global $_LANG_ID; 
+	}
+
+	/**
+	* description
+	*
+	* @param
+	*
+	* @return
+	*
+	* @access
+	*/
+	function runBeforeStart() {
 		global $_LANG_ID; 
 	}
 	

@@ -167,7 +167,10 @@ class ImagesOverlays extends Importer implements ImporterInterface{
 
 			$this->db->QueryUpdateByID(
 				$this->module->tables["plugin:novosteer_vehicles_import_images"],
-				["image_overlay" => $this->info["feed_id"]],
+				[
+					"image_overlay"			=> $this->info["feed_id"],
+					"image_overlay_date"	=> time(),
+				],
 				$item["image_id"]
 			);
 
@@ -187,6 +190,65 @@ class ImagesOverlays extends Importer implements ImporterInterface{
 
 	}
 
+	/**
+	* description
+	*
+	* @param
+	*
+	* @return
+	*
+	* @access
+	*/
+	function deleteNonConditionalImages() {
+		global $_LANG_ID; 
+
+		$this->db->QueryUpdate(
+			$this->module->tables["plugin:novosteer_vehicles_import_images"],
+			[
+				"image_overlay" => -1
+			],
+
+			$this->db->Statement(
+				"image_id in ( 
+					SELECT images.image_id FROM %s as images
+						INNER JOIN 
+							%s as products
+						ON 
+							images.product_id = products.product_id
+
+						INNER JOIN 
+							%s as brands
+						ON
+							products.brand_id = brands.brand_id 
+						INNER JOIN 
+							%s as models
+						ON 
+							products.model_id = models.model_id 
+					WHERE				
+						image_alert = 0 AND 
+						dealership_id = %d AND
+						image_overlay = %d AND
+						image_deleted = 0
+
+						:cond				
+				)",
+
+				[
+					$this->module->tables["plugin:novosteer_vehicles_import_images"],
+					$this->module->tables["plugin:novosteer_vehicles_import"],
+					$this->module->tables["plugin:novosteer_addon_autobrands_brands"],
+					$this->module->tables["plugin:novosteer_addon_autobrands_models"],
+					$this->info["dealership_id"],
+					$this->info["feed_id"]
+				],
+
+				[ 
+					":cond" => $this->processCondition($this->info["settings"]["set_condition"] , " AND NOT ") 
+				]
+			)
+		);
+	}
+	
 	
 	/**
 	* description
@@ -198,8 +260,6 @@ class ImagesOverlays extends Importer implements ImporterInterface{
 	* @access
 	*/
 	function runPreprocess() {
-
-		$this->deleteOldImages();
 
 		$this->image = new ImageManager(array('driver' => "gd"));
 
@@ -265,7 +325,8 @@ class ImagesOverlays extends Importer implements ImporterInterface{
 				$this->db->QueryUpdateByID(
 					$this->module->tables["plugin:novosteer_vehicles_import_images"],
 					[
-						"image_overlay"	=> -1
+						"image_overlay"	=> 0,
+						"image_overlay_date" => 0,
 					],
 					$image["image_id"]
 				);
@@ -330,6 +391,22 @@ class ImagesOverlays extends Importer implements ImporterInterface{
 			}
 			
 		}	
+	}
+
+	/**
+	* description
+	*
+	* @param
+	*
+	* @return
+	*
+	* @access
+	*/
+	function runBeforeStart() {
+		global $_LANG_ID; 
+
+		$this->deleteNonConditionalImages();
+		$this->deleteOldImages();
 	}
 	
 

@@ -387,5 +387,88 @@ class Homenet extends Importer implements ImporterInterface{
 			}			
 		}		
 	}
+
+
+/**
+	* description
+	*
+	* @param
+	*
+	* @return
+	*
+	* @access
+	*/
+	function runBeforeStart() {
+		global $_LANG_ID; 
+
+		$this->deleteOldImages();
+	}
+
+
+/**
+	* description
+	*
+	* @param
+	*
+	* @return
+	*
+	* @access
+	*/
+	function deleteOldImages() {
+		global $_LANG_ID; 
+
+		$images = $this->db->QFetchRowArray(
+			"SELECT products.product_id, product_sku , images.* FROM %s as images
+
+				INNER JOIN 
+					%s as products
+				ON 
+					images.product_id = products.product_id				
+			WHERE				
+				dealership_id = %d AND
+				image_deleted = 1
+			",
+			[
+				$this->module->tables["plugin:novosteer_vehicles_import_images"],
+				$this->module->tables["plugin:novosteer_vehicles_import"],
+				$this->info["dealership_id"]
+			],
+		);
+
+		if (is_array($images)) {
+			$this->log("Deleting old images");
+
+			foreach ($images as $key => $image) {
+
+				if ($image["image_downloaded"]) {
+					$destination = $this->info["dealership_location_prefix"] . "/inventory/" . $image['product_sku'] ."/" . $image["image_id"] . ".jpg";
+					if ($this->module->storage->getLocation($this->info["dealership_location"])->fileExists($destination)) {
+						$this->log("Deleting %s" , $destination);
+						$this->module->storage->getLocation($this->info["dealership_location"])->delete($destination);
+					}		
+				}
+
+				if ($image["image_overlay"]) {
+					$destination = $this->info["dealership_location_prefix"] . "/inventory/" . $image['product_sku'] ."/over_" . $image["image_id"] . ".jpg";
+					if ($this->module->storage->getLocation($this->info["dealership_location"])->fileExists($destination)) {
+						$this->log("Deleting %s" , $destination);
+						$this->module->storage->getLocation($this->info["dealership_location"])->delete($destination);
+					}		
+				}
+
+				$this->log("Deleting db record \n");
+				$this->db->Query(
+					"DELETE FROM %s WHERE image_id = %d",
+					[
+						$this->module->tables["plugin:novosteer_vehicles_import_images"],
+						$image["image_id"]						
+					]
+				);				
+			}
+
+			$this->log("Done");			
+		}
+		
+	}
 	
 }

@@ -238,14 +238,10 @@ class CNovosteerAddonVehicles extends CNovosteerAddonVehiclesBackend{
 			$this->db->Query(
 				"DELETE FROM %s WHERE product_id IN (%s)",
 				[
-					$this->tables["plugin:novosteer_addon_importer" . ($_GET["type"] == "import" ? "import" : "export") . "_items"],
-				],
-				$this->db->Statement(
-					"product_id in (%s)",
-					[ implode("," , $_POST["product_id"])]
-				)
+					$this->tables["plugin:novosteer_addon_" . ($_GET["type"] == "import" ? "importer" : "export") . "_items"],
+					implode("," , $_POST["product_id"])
+				]
 			);
-
 		}
 		die("1");		
 	}

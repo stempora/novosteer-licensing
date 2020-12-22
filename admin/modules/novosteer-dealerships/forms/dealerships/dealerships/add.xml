@@ -101,13 +101,6 @@
 
 				<dealership_location_prefix type="textbox" title="Resources Prefix" preffix="/" suffix="/"></dealership_location_prefix>
 
-				<subtitle_calaculator type="subtitle" title="Discounts Calculator"></subtitle_calaculator>
-
-				<calculator_id type="droplist" empty="true" title="Calculator" required="true" validate="A:1:200">
-					<relation table="plugin:novosteer_manufacturers_calculators" id="calculator_id" text="calculator_name" order="calculator_name"></relation>
-					<description>Calculator to be used to calculate the discounts for the msrp.</description>
-				</calculator_id>
-
 			</fields>
 		</box>
 	</fields>

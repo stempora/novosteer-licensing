@@ -135,10 +135,10 @@ class GenerateFeed extends Importer {
 					}
 
 					if ($image["image_overlay"]) {
-						$_image = $this->module->storage->getLocation($this->info["dealership_location"])->getUrl($this->info["dealership_location_prefix"] . "/inventory/" . $items[$image["product_id"]]['product_sku'] ."/over_" . $image["image_id"] . ".jpg");
+						$_image = $this->module->storage->getLocation($this->info["dealership_location"])->getUrl($this->info["dealership_location_prefix"] . "/inventory/" . $items[$image["product_id"]]['product_sku'] ."/over_" . $image["image_id"] . ".jpg" , $image["image_overlay_date"]);
 					} else {
 						$_image = $image["image_downloaded"] 
-							? $this->module->storage->getLocation($this->info["dealership_location"])->getUrl($this->info["dealership_location_prefix"] . "/inventory/" . $items[$image["product_id"]]['product_sku'] ."/" . $image["image_id"] . ".jpg")
+							? $this->module->storage->getLocation($this->info["dealership_location"])->getUrl($this->info["dealership_location_prefix"] . "/inventory/" . $items[$image["product_id"]]['product_sku'] ."/" . $image["image_id"] . ".jpg" , $image["image_downloaded_date"])
 							: $image["image_source"];
 					}
 

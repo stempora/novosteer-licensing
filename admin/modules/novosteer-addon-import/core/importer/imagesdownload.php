@@ -147,6 +147,7 @@ class ImagesDownload extends Importer implements ImporterInterface{
 				[
 					"image_error_download"	=> "",
 					"image_downloaded"		=> 1,
+					"image_downloaded_date"	=> time(),
 				],
 				$item["image_id"]
 			);

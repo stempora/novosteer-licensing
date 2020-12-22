@@ -65,7 +65,7 @@
 			</from>
 			<condition type="var" import="WHERE product_id = {PARENT}" />
 
-			<order type="var" import="image_order" />
+			<order type="var" import="image_deleted ASC, image_order" />
 			<order_mode type="var" import="ASC" />
 
 		</vars>
