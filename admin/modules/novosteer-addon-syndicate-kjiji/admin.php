@@ -23,6 +23,7 @@ class CNovosteerAddonSyndicateKjiji extends CNovosteerAddonSyndicateKjijiBackend
 				case "log":
 				case "vehicles":
 				case "map":
+				case "groups":
 					$data = new CSQLAdmin($sub, $this->__parent_templates,$this->db,$this->tables,$extra);
 					$data->setAclMod($this->tpl_module);
 					$this->PrepareFields($data->forms["forms"]);					

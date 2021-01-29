@@ -4,7 +4,7 @@
 	<code>novosteer-addon-export</code>
 	<type>system</type>
 	<protected></protected>
-	<version>1.0</version>
+	<version>1.1</version>
 	<noperm>1</noperm>
 	<parent>novosteer-dealerships</parent>
 
@@ -26,7 +26,11 @@
 	</install>
 
 	<history>
-
+		<version name="1.1">
+			<files>
+				<file>update-1.1.sql</file>
+			</files>
+		</version>
 	</history>
 
 </module>

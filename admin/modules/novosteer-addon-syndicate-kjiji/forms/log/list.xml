@@ -10,6 +10,11 @@
 		<_count header="No." suffix="." width="30" align="center" />
 
 		<file_date header="Date" type="date" params="%F %T" align="center" width="120px"/>
+
+		<history_group type="relation" header="Group">
+			<relation id="group_id" text="group_name" table="plugin:novosteer_addon_syndicate_kjiji_groups"></relation>
+		</history_group>
+
 		<history_file_file header="File Name"/>
 
 		<button_view type="button" icon="file-excel" width="20" align="center" onclick="" color="Green" protected="eval:!strstr($field['history_file_file'] , '.csv');" acl="log.view">

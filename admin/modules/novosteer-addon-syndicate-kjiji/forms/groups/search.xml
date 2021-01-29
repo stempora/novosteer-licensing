@@ -5,7 +5,7 @@
 	<width>100%</width>
 	<method>get</method>
 
-	<skin>Yellow</skin>
+	<skin>Orange</skin>
 
 	<formtag>true</formtag>
 	<border>true</border>
@@ -34,29 +34,18 @@
 	<search>
 			<fields>
 
-				<box title="Search" width="6">
-					<fields>					
-
-						<history_group type="droplist" title="Group" empty="true" required="true" validate="A:1:200">
-							<relation id="group_id" text="group_name" table="plugin:novosteer_addon_syndicate_kjiji_groups"></relation>
-						</history_group>
-						
-					</fields>
-				</box>
-					
-				<box title="Filter" width="6">
+				<box title="Search" width="12">
 					<fields>
-						<file_date type="calendar" range="true" title="Date Range" />
+						
 
+						<keywords type="textbox" width="100%" title="Keywords" />
 					</fields>
 				</box>
-					
+
 			</fields>
 
 			<sql_fields>
-				<field name="feed_id" type="=" field="feeds.feed_id"></field>			
-				<field name="history_group" type="="  field="history_group"></field>			
-				<field name="file_date">range</field>			
+				<field name="keywords" type="keyword" search="full" fields="group_name,group_server,group_username,group_password">keyword</field>			
 			</sql_fields>
 
 	</search>

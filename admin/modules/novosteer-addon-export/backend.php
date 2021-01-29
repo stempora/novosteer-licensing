@@ -103,7 +103,8 @@ class CNovosteerAddonExportBackend extends CPlugin{
 				"file_date"			=> time(),
 				"history_file"		=> "1",
 				"feed_extension"	=> $feed["feed_extension"],
-				"history_file_file"	=> $file
+				"history_file_file"	=> $file,
+				"history_group"		=> $feed["history_group"]
 			]
 		);
 

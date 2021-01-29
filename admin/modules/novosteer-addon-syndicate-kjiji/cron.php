@@ -66,39 +66,63 @@ class CNovosteerAddonSyndicateKjiji extends CNovosteerAddonSyndicateKjijiBackend
 	
 		$feeds = $this->export->getAllFeedsByName("syndicatekjiji");
 
+		$groups = $this->getAllGroups();
 		if (!is_array($feeds)) {
 			$job->removeLog();
 		}
 
-		$temp = tmpfile();
-		$this->csv = League\Csv\Writer::createFromStream($temp);
-		$this->csv->insertOne($this->getHeader());
-
-		
-		foreach ($feeds as $key => $feed) {
-			$this->pushFeed($job , $feed);
+		if (!is_array($groups)) {
+			$job->removeLog();
 		}
 
-		$job->log("Uploading file to remote ".$this->_s("set_path"));
+		foreach ($feeds as $key => $feed) {
+			if (is_array($groups[$feed["settings"]["set_group"]])) {
+				$groups[$feed["settings"]["set_group"]]["feeds"][] = $feed;
+			}			
+		}
 
-		$content = $this->export->recordHistory(["feed_extension" => "syndicatekjiji"] , "export.csv" , $temp);
+		foreach ($groups as $k => $group) {
+			$job->log("Processing dealers group ". $group["group_name"]);
 
-		$this->export->uploadFileToFTP(
-			[
+			$feeds = $group["feeds"];
 
-				"server"		=> $this->_s("set_server"),
-				"port"			=> $this->_s("set_port"),
-				"username"		=> $this->_s("set_username"),
-				"password"		=> $this->_s("set_password"),
-				"passive"		=> $this->_s("set_passive"),
-				"ssl"			=> $this->_s("set_ssl"),
-				"remote_file"	=> $this->_s("set_path"),
-				"local_file"	=> $content
-			],
-			true,
-			$job
-		);
+			if (is_array($feeds) && count($feeds)) {
 
+				$temp = tmpfile();
+				$this->csv = League\Csv\Writer::createFromStream($temp);
+				$this->csv->insertOne($this->getHeader());
+
+				
+				foreach ($feeds as $key => $feed) {
+					$this->pushFeed($job , $feed);
+				}
+
+
+				$job->log("Uploading file to remote ".$this->_s("set_path"));
+
+				$content = $this->export->recordHistory(["feed_extension" => "syndicatekjiji" , "history_group" => $group["group_id"]] , "export.csv" , $temp);
+				$this->export->uploadFileToFTP(
+					[
+						"server"		=> $group["group_server"],
+						"port"			=> $group["group_port"],
+						"username"		=> $group["group_username"],
+						"password"		=> $group["group_password"],
+						"passive"		=> $group["group_passive"],
+						"ssl"			=> $group["group_ssl"],
+						"remote_file"	=> $group["group_path"],
+						"local_file"	=> $content
+					],
+					true,
+					$job
+				);
+
+
+			}
+			
+
+			
+		}
+		
 
 		return true;
 	}

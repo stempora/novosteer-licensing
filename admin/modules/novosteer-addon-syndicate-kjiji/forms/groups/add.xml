@@ -1,0 +1,64 @@
+<form>
+	<title>{SELF.TITLE} Group</title>
+	<action>{SELF.URI.STORE}</action>
+	<name>edit</name>
+	<width>100%</width>
+	<encoding>multipart/form-data</encoding>
+	<alternance>true</alternance>
+	<skin>Orange</skin>
+
+
+	<formtag>true</formtag>
+	<border>true</border>
+	
+	<buttons>		
+		<set>
+			<header>true</header>
+		</set>
+
+		<button_back onclick="" button="return">
+			<location>{TRAIL.PREVIOUS.LINK}</location>
+		</button_back>
+
+		<button_edit onclick="" button="edit" acl="avize.achizitii.edit">
+			<location>{SELF.URI.EDIT}</location>
+		</button_edit>
+
+		<button_save button="saveall">
+			<location>javascript:$('form').first().trigger('submit');</location>
+		</button_save>
+
+	</buttons>
+
+	<redirect>{PHP}?sub=accounts</redirect>
+
+	<fields>
+		<group_id type="hidden"/>
+		<box title="Details" width="6">
+			<fields>
+				<group_status type="checkbox" checked="1" label="enabled|disabled" title="Status"></group_status>
+				<group_name type="textbox" title="Name" unique="true" required="true" validate="A:1:200"></group_name>
+			</fields>
+		</box>
+
+		<box title="FTP Server" width="6">
+			<fields>				
+				<group_server type="textbox" title="Server" referers="group_port" width="70%"></group_server>
+				<group_port type="textbox" title="Port" referer="true" width="30%" preffix=":" default="21"></group_port>
+
+				<group_username type="textbox" title="Username" />
+				<group_password type="textbox" title="Password" />
+				<group_passive type="checkbox" checked="1" label="yes|no" title="Passive"/>
+				<group_ssl type="checkbox" checked="1" label="yes|no" title="SSL"/>
+				<group_path type="textbox" title="File Path"/>
+			</fields>
+		</box>
+	</fields>
+
+	<javascript>
+		<after>
+		</after>
+
+	</javascript>
+
+</form>

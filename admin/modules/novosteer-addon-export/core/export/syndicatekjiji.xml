@@ -10,6 +10,9 @@
 
 				
 				<subtitle_ftp type="subtitle" title="Dealer Details" ></subtitle_ftp>
+				<set_group type="droplist" title="Group" empty="true" required="true" validate="A:1:200">
+					<relation id="group_id" text="group_name" table="plugin:novosteer_addon_syndicate_kjiji_groups"></relation>
+				</set_group>
 				<set_dealer_id type="textbox" title="Dealer ID#"></set_dealer_id>
 
 				<set_trim type="droplist" title="Trim Field">
