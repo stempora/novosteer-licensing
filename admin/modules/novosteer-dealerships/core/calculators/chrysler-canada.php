@@ -87,7 +87,7 @@ class Chrysler_Canada extends Calculator {
 								$rules["discounts"][str_replace("d:" , "" , $k)] = strstr($v, "%" ) ? $v : str_replace("," ,'' , $v);
 							}							
 							
-						} elseif (!in_array($k , ["y1" , "y2" , "y3" , "y4" , "y5" , "y6" , "y7" , "y8"])) {						
+						} elseif (!in_array($k , ["y:1" , "y:2" , "y:3" , "y:4" , "y:5" , "y:6" , "y:7" , "y:8" , "k:6" , "k:5" , "k:4" ,"k:3"])) {						
 							if (stristr($v , "|not")) {
 								$rule["type"] = "2";
 								$v = str_ireplace("|not" , ""  , $v);

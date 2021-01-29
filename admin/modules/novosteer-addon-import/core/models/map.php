@@ -160,10 +160,13 @@ class Map extends Base{
 			return $this;
 		}
 
-		foreach ($this->table as $map) {
+		foreach ($this->table as $map) { 
 
-			$int = array_intersect($item , $map["from"]);
-			$diff = array_diff($map["from"] , $int);
+			//$int = array_intersect($item , $map["from"]);
+			$int = array_intersect(array_map('strtolower', $item), array_map('strtolower', $map["from"]));
+
+			//$diff = array_diff($map["from"] , $int);
+			$diff = array_diff(array_map('strtolower', $map["from"]), $int);
 
 			if (!count($diff) ) {
 				

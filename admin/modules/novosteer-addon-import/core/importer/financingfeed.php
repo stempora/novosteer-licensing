@@ -15,10 +15,13 @@ if (!defined("STPBase")) {
 }
 
 use \Stembase\Modules\Novosteer_Addon_Import\Core\Models\Importer;
+use \Stembase\Modules\Novosteer_Addon_Import\Core\Interfaces\ImporterInterface;
+use \Stembase\Modules\Novosteer_Dealerships\Core\Models\Discounts;
 use \CHeaders;
 
-class ModelsFeed extends Importer {
 
+
+class FinancingFeed extends Importer implements ImporterInterface{
 	/**
 	* description
 	*
@@ -28,12 +31,13 @@ class ModelsFeed extends Importer {
 	*
 	* @access
 	*/
-	function getFile($default= null) {
+	function getFile($default = null) {
 		global $_LANG_ID; 
 
+		//just ro return something
 		return true;
 	}
-	
+
 	/**
 	* description
 	*
@@ -44,78 +48,73 @@ class ModelsFeed extends Importer {
 	* @access
 	*/
 	function loadFeedFile($file) {
-		global $_LANG_ID , $_CONF; 
+		global $_LANG_ID; 
 
-		if (!$this->info["settings"]["set_brands"]) {
-			return null;
+		return [];		
+	}
+
+
+
+	/**
+	* description
+	*
+	* @param
+	*
+	* @return
+	*
+	* @access
+	*/
+	public function wasUpdated($scope , $hash) {
+		global $_LANG_ID; 
+
+		return true;
+	}
+
+	/**
+	* description
+	*
+	* @param
+	*
+	* @return
+	*
+	* @access
+	*/
+	function runPreProcess() {
+		global $_LANG_ID; 
+
+	
+		$this->setSKUField("product_sku");
+
+		$this->module->plugins["novosteer-dealerships"]->__init(); 
+
+		$client = \Stembase\Lib\File\GoogleSheets::create()
+			->setCredentialsString($this->module->plugins["novosteer-dealerships"]->_s("set_keyfile"))
+			->setSheetId($this->info["settings"]["set_sheet_id"])
+			->setWorksheet($this->info["settings"]["set_worksheet"]);
+
+
+		$rates = $client->getAllvalues();
+
+		foreach ($rates as $key => $val) {
+			$found = false;
+
+			foreach ($val as $k => $v) {
+				if (trim($v)) {
+					$found = true;
+				}				
+			}
+
+			if (!$found) {
+				unset($rates[$key]);
+			}				
 		}
-
-		$items = $this->db->QFetchRowArray(
-			"SELECT * FROM 
-				%s as vehicles
-			INNER JOIN 
-				%s as models 
-				ON
-					vehicles.model_id = models.model_id
-			INNER JOIN 
-				%s as brands
-				ON 
-					brands.brand_id = models.brand_id 
-			INNER JOIN 
-				%s as trims
-				ON 
-					trims.trim_id = vehicles.trim_id 
-			INNER JOIN 
-				%s as types
-				ON
-					models.type_id = types.type_id
-			WHERE
-				brands.brand_id IN (%s) AND 
-				vehicles.vehicle_status = 1
-			ORDER BY 
-				vehicle_default DESC,
-				brand_order ASC,
-				model_order ASC,
-				trim_order ASC,
-				vehicle_id DESC
-			",
-			[
-				$this->module->tables["plugin:novosteer_addon_autobrands_vehicles"],
-				$this->module->tables["plugin:novosteer_addon_autobrands_models"],
-				$this->module->tables["plugin:novosteer_addon_autobrands_brands"],
-				$this->module->tables["plugin:novosteer_addon_autobrands_trims"],
-				$this->module->tables["plugin:novosteer_addon_autobrands_types"],
-				$this->info["settings"]["set_brands"]
-			]
-		);
-
-		if (!is_array($items)) {
-			return null;
-		}
-
-		$menu = [];
-		foreach ($items as $key => $val) {
-
-			$hash = $val["vehicle_year"] . "-" . $val["brand_name"] . "-" . $val["model_name"] . "-" . $val["trim_name"];
-
-			if (!is_array($menu[$hash])) {
-				$menu[$hash] = [
-					"year"	=> $val["vehicle_year"],
-					"brand"	=> $val["brand_name"],
-					"model"	=> $val["model_name"],
-					"trim"	=> $val["trim_name"],
-					"type"	=> $val["type_name"],
-					"image"	=> $this->module->storage->public->getUrl("vehicles/stock/" . $val["vehicle_id"] . "." . $val["vehicle_image_type"] , $val["vehicle_image_date"])
-				];
-			}			
-		}
-
+		
 		$data = json_encode([
-			"models"	=> $menu
+			"rates"	=> $rates
 		]);
 
 
-		$this->log("Saving inventory");
+		$this->log("Saving financial rules");
 		$this->module->storage->private->save(
 			"novosteer/inventory/" . $this->info["feed_id"] . ".json",
 			$data
@@ -134,54 +133,17 @@ class ModelsFeed extends Importer {
 		}
 
 		if ($hash != $this->info["feed_reserved"]) {
-			$this->log("Pinging dealer website to request the new inventory");
+			$this->log("Pinging dealer website to request the new rates");
 			$this->pingDealer();
 
 			$this->log("Done");
 
 		} else {
-			$this->log("No changes to the inventory.");
+			$this->log("No changes to the rates table.");
 		}		
 
-		
 		return null;
-	}
 
-	
-	/**
-	* description
-	*
-	* @param
-	*
-	* @return
-	*
-	* @access
-	*/
-	function updateProduct($product , $item) {
-		global $base , $_USER , $_SESS; 		
-
-		return null;
-	}
-
-	/**
-	* description
-	*
-	* @param
-	*
-	* @return
-	*
-	* @access
-	*/
-	function createProduct($item) {
-		global $base , $_USER , $_SESS , $_CONF , $_LANG_ID; 
-		
-		//disable new creation of product
-		return null;
-	}
-
-
-	function runPreProcess() {
-		$this->setSKUField("vin");
 	}
 
 
@@ -205,7 +167,7 @@ class ModelsFeed extends Importer {
 			return $site->plugins["redirects"]->ErrorPage("404" , true);
 		}
 
-		Cheaders::newInstance()
+		\Cheaders::newInstance()
 			->ContentTypeByExt("novosteer.json")
 			->FileName("novosteer" , "inline");
 
@@ -215,7 +177,6 @@ class ModelsFeed extends Importer {
 		
 		die();
 	}
-
 	/**
 	* description
 	*
@@ -240,7 +201,7 @@ class ModelsFeed extends Importer {
 			'https://' . $this->info["settings"]["set_dealer_client"] . "/__novosteer/action", 
 			[
 				"form_params"	=> [
-					"action"	=> "cron-models",
+					"action"	=> "cron-financial",
 					"link"		=> $_CONF["url"] . "__novosteer_import/" . $this->info["feed_code"] . "/",
 				],
 				"headers"	=> [
@@ -261,6 +222,5 @@ class ModelsFeed extends Importer {
 			$this->log("Error pinging dealer code: %s" , [$res->getStatusCode()]);
 		}
 	}
-	
 
 }

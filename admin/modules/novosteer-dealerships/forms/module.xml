@@ -9,9 +9,10 @@
 		</box>
 
 
-		<box width="6" title="Financial Terms">
+		<box width="6" title="Canadian Black Book">
 			<fields>				
-
+				<set_cbb_api_user type="textbox" title="Username" />
+				<set_cbb_api_pass type="textbox" title="Password" />
 			</fields>
 		</box>
 		

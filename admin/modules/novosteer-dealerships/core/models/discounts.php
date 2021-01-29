@@ -91,9 +91,37 @@ class Discounts extends Base{
 				}
 			}
 			
-			return $val;
+			return $cur;
 		}
 
+		return null;	
+	}
+
+	/**
+	* description
+	*
+	* @param
+	*
+	* @return
+	*
+	* @access
+	*/
+	function getMatchingRules() {
+		global $base , $_USER , $_SESS , $_CONF , $_LANG_ID; 
+
+		$found = [];
+
+		foreach ($this->rules as $key => $rule) {
+
+			if ($this->compareRuleAgainstProduct($rule)) {
+				$found[] = $rule;
+			}			
+		}
+
+		if (count($found)) {
+			return $found;
+		}
+		
 		return null;	
 	}
 

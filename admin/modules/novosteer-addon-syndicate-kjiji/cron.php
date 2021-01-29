@@ -194,7 +194,7 @@ class CNovosteerAddonSyndicateKjiji extends CNovosteerAddonSyndicateKjijiBackend
 			$product["description"],
 			$product["drivetrain"],
 			0,
-			implode("," , $images),
+			implode("|" , $images),
 		];
 	}
 

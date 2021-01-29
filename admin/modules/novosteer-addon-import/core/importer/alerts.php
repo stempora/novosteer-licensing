@@ -107,7 +107,7 @@ class Alerts extends Importer {
 									dealership_id = %d AND
 									cat LIKE '%s'
 							) AND 
-							alert_model = 1 OR NOT type_id
+							(alert_model = 1 OR NOT type_id)
 						",
 						[
 							$this->module->tables["plugin:novosteer_addon_autobrands_models"],

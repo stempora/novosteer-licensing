@@ -85,6 +85,12 @@ class ImagesOverlays extends Importer implements ImporterInterface{
 					%s as models
 				ON 
 					products.model_id = models.model_id 
+
+				INNER JOIN 
+					%s as trims
+				ON 
+					products.trim_id = trims.trim_id 
+
 			WHERE				
 				image_alert = 0 AND 
 				dealership_id = %d AND
@@ -98,6 +104,7 @@ class ImagesOverlays extends Importer implements ImporterInterface{
 				$this->module->tables["plugin:novosteer_vehicles_import"],
 				$this->module->tables["plugin:novosteer_addon_autobrands_brands"],
 				$this->module->tables["plugin:novosteer_addon_autobrands_models"],
+				$this->module->tables["plugin:novosteer_addon_autobrands_trims"],
 				$this->info["dealership_id"]
 			],
 
@@ -224,6 +231,10 @@ class ImagesOverlays extends Importer implements ImporterInterface{
 							%s as models
 						ON 
 							products.model_id = models.model_id 
+						INNER JOIN 
+							%s as trims
+						ON 
+							products.trim_id = trims.trim_id 
 					WHERE				
 						image_alert = 0 AND 
 						dealership_id = %d AND
@@ -238,6 +249,7 @@ class ImagesOverlays extends Importer implements ImporterInterface{
 					$this->module->tables["plugin:novosteer_vehicles_import"],
 					$this->module->tables["plugin:novosteer_addon_autobrands_brands"],
 					$this->module->tables["plugin:novosteer_addon_autobrands_models"],
+					$this->module->tables["plugin:novosteer_addon_autobrands_trims"],
 					$this->info["dealership_id"],
 					$this->info["feed_id"]
 				],

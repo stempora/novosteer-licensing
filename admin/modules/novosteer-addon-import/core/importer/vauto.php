@@ -114,8 +114,17 @@ class Vauto extends Importer {
 						$product["product_id"]
 					);
 				}				
-			}			
+			}					
 		}
+
+		$this->log("Forcing enable for other vehicles");
+		$this->db->QueryUpdate(
+			$this->module->tables["plugin:novosteer_vehicles_import"],
+			[
+				"product_status" => 1,
+			],
+			"product_sku in ('" . implode("','" , $this->skus["all"]) . "')"
+		);
 		
 	}
 

@@ -1,0 +1,62 @@
+<importer>
+	<fields>
+		<box title="Settings" width="7">
+			<fields>			
+				<set_sheet_id title="Google Sheet ID#" type="textbox"></set_sheet_id>
+				<set_worksheet title="Google Worksheet Name" type="textbox"></set_worksheet> 
+
+				<subtitle_fields type="subtitle" title="Fields Relation" skin="Gray"></subtitle_fields>
+			
+				<set_msrp_field type="droplist" required="true" validate="A:1:2000" title="MSRP Field" empty="true">
+					<function module="novosteer-addon-import" function="getTableFields" />
+					<relation id="Field">							
+						<text>
+							<f1 field="Field" />
+						</text>
+					</relation>
+				</set_msrp_field>
+
+				<set_price_field type="droplist" required="true" validate="A:1:2000" title="Calculated Discount" empty="true">
+					<function module="novosteer-addon-import" function="getTableFields" />
+					<relation id="Field">							
+						<text>
+							<f1 field="Field" />
+						</text>
+					</relation>
+				</set_price_field>
+
+			</fields>
+		</box>
+	</fields>
+
+	<javascript>
+		<after>
+			CM("set_maping");
+		</after>
+	</javascript>
+
+	<remove_fields>
+		<subtitle_feed_location></subtitle_feed_location>
+		<feed_data_type></feed_data_type>
+		<subtitle_feed_manual></subtitle_feed_manual>
+		<comment_manual></comment_manual>
+		<feed_data_file></feed_data_file>
+		<subtitle_feed_ftp></subtitle_feed_ftp>
+		<feed_data_server></feed_data_server>
+		<feed_data_port></feed_data_port>
+		<feed_data_enc></feed_data_enc>
+		<feed_data_passive></feed_data_passive>
+		<feed_data_user></feed_data_user>
+		<feed_data_pass></feed_data_pass>
+		<feed_data_path></feed_data_path>
+		<subtitle_feed_web></subtitle_feed_web>
+		<feed_data_link></feed_data_link>
+		<cache_control></cache_control>
+		<button_all></button_all>
+		<button_info></button_info>
+		<button_list></button_list>
+		<button_details></button_details>
+	</remove_fields>
+
+</importer>
+

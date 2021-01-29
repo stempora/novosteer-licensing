@@ -168,13 +168,17 @@ class GenerateFeed extends Importer {
 			$data
 		);
 
-		$hash = md5($data);
+		if ($_GET["ping"] == "true") {
+			$hash = time();
+		} else {	
+			$hash = md5($data);
 
-		$this->db->QueryUpdateByID(
-			$this->module->tables["plugin:novosteer_addon_importer_feeds"],
-			["feed_reserved" => $hash],
-			$this->info["feed_id"]
-		);
+			$this->db->QueryUpdateByID(
+				$this->module->tables["plugin:novosteer_addon_importer_feeds"],
+				["feed_reserved" => $hash],
+				$this->info["feed_id"]
+			);
+		}
 
 		if ($hash != $this->info["feed_reserved"]) {
 			$this->log("Pinging dealer website to request the new inventory");

@@ -59,7 +59,9 @@ class GoogleSheets extends Importer implements ImporterInterface{
 			->setSheetId($this->info["settings"]["set_sheet_id"])
 			->setWorksheet($this->info["settings"]["set_worksheet"]);
 
-		return $client->getAllvalues();
+		$data = $client->getAllvalues();
+
+		return $data;
 	}
 	
 

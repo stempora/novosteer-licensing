@@ -143,7 +143,7 @@ class CNovosteerAddonAutoBrandsBackend extends CPlugin {
 		}		
 
 		$brand = $this->db->QFetchArray(
-			"SELECT * FROM %s WHERE brand_name LIKE '%s'",
+			"SELECT * FROM %s WHERE brand_name LIKE LOWER('%s')",
 			[
 				$this->tables['plugin:novosteer_addon_autobrands_brands'],
 				$name
@@ -191,7 +191,7 @@ class CNovosteerAddonAutoBrandsBackend extends CPlugin {
 		}		
 
 		$model = $this->db->QFetchArray(
-			"SELECT * FROM %s WHERE brand_id = %d AND model_name LIKE '%s'",
+			"SELECT * FROM %s WHERE brand_id = %d AND LOWER(model_name) LIKE LOWER('%s')",
 			[
 				$this->tables['plugin:novosteer_addon_autobrands_models'],
 				$brand , 
@@ -261,7 +261,7 @@ class CNovosteerAddonAutoBrandsBackend extends CPlugin {
 		}		
 
 		$color = $this->db->QFetchArray(
-			"SELECT * FROM %s WHERE color_name LIKE '%s'",
+			"SELECT * FROM %s WHERE color_name LIKE LOWER('%s')",
 			[
 				$this->tables['plugin:novosteer_addon_autobrands_colors'],
 				$name
@@ -313,7 +313,7 @@ class CNovosteerAddonAutoBrandsBackend extends CPlugin {
 		}		
 
 		$trim = $this->db->QFetchArray(
-			"SELECT * FROM %s WHERE brand_id = %d AND trim_name LIKE '%s'",
+			"SELECT * FROM %s WHERE brand_id = %d AND trim_name LIKE LOWER('%s')",
 			[
 				$this->tables['plugin:novosteer_addon_autobrands_trims'],
 				$brand , 
@@ -365,7 +365,7 @@ class CNovosteerAddonAutoBrandsBackend extends CPlugin {
 
 		$type = $this->db->QFetchArray(
 			"SELECT * FROM %s as type
-				WHERE type_name LIKE '%s'",
+				WHERE type_name LIKE LOWER('%s')",
 			[
 				$this->tables['plugin:novosteer_addon_autobrands_types'],
 				$name
