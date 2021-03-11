@@ -63,8 +63,6 @@ class CNovosteerAddonAutoBrands extends CNovosteerAddonAutoBrandsBackend{
 		]);
 
 		$this->tpl_module = $this->plugins["modules"]->LoadDefaultModule($this->name);
-		$this->module = &$this->plugins["products"];
-		$this->module->__init();
 
 		//$this->decodeParams();
 

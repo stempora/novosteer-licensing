@@ -75,8 +75,6 @@ class CNovosteerAddonExport extends CNovosteerAddonExportBackend{
 		]);
 
 		$this->tpl_module = $this->plugins["modules"]->LoadDefaultModule($this->name);
-		$this->module = &$this->plugins["products"];
-		$this->module->__init();
 
 		$this->search = clone $this->module->search;
 

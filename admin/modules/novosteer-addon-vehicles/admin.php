@@ -19,7 +19,6 @@ class CNovosteerAddonVehicles extends CNovosteerAddonVehiclesBackend{
 		$this->__inited = true;
 	
 		$this->tpl_module = $this->plugins["modules"]->LoadDefaultModule($this->name);
-		$this->module = &$this->plugins["products"];
 
 	}
 

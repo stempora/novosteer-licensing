@@ -5,6 +5,9 @@
 		<box width="6" title="Google Authorisation">
 			<fields>
 				<set_keyfile type="textarea" script="true" title="KeyFile"></set_keyfile>	
+				<set_sheet_id title="Google Sheet ID#" type="textbox"></set_sheet_id>
+				<set_worksheet title="Google Worksheet Name" type="textbox"></set_worksheet> 
+
 			</fields>
 		</box>
 
